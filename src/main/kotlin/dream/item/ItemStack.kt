@@ -2,29 +2,26 @@
 
 package dream.item
 
-import com.soywiz.kds.*
-import com.soywiz.kmem.*
-import dream.*
-import dream.block.*
+import com.soywiz.kds.hashCode
+import dream.Key
+import dream.block.Block
 import dream.chat.*
 import dream.enchantment.*
 import dream.entity.*
 import dream.entity.item.*
-import dream.entity.monster.*
-import dream.entity.player.*
+import dream.entity.monster.Enderman
+import dream.entity.player.Player
 import dream.interfaces.*
-import dream.interfaces.Locale
 import dream.item.block.*
 import dream.item.food.*
 import dream.item.tool.*
-import dream.level.*
+import dream.level.Level
 import dream.nbt.*
-import dream.nbt.adapter.*
+import dream.nbt.adapter.TagAdapter
 import dream.nbt.types.*
 import dream.pos.*
-import dream.tab.*
+import dream.tab.CreativeTab
 import dream.utils.*
-import java.util.*
 
 /**
  * Represents an Item Stack in inventory.
@@ -761,10 +758,10 @@ data class ItemStack(
     * custom entity for this item stack.
     */
    fun createEntity(level: Level, x: Double, y: Double, z: Double): Entity {
-      val entity = EntityItem(level, x, y, z, this)
       return if (hasCustomEntity(level)) {
-         item.createEntity(level, entity, this)
+         item.createEntity(level, this, x, y, z)
       } else {
+         val entity = EntityItem(level, x, y, z, this)
          entity.age = lifespan(level)
          entity
       }
@@ -780,7 +777,14 @@ data class ItemStack(
    fun createEntity(level: Level, pos: Pos): Entity {
       return createEntity(level, pos.x, pos.y, pos.z)
    }
-   
+
+   /**
+    * Gets if this item can be dropped.
+    */
+   fun canDrop(level: Level, x: Double, y: Double, z: Double): Boolean {
+      return item.canDrop(level, this, x, y, z)
+   }
+
    /**
     * Drops this item.
     *
@@ -790,9 +794,10 @@ data class ItemStack(
       if (isAir || amount <= 0) {
          return null
       }
-      
-      val entity = createEntity(level, x, y, z)
-      return if (item.onDrop(level, this, entity)) {
+
+      return if (canDrop(level, x, y, z)) {
+         val entity = createEntity(level, x, y, z)
+         item.onDrop(level, this, entity, x, y, z)
          entity.spawnAndGet(level)
       } else {
          null

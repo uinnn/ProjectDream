@@ -1,21 +1,21 @@
 package dream.item
 
-import com.google.common.collect.*
+import com.google.common.collect.HashMultimap
 import dream.*
-import dream.attribute.*
-import dream.block.*
+import dream.attribute.AttributeMap
+import dream.block.Block
 import dream.entity.*
-import dream.entity.item.*
-import dream.entity.monster.*
-import dream.entity.player.*
+import dream.entity.item.EntityItem
+import dream.entity.monster.Enderman
+import dream.entity.player.Player
 import dream.interfaces.*
 import dream.item.block.*
-import dream.level.*
-import dream.misc.*
-import dream.nbt.types.*
-import dream.network.*
+import dream.level.Level
+import dream.misc.Open
+import dream.nbt.types.CompoundTag
+import dream.network.PacketBuffer
 import dream.pos.*
-import dream.tab.*
+import dream.tab.CreativeTab
 
 /**
  * Represents an Item.
@@ -326,12 +326,19 @@ public class Item : Keyable, Locale {
    fun onInteract(level: Level, item: ItemStack, player: Player, target: Entity): Boolean {
       return true
    }
-   
+
+   /**
+    * Gets if this item can be dropped.
+    */
+   fun canDrop(level: Level, item: ItemStack, x: Double, y: Double, z: Double): Boolean {
+      return true
+   }
+
    /**
     * Called when this item is dropped.
     */
-   fun onDrop(level: Level, item: ItemStack, entity: Entity): Boolean {
-      return true
+   fun onDrop(level: Level, item: ItemStack, entity: Entity, x: Double, y: Double, z: Double) {
+
    }
    
    /**
@@ -379,8 +386,8 @@ public class Item : Keyable, Locale {
     *
     * This function is only called if [hasCustomEntity] returns true.
     */
-   fun createEntity(level: Level, entity: EntityItem, item: ItemStack): Entity {
-      return entity
+   fun createEntity(level: Level, item: ItemStack, x: Double, y: Double, z: Double): Entity {
+      return EntityItem(level, x, y, z, item)
    }
    
    /**
