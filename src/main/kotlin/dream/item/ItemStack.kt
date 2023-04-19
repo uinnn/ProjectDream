@@ -790,12 +790,12 @@ data class ItemStack(
     *
     * Can return null if this item is air or stack is below 0.
     */
-   fun drop(level: Level, x: Double, y: Double, z: Double): Entity? {
+   fun drop(level: Level, x: Double, y: Double, z: Double, ignoreCanDrop: Boolean = false): Entity? {
       if (isAir || amount <= 0) {
          return null
       }
 
-      return if (canDrop(level, x, y, z)) {
+      return if (ignoreCanDrop || canDrop(level, x, y, z)) {
          val entity = createEntity(level, x, y, z)
          item.onDrop(level, this, entity, x, y, z)
          entity.spawnAndGet(level)
@@ -809,8 +809,8 @@ data class ItemStack(
     *
     * Can return null if this item is air or stack is below 0.
     */
-   fun drop(level: Level, pos: Pos): Entity? {
-      return drop(level, pos.x, pos.y, pos.z)
+   fun drop(level: Level, pos: Pos, ignoreCanDrop: Boolean = false): Entity? {
+      return drop(level, pos.x, pos.y, pos.z, ignoreCanDrop)
    }
    
    /**
