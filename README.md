@@ -106,7 +106,7 @@ val swords = items.filter { it.item is ItemSword }
 val item = object : Item() {
    override fun canDrop(level: Level, item: ItemStack, x: Double, y: Double, z: Double): Boolean {
       val aroundEntities = level.getEntitiesAround(Pos(x, y, z), 3.0, 3.0, 3.0)
-      return aroundEntities.any { it is EntityItem }
+      return !aroundEntities.any { it is EntityItem }
    }
 }
 
