@@ -79,9 +79,8 @@ player.repeated(100) {
       val pos = player.pos
       val min = pos.subtract(1, 1, 1)
       val max = pos.offset(1, 1, 1)
-      val blocks = min.allInBox(max)
-      for (block in blocks) {
-         block.setBlockAt(player.level, Blocks.AIR)
+      min.allInBox(max).forEach { block ->
+         level.setAir(block)
       }
    }
    delay(50)
