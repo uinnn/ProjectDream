@@ -1,6 +1,6 @@
 package dream.utils
 
-import com.github.benmanes.caffeine.cache.*
+import com.github.benmanes.caffeine.cache.Cache
 
 /**
  * Returns if the given [key] is present in this cache.

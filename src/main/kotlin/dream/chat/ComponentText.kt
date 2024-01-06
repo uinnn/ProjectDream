@@ -7,12 +7,12 @@ import kotlinx.serialization.*
  */
 @Serializable
 data class ComponentText(var text: String) : ComponentStyle() {
-   override val unformattedText: String get() = text
-   
-   override fun copy() = ComponentText(text).also {
-      it.style = style.shallowCopy()
-      components.forEach(it::add)
-   }
+  override val unformattedText: String get() = text
+
+  override fun copy() = ComponentText(text).also {
+    it.style = style.shallowCopy()
+    components.forEach(it::add)
+  }
 }
 
 /**

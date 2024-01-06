@@ -1,6 +1,6 @@
 package dream.utils
 
-import com.google.common.util.concurrent.*
+import com.google.common.util.concurrent.AtomicDouble
 import java.util.concurrent.atomic.*
 
 /**

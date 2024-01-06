@@ -1,5 +1,5 @@
 package dream.item.block
 
-import dream.item.*
+import dream.item.Item
 
 class ItemPumpkin : Item()

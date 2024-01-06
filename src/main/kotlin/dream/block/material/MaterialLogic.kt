@@ -1,12 +1,12 @@
 package dream.block.material
 
-import dream.item.*
+import dream.item.MapPallete
 
 /**
  * Represents a logic material.
  */
-public class MaterialLogic(pallete: MapPallete) : Material(pallete, isAdventureModeExempt = true) {
-   public override val isSolid: Boolean get() = false
-   public override val blocksLight: Boolean get() = false
-   public override val blocksMovement: Boolean get() = false
+class MaterialLogic(pallete: MapPallete) : Material(pallete, isAdventureModeExempt = true) {
+  override val isSolid: Boolean get() = false
+  override val blocksLight: Boolean get() = false
+  override val blocksMovement: Boolean get() = false
 }

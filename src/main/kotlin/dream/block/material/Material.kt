@@ -10,73 +10,73 @@ import dream.misc.*
  * This allow for specialized action by a specific material block.
  */
 @Open
-public data class Material(
-   var pallete: MapPallete,
-   var canBurn: Boolean = false,
-   var isReplaceable: Boolean = false,
-   var isTranslucent: Boolean = false,
-   var requiresTool: Boolean = false,
-   var mobility: PistonMobility = PistonMobility.FREE,
-   var isAdventureModeExempt: Boolean = false,
+data class Material(
+  var pallete: MapPallete,
+  var canBurn: Boolean = false,
+  var isReplaceable: Boolean = false,
+  var isTranslucent: Boolean = false,
+  var requiresTool: Boolean = false,
+  var mobility: PistonMobility = PistonMobility.FREE,
+  var isAdventureModeExempt: Boolean = false,
 ) {
-   
-   /**
-    * Determinates if this material is a liquid.
-    */
-   public val isLiquid: Boolean get() = false
-   
-   /**
-    * Determinates if this material is solid.
-    */
-   public val isSolid: Boolean get() = true
-   
-   /**
-    * Determinates if this material should blocks light for passing.
-    */
-   public val blocksLight: Boolean get() = true
-   
-   /**
-    * Determinates if this material should blocks movement.
-    */
-   public val blocksMovement: Boolean get() = true
-   
-   /**
-    * Determinates if this material is opaque.
-    */
-   public val isOpaque: Boolean get() = if (isTranslucent) false else blocksMovement
-   
-   public fun replaceable(): Material {
-      isReplaceable = true
-      return this
-   }
-   
-   public fun requiresTool(): Material {
-      requiresTool = true
-      return this
-   }
-   
-   public fun translucent(): Material {
-      isTranslucent = true
-      return this
-   }
-   
-   public fun burnable(): Material {
-      canBurn = true
-      return this
-   }
-   
-   public fun immovable(): Material {
-      mobility = PistonMobility.IMMOVABLE
-      return this
-   }
-   
-   public fun unpushable(): Material {
-      mobility = PistonMobility.UNPUSHABLE
-      return this
-   }
-   
-   public fun adventureExempt(): Material {
-      isAdventureModeExempt = true
-      return this
-   }
+
+  /**
+   * Determinates if this material is a liquid.
+   */
+  val isLiquid: Boolean get() = false
+
+  /**
+   * Determinates if this material is solid.
+   */
+  val isSolid: Boolean get() = true
+
+  /**
+   * Determinates if this material should blocks light for passing.
+   */
+  val blocksLight: Boolean get() = true
+
+  /**
+   * Determinates if this material should blocks movement.
+   */
+  val blocksMovement: Boolean get() = true
+
+  /**
+   * Determinates if this material is opaque.
+   */
+  val isOpaque: Boolean get() = if (isTranslucent) false else blocksMovement
+
+  fun replaceable(): Material {
+    isReplaceable = true
+    return this
+  }
+
+  fun requiresTool(): Material {
+    requiresTool = true
+    return this
+  }
+
+  fun translucent(): Material {
+    isTranslucent = true
+    return this
+  }
+
+  fun burnable(): Material {
+    canBurn = true
+    return this
+  }
+
+  fun immovable(): Material {
+    mobility = PistonMobility.IMMOVABLE
+    return this
+  }
+
+  fun unpushable(): Material {
+    mobility = PistonMobility.UNPUSHABLE
+    return this
+  }
+
+  fun adventureExempt(): Material {
+    isAdventureModeExempt = true
+    return this
+  }
 }

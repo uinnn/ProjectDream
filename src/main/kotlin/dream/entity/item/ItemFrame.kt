@@ -1,5 +1,5 @@
 package dream.entity.item
 
-import dream.entity.*
+import dream.entity.base.*
 
-abstract class ItemFrame : Entity()
+class ItemFrame : EntityHanging()

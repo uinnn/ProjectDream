@@ -1,131 +1,198 @@
 package dream.app
 
-import dream.block.Blocks
-import dream.entity.player.Player
-import dream.item.food.Food
-import dream.item.tool.ItemSword
-import dream.misc.Click
-import dream.tiles.TileSpawner
-import dream.utils.repeated
-import kotlinx.coroutines.delay
+import dream.block.*
+import dream.block.state.*
+import dream.entity.player.*
+import dream.misc.*
+import dream.pos.*
+import io.netty.buffer.*
+import it.unimi.dsi.fastutil.ints.*
 
 fun main() {
-
-   // few examples
-
-   lateinit var player: Player
-   val container = player.openContainer
-
-   // EXAMPLE 1
-   // Collect all slots of the container that's is food and adds to player nutrition (without removing food)
-
-   val foods: List<Food> = container.filterNotNull { it.item.food }
-   val nutrition = foods.sumOf { it.nutrition }
-   player.nutrition += nutrition
-
-   // EXAMPLE 2
-   // Do a swap between the most stacked item in the container and the player held item
-
-   val slot = container.maxBy { it.item.amount }
-   // check if player can take a item at the slot.
-   if (slot.canTake(player)) {
-      val held = player.heldItem.copy()
-      player.heldItem = slot.item
-      slot.item = held
-   }
-
-   // EXAMPLE 3
-   // Do a simulation of interaction of the first spawner found in the player chunk
-
-   val chunk = player.chunk
-   val tiles = chunk.tiles.values
-   val spawner = tiles.findIs<TileSpawner>()
-   spawner?.onInteract(player, Click.LEFT)
-
-   // EXAMPLE 4
-   // Transform EACH non-air block of a chunk in a single block
-
-   // generate a lazy sequence with all pos and blockstates of the chunk
-   val states = chunk.generateStatesPosSequence(containsAir = false)
-   for ((pos, state) in states) {
-      chunk.setState(pos, Blocks.STONE.state)
-   }
-
-   // EXAMPLE 5
-   // Makes all blocks in a radius of 3x3x3 AIR around player repeting for 100 times with a delay of 1 tick
-
-   player.repeated(100) {
-      // check if player has moved. If not, no reason to delete blocks
-      if (player.hasMoved) {
-         val pos = player.pos
-         val min = pos.subtract(1, 1, 1)
-         val max = pos.offset(1, 1, 1)
-         val blocks = min.allInBox(max)
-         for (block in blocks) {
-            block.setBlockAt(player.level, Blocks.AIR)
-         }
-      }
-
-      delay(50)
-   }
-
-   // EXAMPLE 6
-   // Gets all tools/armors slots from a container.
-
-   val items = container.items
-   val armors = items.filter { it.isArmor }
-   val totalArmorDefense = armors.sumOf { it.armor!!.defense }
-   val tools = items.filter { it.isTool }
-   val swords = items.filter { it.item is ItemSword }
+  
+  lateinit var player: Player
+  val level = player.level
+  val item = player.heldItem
 
 }
 
 
-
-
-/*
- * Prototype extension functions that can be in the final API.
+/**
+ *
  */
+typealias IntCharMap = Int2CharOpenHashMap
 
-
-inline fun <reified R> Iterable<*>.findIs(): R? {
-   for (element in this) if (element is R) return element
-   return null
+/**
+ * Abstract class representing positional storage for values of type [T].
+ *
+ * The [PosStorage] class provides a base implementation for storing and retrieving values based on their positions.
+ * It uses a map to store the positions and their corresponding values.
+ *
+ * @param T The type of values stored in the positional storage. Must be a non-null type.
+ * @param data The underlying map to store the positions and values. Defaults to an empty [IntCharMap] if not provided.
+ */
+@Open
+abstract class PosStorage<T : Any>(val data: IntCharMap = IntCharMap()) {
+  
+  /**
+   * Secondary constructor that initializes the positional storage from a [ByteBuf].
+   *
+   * @param buf The [ByteBuf] containing the data to read.
+   * @param size The size of the positional storage. Defaults to the value read from the [buf].
+   */
+  constructor(buf: ByteBuf, size: Int = buf.readInt()) : this(IntCharMap(size)) {
+    read(buf)
+  }
+  
+  /**
+   * Secondary constructor that initializes the positional storage from a byte array.
+   *
+   * @param array The byte array containing the data to read.
+   */
+  constructor(array: ByteArray) : this(Unpooled.wrappedBuffer(array))
+  
+  /**
+   * Converts a value of type [T] to its corresponding ID (as a [Char]).
+   *
+   * @param value The value to convert.
+   * @return The ID of the value.
+   */
+  abstract fun toId(value: T): Char
+  
+  /**
+   * Converts an ID (as a [Char]) to its corresponding value of type [T].
+   *
+   * @param id The ID to convert.
+   * @return The value corresponding to the ID.
+   */
+  abstract fun toValue(id: Char): T
+  
+  /**
+   * Retrieves the ID at the specified position.
+   *
+   * @param x The x-coordinate of the position.
+   * @param y The y-coordinate of the position.
+   * @param z The z-coordinate of the position.
+   * @return The ID at the specified position.
+   */
+  fun getId(x: Int, y: Int, z: Int) = data.get(posToIndex(x, y, z))
+  
+  /**
+   * Retrieves the ID at the specified position.
+   *
+   * @param pos The position.
+   * @return The ID at the specified position.
+   */
+  fun getId(pos: Pos) = data.get(pos.toIndex())
+  
+  /**
+   * Retrieves the value at the specified position.
+   *
+   * @param x The x-coordinate of the position.
+   * @param y The y-coordinate of the position.
+   * @param z The z-coordinate of the position.
+   * @return The value at the specified position.
+   */
+  fun getValue(x: Int, y: Int, z: Int) = toValue(getId(x, y, z))
+  
+  /**
+   * Retrieves the value at the specified position.
+   *
+   * @param pos The position.
+   * @return The value at the specified position.
+   */
+  fun getValue(pos: Pos) = toValue(getId(pos))
+  
+  /**
+   * Sets the ID at the specified position.
+   *
+   * @param x The x-coordinate of the position.
+   * @param y The y-coordinate of the position.
+   * @param z The z-coordinate of the position.
+   * @param id The ID to set.
+   */
+  fun set(x: Int, y: Int, z: Int, id: Char) = data.put(posToIndex(x, y, z), id)
+  
+  /**
+   * Sets the ID at the specified position.
+   *
+   * @param pos The position.
+   * @param id The ID to set.
+   */
+  fun set(pos: Pos, id: Char) = data.put(pos.toIndex(), id)
+  
+  /**
+   * Sets the value at the specified position.
+   *
+   * @param x The x-coordinate of the position.
+   * @param y The y-coordinate of the position.
+   * @param z The z-coordinate of the position.
+   * @param value The value to set.
+   */
+  fun set(x: Int, y: Int, z: Int, value: T) = set(x, y, z, toId(value))
+  
+  /**
+   * Sets the value at the specified position.
+   *
+   * @param pos The position.
+   * @param value The value to set.
+   */
+  fun set(pos: Pos, value: T) = set(pos, toId(value))
+  
+  /**
+   * Writes the positional storage data to a [ByteBuf].
+   *
+   * @param buf The [ByteBuf] to write the data to.
+   */
+  fun write(buf: ByteBuf) {
+    buf.writeInt(data.size)
+    data.int2CharEntrySet().fastForEach {
+      buf.writeInt(it.intKey)
+      buf.writeChar(it.charValue.code)
+    }
+  }
+  
+  /**
+   * Reads the positional storage data from a [ByteBuf].
+   *
+   * @param buf The [ByteBuf] to read the data from.
+   */
+  fun read(buf: ByteBuf) {
+    repeat(data.size) {
+      data.put(buf.readInt(), buf.readChar())
+    }
+  }
+  
+  /**
+   * Converts the positional storage data to a [ByteBuf].
+   *
+   * @return The [ByteBuf] containing the positional storage data.
+   */
+  fun toBuffer(): ByteBuf {
+    val buf = Unpooled.buffer(data.size)
+    write(buf)
+    return buf
+  }
+  
+  /**
+   * Converts the positional storage data to a byte array.
+   *
+   * @return The byte array containing the positional storage data.
+   */
+  fun toBytes(): ByteArray = toBuffer().array()
 }
 
 
-inline fun <R, T, C : MutableCollection<in R>> Iterable<T>.filterNotNullTo(
-      destination: C,
-      selector: (T) -> R?
-): C {
-   for (element in this) {
-      val selected = selector(element)
-      if (selected != null) {
-         destination.add(selected)
-      }
-   }
-   return destination
-}
-
-
-inline fun <R, T> Iterable<T>.filterNotNull(selector: (T) -> R?): List<R> {
-   return filterNotNullTo(ArrayList(), selector)
-}
-
-inline fun <reified R, T, C : MutableCollection<in R>> Iterable<T>.filterIsInstanceTo(
-      destination: C,
-      selector: (T) -> Any?
-): C {
-   for (element in this) {
-      val selected = selector(element)
-      if (selected is R) {
-         destination.add(selected)
-      }
-   }
-   return destination
-}
-
-
-inline fun <reified R, T> Iterable<T>.filterIsInstance(selector: (T) -> Any?): List<R> {
-   return filterIsInstanceTo(ArrayList(), selector)
+class StateStorage : PosStorage<IState> {
+  constructor(data: IntCharMap = IntCharMap()) : super(data)
+  constructor(buf: ByteBuf) : super(buf)
+  constructor(array: ByteArray) : super(array)
+  
+  override fun toId(value: IState): Char {
+    return value.id.toChar()
+  }
+  
+  override fun toValue(id: Char): IState {
+    return Blocks.stateById(id.code)
+  }
 }

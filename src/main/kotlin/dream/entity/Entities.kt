@@ -1,155 +1,273 @@
 package dream.entity
 
-/*
+import dream.*
+import dream.entity.base.Entity
+import dream.entity.boss.*
+import dream.entity.effect.*
+import dream.entity.item.*
+import dream.entity.monster.*
+import dream.entity.passive.*
+import dream.entity.player.Player
+import dream.entity.projectile.*
+import dream.utils.*
+import kotlin.reflect.KClass
+import kotlin.reflect.full.isSubclassOf
+
 
 /**
  * A registry for entities types.
  *
  * You can register your own entity by this.
  */
-object Entities : HashSet<EntityType<out Entity>>(64) {
-    
-    val ID_LOOKUP = IntObjectMap<EntityType<out Entity>>()
-    
-    
-    @JvmField
-    val ITEM = register(EntityType(EntityItem::class, 1, key("minecraft:item"), "Item"))
-    @JvmField
-    val EXPERIENCE = register(EntityType(2, key("minecraft:xp_orb"), "XPOrb"))
-    @JvmField
-    val EGG = register(ProjectileType(7, key("minecraft:egg"), "Egg"))
-    @JvmField
-    val LEASH = register(EntityType(8, key("minecraft:leash_knot"), "LeashKnot"))
-    @JvmField
-    val PAINTING = register(EntityType(9, key("minecraft:painting"), "Painting"))
-    @JvmField
-    val ARROW = register(ProjectileType(10, key("minecraft:arrow"), "Arrow"))
-    @JvmField
-    val SNOWBAL = register(ProjectileType(11, key("minecraft:snowball"), "Snowball"))
-    @JvmField
-    val FIREBALL = register(ProjectileType(12, key("minecraft:fireball"), "Fireball"))
-    @JvmField
-    val SMALL_FIREBALL = register(ProjectileType(13, key("minecraft:small_fireball"), "SmallFireball"))
-    @JvmField
-    val ENDER_PEARL = register(ProjectileType(14, key("minecraft:ender_pearl"), "ThrownEnderpearl"))
-    @JvmField
-    val ENDER_SIGNAL = register(ProjectileType(15, key("minecraft:eye_of_ender_signal"), "EyeOfEnderSignal"))
-    @JvmField
-    val POTION = register(ProjectileType(16, key("minecraft:potion"), "ThrownPotion"))
-    @JvmField
-    val EXP_BOTTLE = register(ProjectileType(17, key("minecraft:xp_bottle"), "ThrownExpBottle"))
-    @JvmField
-    val ITEM_FRAME = register(EntityType(18, key("minecraft:item_frame"), "ItemFrame"))
-    @JvmField
-    val WITHER_SKULL = register(ProjectileType(19, key("minecraft:wither_skull"), "WitherSkull"))
-    @JvmField
-    val TNT = register(EntityType(20, key("minecraft:tnt"), "PrimedTnt"))
-    @JvmField
-    val FALLING_BLOCK = register(EntityType(21, key("minecraft:falling_block"), "FallingSand"))
-    @JvmField
-    val FIREWORK = register(EntityType(22, key("minecraft:fireworks_rocket"), "FireworksRocketEntity"))
-    @JvmField
-    val ARMOR_STAND = register(EntityType(30, key("minecraft:armor_stand"), "ArmorStand"))
-    @JvmField
-    val BOAT = register(EntityType(41, key("minecraft:boat"), "Boat"))
-    @JvmField
-    val MINECART = register(EntityType(42, key("minecraft:minecart"), "MinecartRideable"))
-    @JvmField
-    val MINECART_COMMAND = register(EntityType(40, key("minecraft:commandblock_minecart"), "MinecartCommandBlock"))
-    @JvmField
-    val MINECART_CHEST = register(EntityType(43, key("minecraft:chest_minecart"), "MinecartChest"))
-    @JvmField
-    val MINECART_FURNACE = register(EntityType(44, key("minecraft:furnace_minecart"), "MinecartFurnace"))
-    @JvmField
-    val MINECART_TNT = register(EntityType(45, key("minecraft:tnt_minecart"), "MinecartTNT"))
-    @JvmField
-    val MINECART_HOPPER = register(EntityType(46, key("minecraft:hopper_minecart"), "MinecartHopper"))
-    @JvmField
-    val MINECART_SPAWNER = register(EntityType(47, key("minecraft:spawner_minecart"), "MinecartMobSpawner"))
-    @JvmField
-    val ENDER_CRYSTAL = register(EntityType(200, key("minecraft:ender_crystal"), "EnderCrystal"))
-    @JvmField
-    val CREEPER = register(CreatureType(50, key("minecraft:creeper"), "Creeper", true))
-    @JvmField
-    val SKELETON = register(CreatureType(51, key("minecraft:skeleton"), "Skeleton", true))
-    @JvmField
-    val SPIDER = register(CreatureType(52, key("minecraft:spider"), "Spider", true))
-    @JvmField
-    val GIANT = register(CreatureType(53, key("minecraft:giant"), "Giant", true))
-    @JvmField
-    val ZOMBIE = register(CreatureType(54, key("minecraft:zombie"), "Zombie", true))
-    @JvmField
-    val SLIME = register(CreatureType(55, key("minecraft:slime"), "Slime", true))
-    @JvmField
-    val GHAST = register(CreatureType(56, key("minecraft:ghast"), "Ghast", true))
-    @JvmField
-    val PIG_ZOMBIE = register(CreatureType(57, key("minecraft:zombie_pigman"), "PigZombie", true))
-    @JvmField
-    val ENDERMAN = register(CreatureType(58, key("minecraft:enderman"), "Enderman", true))
-    @JvmField
-    val CAVE_SPIDER = register(CreatureType(59, key("minecraft:cave_spider"), "CaveSpider", true))
-    @JvmField
-    val SILVERFISH = register(CreatureType(60, key("minecraft:silverfish"), "Silverfish", true))
-    @JvmField
-    val BLAZE = register(CreatureType(61, key("minecraft:blaze"), "Blaze", true))
-    @JvmField
-    val MAGMA_CUBE = register(CreatureType(62, key("minecraft:magma_cube"), "LavaSlime", true))
-    @JvmField
-    val ENDER_DRAGON = register(CreatureType(63, key("minecraft:ender_dragon"), "EnderDragon", true))
-    @JvmField
-    val WITHER = register(CreatureType(64, key("minecraft:wither"), "WitherBoss", true))
-    @JvmField
-    val BAT = register(CreatureType(65, key("minecraft:bat"), "Bat", true))
-    @JvmField
-    val WITCH = register(CreatureType(66, key("minecraft:witch"), "Witch", true))
-    @JvmField
-    val ENDERMITE = register(CreatureType(67, key("minecraft:endermite"), "Endermite", true))
-    @JvmField
-    val GUARDIAN = register(CreatureType(68, key("minecraft:guardian"), "Guardian", true))
-    @JvmField
-    val PIG = register(AnimalType(90, key("minecraft:pig"), "Pig", true))
-    @JvmField
-    val SHEEP = register(AnimalType(91, key("minecraft:sheep"), "Sheep", true))
-    @JvmField
-    val COW = register(AnimalType(92, key("minecraft:cow"), "Cow", true))
-    @JvmField
-    val CHICKEN = register(AnimalType(93, key("minecraft:chicken"), "Chicken", true))
-    @JvmField
-    val SQUID = register(WaterCreatureType(94, key("minecraft:squid"), "Squid", true))
-    @JvmField
-    val WOLF = register(AnimalType(95, key("minecraft:wolf"), "Wolf", true))
-    @JvmField
-    val MUSHROOM_COW = register(AnimalType(96, key("minecraft:mooshroom"), "MushroomCow", true))
-    @JvmField
-    val SNOWMAN = register(AnimalType(97, key("minecraft:snowman"), "Snowman", true))
-    @JvmField
-    val OCELOT = register(AnimalType(98, key("minecraft:ocelot"), "Ozelot", true))
-    @JvmField
-    val GOLEM = register(CreatureType(99, key("minecraft:villager_golem"), "VillagerGolem", true))
-    @JvmField
-    val HORSE = register(AnimalType(100, key("minecraft:horse"), "EntityHorse", true))
-    @JvmField
-    val RABBIT = register(AnimalType(101, key("minecraft:rabbit"), "Rabbit", true))
-    @JvmField
-    val VILLAGER = register(CreatureType(120, key("minecraft:villager"), "Villager", true))
-    @JvmField
-    val PLAYER = register(CreatureType(-1, key("minecraft:player"), "Player", true))
-    @JvmField
-    val LIGHTGNING = register(EntityType(-1, key("minecraft:unknown"), "LightningBolt"))
-    @JvmField
-    val WEATHER = register(EntityType(-1, key("minecraft:unknown"), "Weather"))
-    @JvmField
-    val COMPLEX_PART = register(EntityType(-1, key("minecraft:unknown"), "ComplexPart"))
-    @JvmField
-    val FISHING_HOOK = register(EntityType(-1, key("minecraft:unknown"), "FishingHook"))
-    
-    /**
-     * Register a new entity type in the server.
-     */
-    fun <T : EntityType<out Entity>> register(type: T): T {
-        add(type)
-        return type
-    }
-}
+object Entities : Iterable<EntityType<out Entity>> {
 
- */
+  @JvmField
+  val lookup = IntObjectMap<EntityType<out Entity>>()
+
+
+  @JvmField
+  val ITEM = register0(EntityItem::class, 1, "item", "Item")
+
+  @JvmField
+  val EXPERIENCE = register0(ExperienceOrb::class, 2, "xp_orb", "XPOrb")
+
+  @JvmField
+  val EGG = register0(Egg::class, 7, "egg", "Egg")
+
+  @JvmField
+  val LEASH = register0(LeashKnot::class, 8, "leash_knot", "LeashKnot")
+
+  @JvmField
+  val PAINTING = register0(Painting::class, 9, "painting", "Painting")
+
+  @JvmField
+  val ARROW = register0(Arrow::class, 10, "arrow", "Arrow")
+
+  @JvmField
+  val SNOWBAL = register0(Snowball::class, 11, "snowball", "Snowball")
+
+  @JvmField
+  val FIREBALL = register0(Fireball::class, 12, "fireball", "Fireball")
+
+  @JvmField
+  val SMALL_FIREBALL = register0(SmallFireball::class, 13, "small_fireball", "SmallFireball")
+
+  @JvmField
+  val ENDER_PEARL = register0(EnderPearl::class, 14, "ender_pearl", "ThrownEnderpearl")
+
+  @JvmField
+  val ENDER_EYE = register0(EnderEye::class, 15, "eye_of_ender_signal", "EyeOfEnderSignal")
+
+  @JvmField
+  val POTION = register0(ThrownPotion::class, 16, "potion", "ThrownPotion")
+
+  @JvmField
+  val EXP_BOTTLE = register0(ExperienceBottle::class, 17, "xp_bottle", "ThrownExpBottle")
+
+  @JvmField
+  val ITEM_FRAME = register0(ItemFrame::class, 18, "item_frame", "ItemFrame")
+
+  @JvmField
+  val WITHER_SKULL = register0(WitherSkull::class, 19, "wither_skull", "WitherSkull")
+
+  @JvmField
+  val TNT = register0(PrimedTNT::class, 20, "tnt", "PrimedTnt")
+
+  @JvmField
+  val FALLING_BLOCK = register0(FallingBlock::class, 21, "falling_block", "FallingSand")
+
+  @JvmField
+  val FIREWORK = register0(FireworkRocket::class, 22, "fireworks_rocket", "FireworksRocketEntity")
+
+  @JvmField
+  val ARMOR_STAND = register0(ArmorStand::class, 30, "armor_stand", "ArmorStand")
+
+  @JvmField
+  val BOAT = register0(Boat::class, 41, "boat", "Boat")
+
+  @JvmField
+  val MINECART = register0(RideableMinecart::class, 42, "minecart", "MinecartRideable")
+
+  @JvmField
+  val MINECART_COMMAND = register0(MinecartCommandBlock::class, 40, "commandblock_minecart", "MinecartCommandBlock")
+
+  @JvmField
+  val MINECART_CHEST = register0(MinecartChest::class, 43, "chest_minecart", "MinecartChest")
+
+  @JvmField
+  val MINECART_FURNACE = register0(MinecartFurnace::class, 44, "furnace_minecart", "MinecartFurnace")
+
+  @JvmField
+  val MINECART_TNT = register0(MinecartTNT::class, 45, "tnt_minecart", "MinecartTNT")
+
+  @JvmField
+  val MINECART_HOPPER = register0(MinecartHopper::class, 46, "hopper_minecart", "MinecartHopper")
+
+  @JvmField
+  val MINECART_SPAWNER = register0(MinecartSpawner::class, 47, "spawner_minecart", "MinecartMobSpawner")
+
+  @JvmField
+  val ENDER_CRYSTAL = register0(EnderCrystal::class, 200, "ender_crystal", "EnderCrystal")
+
+  @JvmField
+  val CREEPER = register0(Creeper::class, 50, "creeper", "Creeper")
+
+  @JvmField
+  val SKELETON = register0(Skeleton::class, 51, "skeleton", "Skeleton")
+
+  @JvmField
+  val SPIDER = register0(Spider::class, 52, "spider", "Spider")
+
+  @JvmField
+  val GIANT = register0(Giant::class, 53, "giant", "Giant")
+
+  @JvmField
+  val ZOMBIE = register0(Zombie::class, 54, "zombie", "Zombie")
+
+  @JvmField
+  val SLIME = register0(Slime::class, 55, "slime", "Slime")
+
+  @JvmField
+  val GHAST = register0(Ghast::class, 56, "ghast", "Ghast")
+
+  @JvmField
+  val PIG_ZOMBIE = register0(PigZombie::class, 57, "zombie_pigman", "PigZombie")
+
+  @JvmField
+  val ENDERMAN = register0(Enderman::class, 58, "enderman", "Enderman")
+
+  @JvmField
+  val CAVE_SPIDER = register0(CaveSpider::class, 59, "cave_spider", "CaveSpider")
+
+  @JvmField
+  val SILVERFISH = register0(Silverfish::class, 60, "silverfish", "Silverfish")
+
+  @JvmField
+  val BLAZE = register0(Blaze::class, 61, "blaze", "Blaze")
+
+  @JvmField
+  val MAGMA_CUBE = register0(MagmaCube::class, 62, "magma_cube", "LavaSlime")
+
+  @JvmField
+  val ENDER_DRAGON = register0(EnderDragon::class, 63, "ender_dragon", "EnderDragon")
+
+  @JvmField
+  val WITHER = register0(Wither::class, 64, "wither", "WitherBoss")
+
+  @JvmField
+  val BAT = register0(Bat::class, 65, "bat", "Bat")
+
+  @JvmField
+  val WITCH = register0(Witch::class, 66, "witch", "Witch")
+
+  @JvmField
+  val ENDERMITE = register0(Endermite::class, 67, "endermite", "Endermite")
+
+  @JvmField
+  val GUARDIAN = register0(Guardian::class, 68, "guardian", "Guardian")
+
+  @JvmField
+  val PIG = register0(Pig::class, 90, "pig", "Pig")
+
+  @JvmField
+  val SHEEP = register0(Sheep::class, 91, "sheep", "Sheep")
+
+  @JvmField
+  val COW = register0(Cow::class, 92, "cow", "Cow")
+
+  @JvmField
+  val CHICKEN = register0(Chicken::class, 93, "chicken", "Chicken")
+
+  @JvmField
+  val SQUID = register0(Squid::class, 94, "squid", "Squid")
+
+  @JvmField
+  val WOLF = register0(Wolf::class, 95, "wolf", "Wolf")
+
+  @JvmField
+  val MOOSHROOM_COW = register0(MooshroomCow::class, 96, "mooshroom", "MushroomCow")
+
+  @JvmField
+  val SNOW_GOLEM = register0(SnowGolem::class, 97, "snowman", "Snowman")
+
+  @JvmField
+  val OCELOT = register0(Ocelot::class, 98, "ocelot", "Ozelot")
+
+  @JvmField
+  val IRON_GOLEM = register0(IronGolem::class, 99, "villager_golem", "VillagerGolem")
+
+  @JvmField
+  val HORSE = register0(Horse::class, 100, "horse", "EntityHorse")
+
+  @JvmField
+  val RABBIT = register0(Rabbit::class, 101, "rabbit", "Rabbit")
+
+  @JvmField
+  val VILLAGER = register0(Villager::class, 120, "villager", "Villager")
+
+  @JvmField
+  val PLAYER = register0(Player::class, -1, "player", "Player")
+
+  @JvmField
+  val LIGHTGNING = register0(LightningBolt::class, -1, "unknown", "LightningBolt")
+
+  @JvmField
+  val WEATHER = register0(WeatherEffect::class, -1, "unknown", "Weather")
+
+  @JvmField
+  val DRAGON_PART = register0(DragonPart::class, -1, "unknown", "ComplexPart")
+
+  @JvmField
+  val FISH_HOOK = register0(FishHook::class, -1, "unknown", "FishingHook")
+
+  /**
+   * Register a new entity type in the server.
+   */
+  fun <T : EntityType<out Entity>> register(type: T): T {
+    lookup.put(type.id, type)
+    return type
+  }
+
+  private fun <T : Entity> register0(type: KClass<T>, id: Int, key: String, name: String): EntityType<T> {
+    return register(EntityType(type, id, minecraftKey(key), name))
+  }
+
+  /**
+   * Gets a type by id.
+   */
+  fun byId(id: Int): EntityType<out Entity>? {
+    return lookup.get(id)
+  }
+
+  /**
+   * Gets a type by class.
+   */
+  fun <T : Entity> byClass(clazz: KClass<T>): EntityType<T>? {
+    return find { clazz.isSubclassOf(it.type) }.cast()
+  }
+
+  /**
+   * Gets a type by class.
+   */
+  inline fun <reified T : Entity> byClass(): EntityType<T>? {
+    return find { it.type is T }.cast()
+  }
+
+  /**
+   * Gets a type by key.
+   */
+  fun byKey(key: Key): EntityType<out Entity>? {
+    return find { it.key == key }
+  }
+
+  /**
+   * Gets a type by name.
+   */
+  fun byName(name: String): EntityType<out Entity>? {
+    return find { it.name == name }
+  }
+
+  override fun iterator(): Iterator<EntityType<out Entity>> {
+    return lookup.values.iterator()
+  }
+}

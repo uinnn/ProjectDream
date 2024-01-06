@@ -5,10 +5,10 @@ package dream.item
  * tooltip when hovering an item.
  */
 enum class HideFlag {
-   ENCHANTMENTS,
-   ATTRIBUTES,
-   UNBREAKABLE,
-   CAN_DESTROY,
-   CAN_PLACE,
-   POTION_EFFECT
+  ENCHANTMENTS,
+  ATTRIBUTES,
+  UNBREAKABLE,
+  CAN_DESTROY,
+  CAN_PLACE,
+  POTION_EFFECT
 }

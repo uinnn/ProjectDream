@@ -14,24 +14,24 @@ typealias ServerStatusPacket = ServerPacket<StatusPacketHandler>
  * * `handle` is for client-side packets control
  */
 interface StatusPacketHandler : PacketHandler {
-   
-   /**
-    * Handle client-side [ClientPacketPing] packet.
-    */
-   fun handlePing(packet: ClientPacketPing)
-   
-   /**
-    * Handle client-side [ClientPacketServerQuery] packet.
-    */
-   fun handleServerQuery(packet: ClientPacketServerQuery)
-   
-   /**
-    * Process server-side [ServerPacketPong] packet.
-    */
-   fun processPong(packet: ServerPacketPong)
-   
-   /**
-    * Process server-side [ServerPacketServerInfo] packet.
-    */
-   fun processServerInfo(packet: ServerPacketServerInfo)
+
+  /**
+   * Handle client-side [CPacketPing] packet.
+   */
+  fun handlePing(packet: CPacketPing)
+
+  /**
+   * Handle client-side [CPacketServerQuery] packet.
+   */
+  fun handleServerQuery(packet: CPacketServerQuery)
+
+  /**
+   * Process server-side [SPacketPong] packet.
+   */
+  fun processPong(packet: SPacketPong)
+
+  /**
+   * Process server-side [SPacketServerInfo] packet.
+   */
+  fun processServerInfo(packet: SPacketServerInfo)
 }

@@ -9,7 +9,7 @@ import it.unimi.dsi.fastutil.longs.*
 import it.unimi.dsi.fastutil.objects.*
 import it.unimi.dsi.fastutil.shorts.*
 import org.joda.time.format.*
-import java.io.Serializable
+import java.io.*
 
 typealias JSerializable = Serializable
 typealias KSerializable = kotlinx.serialization.Serializable
@@ -68,3 +68,6 @@ typealias DoubleLinkedSet = DoubleLinkedOpenHashSet
 typealias Profile = GameProfile
 
 typealias TimeFormat = DateTimeFormatter
+
+typealias FloatRange = ClosedFloatingPointRange<Float>
+typealias DoubleRange = ClosedFloatingPointRange<Double>

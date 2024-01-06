@@ -1,6 +1,6 @@
 package dream.errors
 
-import dream.nbt.types.*
+import dream.nbt.types.CompoundTag
 
 /**
  * Base exception for any tag-related exceptions.

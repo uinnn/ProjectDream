@@ -1,8 +1,8 @@
 package dream.chat
 
-import dream.interfaces.*
-import dream.serializer.*
-import kotlinx.serialization.*
+import dream.api.Id
+import dream.serializer.ClickEventSerializer
+import kotlinx.serialization.Serializable
 
 /**
  * Represents a chat click event.
@@ -14,22 +14,22 @@ data class ClickEvent(var action: ClickAction, var value: String)
  * All actions that's a click event can do.
  */
 enum class ClickAction(override val id: String, val allowedInChat: Boolean = true) : Id {
-   OPEN_URL("open_url"),
-   RUN_COMMAND("run_command"),
-   SUGGEST_COMMAND("suggest_command"),
-   CHANGE_PAGE("change_page"),
-   OPEN_FILE("open_file", false),
-   TWITCH_USER_INFO("twitch_user_info", false);
-   
-   companion object {
-      val values = values()
-      val lookup = values.associateBy { it.id }
-      
-      /**
-       * Gets a click action by [id].
-       */
-      fun byId(id: String) = lookup[id] ?: SUGGEST_COMMAND
-   }
+  OPEN_URL("open_url"),
+  RUN_COMMAND("run_command"),
+  SUGGEST_COMMAND("suggest_command"),
+  CHANGE_PAGE("change_page"),
+  OPEN_FILE("open_file", false),
+  TWITCH_USER_INFO("twitch_user_info", false);
+
+  companion object {
+    val values = values()
+    val lookup = values.associateBy { it.id }
+
+    /**
+     * Gets a click action by [id].
+     */
+    fun byId(id: String) = lookup[id] ?: SUGGEST_COMMAND
+  }
 }
 
 /**

@@ -1,4 +1,3 @@
 package dream.level.storage
 
-class LevelInfo {
-}
+class LevelInfo

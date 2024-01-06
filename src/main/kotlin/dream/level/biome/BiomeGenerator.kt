@@ -1,4 +1,3 @@
 package dream.level.biome
 
-abstract class BiomeGenerator {
-}
+abstract class BiomeGenerator

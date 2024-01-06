@@ -1,7 +1,8 @@
 package dream.level
 
 class LevelType(val name: String) {
-   companion object {
-      @JvmField val DEFAULT = LevelType("default")
-   }
+  companion object {
+    @JvmField
+    val DEFAULT = LevelType("default")
+  }
 }

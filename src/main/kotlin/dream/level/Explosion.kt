@@ -1,4 +1,3 @@
 package dream.level
 
-class Explosion {
-}
+class Explosion

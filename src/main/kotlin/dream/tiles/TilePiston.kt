@@ -1,11 +1,11 @@
 package dream.tiles
 
-import dream.interfaces.*
+import dream.api.Tickable
 
 /**
  * A piston tile.
  */
 class TilePiston : Tile(Tiles.PISTON), Tickable {
-   override fun tick() {
-   }
+  override fun tick(partial: Int) {
+  }
 }

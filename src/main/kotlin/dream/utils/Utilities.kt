@@ -17,11 +17,11 @@ inline fun <A, B> A.castOrNull(): B? = this as? B
  * when executing, otherwise return [default] value.
  */
 inline fun <T : Any> catching(default: T, collector: () -> T): T {
-   return try {
-      collector()
-   } catch (ex: Exception) {
-      return default
-   }
+  return try {
+    collector()
+  } catch (ex: Exception) {
+    return default
+  }
 }
 
 /**
@@ -29,29 +29,29 @@ inline fun <T : Any> catching(default: T, collector: () -> T): T {
  * when executing, otherwise return [default] value.
  */
 inline fun <T : Any> catchingOrNull(default: T? = null, collector: () -> T): T? {
-   return try {
-      collector()
-   } catch (ex: Exception) {
-      return default
-   }
+  return try {
+    collector()
+  } catch (ex: Exception) {
+    return default
+  }
 }
 
 /**
  * Executes [collector] and do nothing if any exception is thrown
  */
 inline fun <T : Any> catches(collector: () -> T) {
-   try {
-      collector()
-   } catch (_: Exception) {
-   
-   }
+  try {
+    collector()
+  } catch (_: Exception) {
+
+  }
 }
 
 /**
  * Prints [s] marked.
  */
 fun printm(s: Any) {
-   println()
-   println(s)
-   println()
+  println()
+  println(s)
+  println()
 }

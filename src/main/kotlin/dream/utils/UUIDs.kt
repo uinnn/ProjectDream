@@ -31,26 +31,26 @@ fun OfflineUUID(name: String) = uuid("OfflinePlayer:$name".toByteArray())
  * Creates a random [UUID] used on creating entity ID's.
  */
 fun EntityUUID(): UUID {
-   val most = randomLong() and -61441L or 16384L
-   val least = randomLong() and 4611686018427387903L or Long.MIN_VALUE
-   return UUID(most, least)
+  val most = randomLong() and -61441L or 16384L
+  val least = randomLong() and 4611686018427387903L or Long.MIN_VALUE
+  return UUID(most, least)
 }
 
 /**
  * Converts this UUID to IntArray.
  */
 fun UUID.toIntArray(): IntArray {
-   val most = mostSignificantBits.toInt()
-   val least = leastSignificantBits.toInt()
-   return intArrayOf(most shr 32, most, least shr 32, least)
+  val most = mostSignificantBits.toInt()
+  val least = leastSignificantBits.toInt()
+  return intArrayOf(most shr 32, most, least shr 32, least)
 }
 
 /**
  * Converts this IntArray constructued by [UUID.toIntArray] backs to UUID.
  */
 fun IntArray.toUUID(): UUID {
-   return uuid(
-      get(0).toLong() shl 32 or get(1).toLong() and 4294967295L,
-      get(2).toLong() shl 32 or get(4).toLong() and 4294967295L
-   )
+  return uuid(
+    get(0).toLong() shl 32 or get(1).toLong() and 4294967295L,
+    get(2).toLong() shl 32 or get(4).toLong() and 4294967295L
+  )
 }

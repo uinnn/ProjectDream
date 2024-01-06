@@ -1,250 +1,274 @@
 package dream.inventory
 
+import com.soywiz.kmem.*
+import dream.collections.*
 import dream.entity.player.*
 import dream.item.*
 import dream.misc.*
 import dream.nbt.*
 import dream.nbt.types.*
+import dream.utils.*
 
 /**
- * Represents an inventory of a player.
+ * Represents the player's inventory.
  */
 @Open
-class PlayerInventory(val player: Player) : IInventory, CompoundStorable {
-   
-   /**
-    * Represents the main items on this inventory.
-    */
-   val items = ArrayList<ItemStack>()
-   
-   /**
-    * Represents the armor items on this inventory.
-    */
-   val armors = ArrayList<ItemStack>()
-   
-   /**
-    * The current held slot.
-    */
-   var heldSlot = 0
-      set(value) {
-         field = value.coerceIn(0, 8)
-      }
-   
-   /**
-    * The item that's the player is holding.
-    */
-   var heldItem: ItemStack
-      get() = items[heldSlot]
-      set(value) {
-         items[heldSlot] = value
-      }
-   
-   /**
-    * The item on the cursor.
-    */
-   var cursor = ItemStack.AIR
-   
-   /**
-    * Gets if this inventory has changed.
-    */
-   var hasChanged = false
-   
-   /**
-    * Gets the name of this inventory.
-    */
-   override var name = "Inventory"
-   
-   /**
-    * Gets the size of this inventory.
-    */
-   override val size get() = items.size + 4
-   
-   /**
-    * Gets the amount of field of this inventory.
-    */
-   override val fieldCount get() = 0
-   
-   /**
-    * Gets the max stack of this inventory.
-    */
-   override val maxStack get() = 64
-   
-   /**
-    * Gets the sum of all defense gived by armors.
-    */
-   val armorDefense: Int
-      get() = armors.sumOf { it.armor?.defense ?: 0 }
-   
-   /**
-    * Gets all items of this inventory based on the given [slot].
-    */
-   fun getItemsBasedOnSlot(slot: Int): ArrayList<ItemStack> {
-      return if (slot >= items.size) return armors else items
-   }
-   
-   /**
-    * Drops all items of this inventory.
-    */
-   fun dropInventory() {
+class PlayerInventory(val player: Player) : IInventory, ListStorable<CompoundTag> {
+  
+  /**
+   * The items in the inventory.
+   */
+  override var items = ItemList(36)
+  
+  /**
+   * The armors items.
+   */
+  val armors = object : ItemList(4) {
+    override fun setItem(index: Int, stack: ItemStack, whenDone: Runnable?) {
+      super.setItem(index % 4, stack, whenDone)
+    }
+    
+    override fun getItem(index: Int): ItemStack {
+      return super.getItem(index % 4)
+    }
+    
+    override fun remove(index: Int, whenDone: Runnable?): ItemStack {
+      return super.remove(index % 4, whenDone)
+    }
+    
+    override fun save(tag: ListTag<CompoundTag>) {
       items.forEachIndexed { index, item ->
-         if (!item.isAir) {
-            player.drop(item, true)
-            items[index] = ItemStack.AIR
-         }
+        if (!item.isAir) {
+          val data = item.store()
+          data["Slot"] = (index + 100).toByte()
+          tag.add(data)
+        }
       }
-   }
-   
-   /**
-    * Drops the armor of this inventory.
-    */
-   fun dropArmor() {
-      armors.forEachIndexed { index, item ->
-         if (!item.isAir) {
-            player.drop(item, true)
-            armors[index] = ItemStack.AIR
-         }
+    }
+    
+    override fun load(tag: ListTag<CompoundTag>) {
+      for (data in tag) {
+        val slot = (data.byte("Slot") and 255).toInt()
+        items[slot - 100] = data.createItem()
       }
-   }
-   
-   /**
-    * Drops everything of this inventory, including items and armors.
-    */
-   fun dropAll() {
-      dropInventory()
-      dropArmor()
-   }
-   
-   /**
-    * Gets an item on the specified [slot].
-    */
-   override fun getItem(slot: Int): ItemStack {
-      val size = items.size
-      return if (slot >= size) getArmor(slot - size) else items[slot]
-   }
-   
-   /**
-    * Sets an item on the specified [slot].
-    */
-   override fun setItem(slot: Int, item: ItemStack) {
-      val size = items.size
-      if (slot >= size) {
-         setArmor(slot - size, item)
-      } else {
-         items[slot] = item
+    }
+  }
+  
+  /**
+   * The fully inventory, containing [items] and [armors].
+   */
+  val inventory = (items.items + armors.items).asList()
+  
+  /**
+   * The currently held slot index.
+   */
+  var heldSlot = 0
+    set(value) {
+      field = value.clamp(0, 8)
+    }
+  
+  /**
+   * The item currently held in the player's hand.
+   */
+  var heldItem: ItemStack
+    get() = items[heldSlot]
+    set(value) {
+      items.setItem(heldSlot, value)
+    }
+  
+  /**
+   * The item currently on the cursor.
+   */
+  var cursor: ItemStack = EmptyItemStack
+  
+  /**
+   * Flag indicating whether the inventory has changed.
+   */
+  var hasChanged = false
+  
+  /**
+   * The name of the inventory.
+   */
+  override var name = "Inventory"
+  
+  /**
+   * The size of the inventory.
+   */
+  override var size
+    get() = items.size + armors.size
+    set(value) = error("Cannot change the size of a Player Inventory.")
+  
+  /**
+   * The number of fields in the inventory.
+   */
+  override val fieldCount get() = 0
+  
+  /**
+   * The total defense value provided by the equipped armor pieces.
+   */
+  val armorDefense: Int get() = armors.sumOf { it.armor?.defense ?: 0 }
+  
+  /**
+   * Returns the item list based on the given slot index.
+   *
+   * @param slot The slot index.
+   * @return The item list associated with the slot index.
+   */
+  fun getItemsBasedOnSlot(slot: Int): ItemList {
+    return if (slot >= items.size) return armors else items
+  }
+  
+  /**
+   * Retrieves the ItemStack in the specified slot.
+   *
+   * @param slot The slot index.
+   * @return The ItemStack in the slot.
+   */
+  override fun getItem(slot: Int): ItemStack {
+    return getItemsBasedOnSlot(slot).getItem(slot)
+  }
+  
+  /**
+   * Sets the ItemStack in the specified slot.
+   *
+   * @param slot The slot index.
+   * @param item The ItemStack to set.
+   */
+  override fun setItem(slot: Int, item: ItemStack) {
+    getItemsBasedOnSlot(slot).setItem(slot, item)
+  }
+  
+  /**
+   * Checks if the specified slot contains an item.
+   *
+   * @param slot The slot index.
+   * @return True if the slot contains an item, false otherwise.
+   */
+  override fun hasItem(slot: Int): Boolean {
+    return getItemsBasedOnSlot(slot).hasItem(slot)
+  }
+  
+  /**
+   * Decreases the stack size of the ItemStack in the specified slot.
+   *
+   * @param slot The slot index.
+   * @param amount The amount to decrease.
+   * @return The decreased ItemStack.
+   */
+  override fun decrease(slot: Int, amount: Int): ItemStack {
+    return getItemsBasedOnSlot(slot).decrease(slot, amount)
+  }
+  
+  /**
+   * Removes the ItemStack from the specified slot.
+   *
+   * @param slot The slot index.
+   * @return The removed ItemStack.
+   */
+  override fun remove(slot: Int): ItemStack {
+    return getItemsBasedOnSlot(slot).remove(slot)
+  }
+  
+  /**
+   * Retrieves the armor item at the specified slot.
+   *
+   * @param slot The armor slot index.
+   * @return The armor item at the specified slot.
+   */
+  fun getArmor(slot: Int) = armors.getItem(slot)
+  
+  /**
+   * Sets the armor item at the specified slot.
+   *
+   * @param slot The armor slot index.
+   * @param item The item to set.
+   */
+  fun setArmor(slot: Int, item: ItemStack) = armors.setItem(slot, item)
+  
+  /**
+   * Removes the armor item at the specified slot.
+   *
+   * @param slot The armor slot index.
+   * @return The removed armor item.
+   */
+  fun removeArmor(slot: Int) = armors.remove(slot)
+  
+  /**
+   * Marks the inventory as dirty, indicating that it has been modified.
+   */
+  override fun markDirty() {
+    hasChanged = true
+  }
+  
+  /**
+   * Checks if the inventory can be used by the specified player.
+   *
+   * @param player The player using the inventory.
+   * @return True if the inventory can be used, false otherwise.
+   */
+  override fun isUseable(player: Player): Boolean {
+    return !this.player.isDead && player.isNear(this.player, 8.0)
+  }
+  
+  /**
+   * Clears the inventory, removing all items.
+   */
+  override fun clear() {
+    items.clear()
+    armors.clear()
+  }
+  
+  /**
+   * Drops all items in the inventory to the ground.
+   */
+  fun dropInventory() {
+    items.forEachIndexed { index, item ->
+      if (!item.isAir) {
+        player.drop(item, true)
+        items.remove(index)
       }
-   }
-   
-   /**
-    * Checks if this inventory has an item on [slot].
-    */
-   override fun hasItem(slot: Int): Boolean {
-      return !getItem(slot).isAir
-   }
-   
-   /**
-    * Decreases the item stack on the given [slot] in [amount] and returns the split one.
-    */
-   override fun decrease(slot: Int, amount: Int): ItemStack {
-      val item = getItem(slot)
-      
-      return if (item.amount < amount) {
-         remove(slot)
-         item
-      } else {
-         val split = item.split(amount)
-         if (item.amount == 0) {
-            remove(slot)
-         }
-         
-         split
+    }
+  }
+  
+  /**
+   * Drops all equipped armor items to the ground.
+   */
+  fun dropArmor() {
+    armors.forEachIndexed { index, item ->
+      if (!item.isAir) {
+        player.drop(item, true)
+        armors.remove(index)
       }
-   }
-   
-   /**
-    * Remove an item from the given [slot].
-    */
-   override fun remove(slot: Int): ItemStack {
-      val size = items.size
-      return if (slot >= size) {
-         setArmor(slot - size, ItemStack.AIR)
-      } else {
-         items.set(slot, ItemStack.AIR)
+    }
+  }
+  
+  /**
+   * Drops all items in the inventory and equipped armor items to the ground.
+   */
+  fun dropAll() {
+    dropInventory()
+    dropArmor()
+  }
+  
+  override fun save(tag: ListTag<CompoundTag>) {
+    items.save(tag)
+    armors.save(tag)
+  }
+  
+  override fun load(tag: ListTag<CompoundTag>) {
+    for (data in tag) {
+      val slot = (data.byte("Slot") and 255).toInt()
+      val item = data.createItem()
+      if (!item.isAir) {
+        when {
+          slot < items.size -> items.setItem(slot, item)
+          slot >= 100 && slot < armors.size + 100 -> armors.setItem(slot - 100, item)
+        }
       }
-   }
-   
-   /**
-    * Gets an armor at the given [slot]
-    */
-   fun getArmor(slot: Int) = armors[slot % 4]
-   
-   /**
-    * Sets an armor at the given [slot].
-    */
-   fun setArmor(slot: Int, item: ItemStack) = armors.set(slot % 4, item)
-   
-   /**
-    * Marks this inventory dirty.
-    */
-   override fun markDirty() {
-      hasChanged = true
-   }
-   
-   /**
-    * Checks if [player] can use this inventory.
-    */
-   override fun isUseable(player: Player): Boolean {
-      return player.isAlive
-   }
-   
-   /**
-    * Called when [player] opens this inventory.
-    */
-   override fun onOpen(player: Player) {
-   }
-   
-   /**
-    * Called when [player] close this inventory.
-    */
-   override fun onClose(player: Player) {
-   }
-   
-   /**
-    * Checks if the given [item] is valid to the given [slot].
-    */
-   override fun isSlotValid(slot: Int, item: ItemStack): Boolean {
-      return true
-   }
-   
-   /**
-    * Clear this inventory.
-    */
-   override fun clear() {
-      items.fill(ItemStack.AIR)
-      armors.fill(ItemStack.AIR)
-   }
-   
-   /**
-    * Gets a field data from this inventory by given [id].
-    */
-   override fun getField(id: Int): Int {
-      return 0
-   }
-   
-   /**
-    * Sets a field data of this inventory from given [id] by [value].
-    */
-   override fun setField(id: Int, value: Int) {
-   }
-   
-   override fun save(tag: CompoundTag) {
-      TODO("Not yet implemented")
-   }
-   
-   override fun load(tag: CompoundTag) {
-      TODO("Not yet implemented")
-   }
-   
-   override fun iterator(): Iterator<ItemStack> {
-      return (items + armors).iterator()
-   }
+    }
+  }
+  
+  override fun iterator(): Iterator<ItemStack> {
+    return inventory.iterator()
+  }
 }

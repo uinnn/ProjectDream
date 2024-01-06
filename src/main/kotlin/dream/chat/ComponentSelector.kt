@@ -1,18 +1,18 @@
 package dream.chat
 
-import kotlinx.serialization.*
+import kotlinx.serialization.Serializable
 
 /**
  * Represents a text chat component.
  */
 @Serializable
 data class ComponentSelector(var selector: String) : ComponentStyle() {
-   override val unformattedText: String get() = selector
-   
-   override fun copy() = ComponentSelector(selector).also {
-      it.style = style.shallowCopy()
-      components.forEach(it::add)
-   }
+  override val unformattedText: String get() = selector
+
+  override fun copy() = ComponentSelector(selector).also {
+    it.style = style.shallowCopy()
+    components.forEach(it::add)
+  }
 }
 
 /**

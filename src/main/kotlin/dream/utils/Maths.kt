@@ -3,7 +3,7 @@
 package dream.utils
 
 import com.soywiz.kmem.*
-import net.jafama.*
+import net.jafama.FastMath
 import kotlin.math.*
 
 val SQRT_2 = sqrt(2.0)
@@ -130,11 +130,11 @@ inline fun max(a: Double, b: Double) = if (a >= b) a else b
  * Used for highly optimized "find the log-base-2 of this number" calculations.
  */
 internal val MULTIPLY_DE_BRUIJIN_BIT_POSITION = intArrayOf(
-   0, 1, 28, 2, 29, 14, 24, 3, 30, 22, 20, 15, 25, 17, 4, 8,
-   31, 27, 13, 23, 21, 19, 16, 7, 26, 12, 18, 6, 11, 5, 10, 9
+  0, 1, 28, 2, 29, 14, 24, 3, 30, 22, 20, 15, 25, 17, 4, 8,
+  31, 27, 13, 23, 21, 19, 16, 7, 26, 12, 18, 6, 11, 5, 10, 9
 )
 
 private fun logBaseTwoDeBruijn(value: Int): Int {
-   val n = if (value.isPowerOfTwo) value else value.nextPowerOfTwo
-   return MULTIPLY_DE_BRUIJIN_BIT_POSITION[((n * 125613361L shr 27) and 31).toInt()]
+  val n = if (value.isPowerOfTwo) value else value.nextPowerOfTwo
+  return MULTIPLY_DE_BRUIJIN_BIT_POSITION[((n * 125613361L shr 27) and 31).toInt()]
 }

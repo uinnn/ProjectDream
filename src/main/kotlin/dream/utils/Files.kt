@@ -2,25 +2,25 @@
 
 package dream.utils
 
-import java.io.*
+import java.io.File
 
 /**
  * Creates this file if not exists.
  */
 fun File.create(): File {
-   if (!exists()) {
-      if (parentFile != null) parentFile.mkdirs()
-      createNewFile()
-   }
-   return this
+  if (!exists()) {
+    if (parentFile != null) parentFile.mkdirs()
+    createNewFile()
+  }
+  return this
 }
 
 /**
  * Creates a folder from this file if not exists.
  */
 fun File.createFolder(): File {
-   if (!exists()) mkdirs()
-   return this
+  if (!exists()) mkdirs()
+  return this
 }
 
 inline fun file(path: String) = File(path)

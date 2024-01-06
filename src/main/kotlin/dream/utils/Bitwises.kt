@@ -3,6 +3,7 @@
 package dream.utils
 
 import com.soywiz.kmem.*
+import kotlin.reflect.*
 
 // BYTE
 
@@ -22,7 +23,8 @@ infix fun Byte.and(other: Number) = and(other.toInt())
 fun Byte.setBits(bits: Int) = this or bits
 fun Byte.unsetBits(bits: Int) = this and bits.inv()
 fun Byte.setBitsIf(bits: Int, onlyIf: Boolean) = if (onlyIf) this or bits else this
-fun Byte.hasBits(bits: Int, min: Int = 0) = (this and bits) > min
+fun Byte.hasBits(bits: Int, min: Int) = (this and bits) > min
+fun Byte.hasBits(bits: Int) = (toInt() and bits) == bits
 
 fun <T : Enum<T>> Byte.setBits(enum: Enum<T>) = setBits(enum.mask)
 fun <T : Enum<T>> Byte.setBits(vararg enum: Enum<T>) = enum.calculate { v, t -> t.setBits(v.mask) }
@@ -31,6 +33,9 @@ fun <T : Enum<T>> Byte.unsetBits(vararg enum: Enum<T>) = enum.calculate { v, t -
 fun <T : Enum<T>> Byte.hasBits(enum: Enum<T>) = hasBits(enum.mask)
 fun <T : Enum<T>> Byte.hasAnyBits(vararg enum: Enum<T>) = enum.any { hasBits(it) }
 fun <T : Enum<T>> Byte.hasAllBits(vararg enum: Enum<T>) = enum.all { hasBits(it) }
+
+fun <T : Enum<T>> Byte.getFlags(clazz: KClass<T>) = clazz.enums.filter { hasBits(it) }
+inline fun <reified T : Enum<T>> Byte.getFlags() = getFlags(T::class)
 
 // SHORT
 
@@ -50,7 +55,8 @@ infix fun Short.and(other: Number) = and(other.toInt())
 fun Short.setBits(bits: Int) = this or bits
 fun Short.unsetBits(bits: Int) = this and bits.inv()
 fun Short.setBitsIf(bits: Int, onlyIf: Boolean) = if (onlyIf) this or bits else this
-fun Short.hasBits(bits: Int, min: Int = 0) = (this and bits) > min
+fun Short.hasBits(bits: Int, min: Int) = (this and bits) > min
+fun Short.hasBits(bits: Int) = (toInt() and bits) == bits
 
 fun <T : Enum<T>> Short.setBits(enum: Enum<T>) = setBits(enum.mask)
 fun <T : Enum<T>> Short.setBits(vararg enum: Enum<T>) = enum.calculate { v, t -> t.setBits(v.mask) }
@@ -59,6 +65,9 @@ fun <T : Enum<T>> Short.unsetBits(vararg enum: Enum<T>) = enum.calculate { v, t 
 fun <T : Enum<T>> Short.hasBits(enum: Enum<T>) = hasBits(enum.mask)
 fun <T : Enum<T>> Short.hasAnyBits(vararg enum: Enum<T>) = enum.any { hasBits(it) }
 fun <T : Enum<T>> Short.hasAllBits(vararg enum: Enum<T>) = enum.all { hasBits(it) }
+
+fun <T : Enum<T>> Short.getFlags(clazz: KClass<T>) = clazz.enums.filter { hasBits(it) }
+inline fun <reified T : Enum<T>> Short.getFlags() = getFlags(T::class)
 
 // INT
 
@@ -70,7 +79,7 @@ infix fun Int.xor(other: Number) = xor(other.toInt())
 infix fun Int.and(other: Number) = and(other.toInt())
 
 fun Int.setBitsIf(bits: Int, onlyIf: Boolean) = if (onlyIf) this or bits else this
-fun Int.hasBits(bits: Int, min: Int = 0) = (this and bits) > min
+fun Int.hasBits(bits: Int, min: Int) = (this and bits) > min
 
 fun <T : Enum<T>> Int.setBits(enum: Enum<T>) = setBits(enum.mask)
 fun <T : Enum<T>> Int.setBits(vararg enum: Enum<T>) = enum.calculate { v, t -> t.setBits(v.mask) }
@@ -79,6 +88,11 @@ fun <T : Enum<T>> Int.unsetBits(vararg enum: Enum<T>) = enum.calculate { v, t ->
 fun <T : Enum<T>> Int.hasBits(enum: Enum<T>) = hasBits(enum.mask)
 fun <T : Enum<T>> Int.hasAnyBits(vararg enum: Enum<T>) = enum.any { hasBits(it) }
 fun <T : Enum<T>> Int.hasAllBits(vararg enum: Enum<T>) = enum.all { hasBits(it) }
+
+fun <T : Enum<T>> Int.getFlags(clazz: KClass<T>) = clazz.enums.filter { hasBits(it) }
+inline fun <reified T : Enum<T>> Int.getFlags() = getFlags(T::class)
+
+fun <T : Enum<T>> Iterable<T>.masked() = calculate(0) { value, result -> result.setBits(value) }
 
 // LONG
 
@@ -95,7 +109,8 @@ infix fun Long.and(other: Number) = and(other.toInt())
 fun Long.setBits(bits: Int) = this or bits
 fun Long.unsetBits(bits: Int) = this and bits.inv()
 fun Long.setBitsIf(bits: Int, onlyIf: Boolean) = if (onlyIf) this or bits else this
-fun Long.hasBits(bits: Int, min: Int = 0) = (this and bits) > min
+fun Long.hasBits(bits: Int, min: Int) = (this and bits) > min
+fun Long.hasBits(bits: Int) = (toInt() and bits) == bits
 
 fun <T : Enum<T>> Long.setBits(enum: Enum<T>) = setBits(enum.mask)
 fun <T : Enum<T>> Long.setBits(vararg enum: Enum<T>) = enum.calculate { v, t -> t.setBits(v.mask) }
@@ -104,6 +119,9 @@ fun <T : Enum<T>> Long.unsetBits(vararg enum: Enum<T>) = enum.calculate { v, t -
 fun <T : Enum<T>> Long.hasBits(enum: Enum<T>) = hasBits(enum.mask)
 fun <T : Enum<T>> Long.hasBits(vararg enum: Enum<T>) = enum.any { hasBits(it) }
 fun <T : Enum<T>> Long.hasAllBits(vararg enum: Enum<T>) = enum.all { hasBits(it) }
+
+fun <T : Enum<T>> Long.getFlags(clazz: KClass<T>) = clazz.enums.filter { hasBits(it) }
+inline fun <reified T : Enum<T>> Long.getFlags() = getFlags(T::class)
 
 // FLOAT
 
@@ -123,7 +141,8 @@ infix fun Float.and(other: Number) = and(other.toInt())
 fun Float.setBits(bits: Int) = this or bits
 fun Float.unsetBits(bits: Int) = this and bits.inv()
 fun Float.setBitsIf(bits: Int, onlyIf: Boolean) = if (onlyIf) this or bits else this
-fun Float.hasBits(bits: Int, min: Int = 0) = (this and bits) > min
+fun Float.hasBits(bits: Int, min: Int) = (this and bits) > min
+fun Float.hasBits(bits: Int) = (toInt() and bits) == bits
 
 fun <T : Enum<T>> Float.setBits(enum: Enum<T>) = setBits(enum.mask)
 fun <T : Enum<T>> Float.setBits(vararg enum: Enum<T>) = enum.calculate { v, t -> t.setBits(v.mask) }
@@ -132,6 +151,9 @@ fun <T : Enum<T>> Float.unsetBits(vararg enum: Enum<T>) = enum.calculate { v, t 
 fun <T : Enum<T>> Float.hasBits(enum: Enum<T>) = hasBits(enum.mask)
 fun <T : Enum<T>> Float.hasBits(vararg enum: Enum<T>) = enum.any { hasBits(it) }
 fun <T : Enum<T>> Float.hasAllBits(vararg enum: Enum<T>) = enum.all { hasBits(it) }
+
+fun <T : Enum<T>> Float.getFlags(clazz: KClass<T>) = clazz.enums.filter { hasBits(it) }
+inline fun <reified T : Enum<T>> Float.getFlags() = getFlags(T::class)
 
 // DOUBLE
 
@@ -151,7 +173,8 @@ infix fun Double.and(other: Number) = and(other.toInt())
 fun Double.setBits(bits: Int) = this or bits
 fun Double.unsetBits(bits: Int) = this and bits.inv()
 fun Double.setBitsIf(bits: Int, onlyIf: Boolean) = if (onlyIf) this or bits else this
-fun Double.hasBits(bits: Int, min: Int = 0) = (this and bits) > min
+fun Double.hasBits(bits: Int, min: Int) = (this and bits) > min
+fun Double.hasBits(bits: Int) = (toInt() and bits) == bits
 
 fun <T : Enum<T>> Double.setBits(enum: Enum<T>) = setBits(enum.mask)
 fun <T : Enum<T>> Double.setBits(vararg enum: Enum<T>) = enum.calculate { v, t -> t.setBits(v.mask) }
@@ -160,3 +183,6 @@ fun <T : Enum<T>> Double.unsetBits(vararg enum: Enum<T>) = enum.calculate { v, t
 fun <T : Enum<T>> Double.hasBits(enum: Enum<T>) = hasBits(enum.mask)
 fun <T : Enum<T>> Double.hasBits(vararg enum: Enum<T>) = enum.any { hasBits(it) }
 fun <T : Enum<T>> Double.hasAllBits(vararg enum: Enum<T>) = enum.all { hasBits(it) }
+
+fun <T : Enum<T>> Double.getFlags(clazz: KClass<T>) = clazz.enums.filter { hasBits(it) }
+inline fun <reified T : Enum<T>> Double.getFlags() = getFlags(T::class)

@@ -1,5 +1,5 @@
 package dream.entity.item
 
-import dream.entity.*
+import dream.entity.base.EntityLiving
 
 abstract class ArmorStand : EntityLiving()

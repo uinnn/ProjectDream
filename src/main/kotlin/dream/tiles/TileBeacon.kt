@@ -1,11 +1,11 @@
 package dream.tiles
 
-import dream.interfaces.*
+import dream.api.Tickable
 
 /**
  * A beacon tile.
  */
 class TileBeacon : Tile(Tiles.BEACON), Tickable {
-   override fun tick() {
-   }
+  override fun tick(partial: Int) {
+  }
 }

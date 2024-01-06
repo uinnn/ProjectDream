@@ -15,30 +15,30 @@ import dream.network.*
  */
 @Open
 interface Packet<out T : PacketHandler> {
-   
-   /**
-    * Writes the raw packet data to the data stream.
-    */
-   fun write(buf: PacketBuffer)
-   
-   /**
-    * Passes this Packet on to the [PacketHandler] for processing.
-    */
-   fun process(handler: @UnsafeVariance T)
-   
-   /**
-    * Determinates that this packet can be sended to [player].
-    */
-   fun canSend(player: Player): Boolean {
-      return true
-   }
-   
-   /**
-    * Determinates if network can receive this packet.
-    */
-   fun canReceive(network: NetworkManager): Boolean {
-      return true
-   }
+
+  /**
+   * Writes the raw packet data to the data stream.
+   */
+  fun write(buf: PacketBuffer)
+
+  /**
+   * Passes this Packet on to the [PacketHandler] for processing.
+   */
+  fun process(handler: @UnsafeVariance T)
+
+  /**
+   * Determinates that this packet can be sended to [player].
+   */
+  fun canSend(player: Player): Boolean {
+    return true
+  }
+
+  /**
+   * Determinates if player can receive this packet.
+   */
+  fun canReceive(player: Player): Boolean {
+    return true
+  }
 }
 
 /**

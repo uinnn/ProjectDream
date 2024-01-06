@@ -3,8 +3,11 @@ package dream.utils
 import dream.item.*
 
 fun <T : Any> sequenceOfNotNull(vararg elements: T?): Sequence<T> {
-   return elements.asSequence().filterNotNull()
+  return elements.asSequence().filterNotNull()
 }
+
+fun Sequence<*>.isEmpty() = !iterator().hasNext()
+fun Sequence<*>.isNotEmpty() = iterator().hasNext()
 
 /**
  * Filter this iterable by items that is air.
@@ -35,9 +38,9 @@ fun Sequence<ItemStack>.copy() = map { it.copy() }
  * Loops through this iterable of items, iterating in a copy of the item.
  */
 inline fun Sequence<ItemStack>.forEachCopy(action: (ItemStack) -> Unit) {
-   for (item in this) {
-      action(item.copy())
-   }
+  for (item in this) {
+    action(item.copy())
+  }
 }
 
 /**

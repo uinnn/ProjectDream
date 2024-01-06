@@ -1,14 +1,14 @@
 package dream.utils.stat
 
 fun <T> Sequence<T>.mode() = countBy()
-   .entries
-   .asSequence()
-   .sortedByDescending { it.value }
-   .toList().let { list ->
-      list.asSequence()
-         .takeWhile { list[0].value == it.value }
-         .map { it.key }
-   }
+  .entries
+  .asSequence()
+  .sortedByDescending { it.value }
+  .toList().let { list ->
+    list.asSequence()
+      .takeWhile { list[0].value == it.value }
+      .map { it.key }
+  }
 
 fun <T> Iterable<T>.mode() = asSequence().mode()
 fun <T> Array<out T>.mode() = asIterable().mode()

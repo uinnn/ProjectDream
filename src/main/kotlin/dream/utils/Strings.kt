@@ -1,6 +1,6 @@
 package dream.utils
 
-import org.apache.commons.lang3.builder.*
+import org.apache.commons.lang3.builder.ToStringBuilder
 
 /**
  * Converts this string to a byte or [default].
@@ -36,5 +36,5 @@ fun String.toDoubleOrDefault(default: Double = 0.0) = toDoubleOrNull() ?: defaul
  * Creates a ``toString`` builder.
  */
 inline fun makeString(obj: Any, builder: ToStringBuilder.() -> Unit): String {
-   return ToStringBuilder(obj).apply(builder).build()
+  return ToStringBuilder(obj).apply(builder).build()
 }

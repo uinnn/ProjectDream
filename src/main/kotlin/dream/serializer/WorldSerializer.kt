@@ -1,8 +1,8 @@
 package dream.serializer
 
-import dream.level.*
-import dream.utils.*
-import kotlinx.serialization.*
+import dream.level.Level
+import dream.utils.StringDesc
+import kotlinx.serialization.KSerializer
 import kotlinx.serialization.encoding.*
 
 /**
@@ -11,9 +11,9 @@ import kotlinx.serialization.encoding.*
  * This serializes the name of the world.
  */
 object WorldSerializer : KSerializer<Level> {
-   override val descriptor = StringDesc("World")
-   override fun deserialize(decoder: Decoder) = TODO("Not yet implemented")
-   override fun serialize(encoder: Encoder, value: Level) = encoder.encodeString(value.name)
+  override val descriptor = StringDesc("World")
+  override fun deserialize(decoder: Decoder) = TODO("Not yet implemented")
+  override fun serialize(encoder: Encoder, value: Level) = encoder.encodeString(value.name)
 }
 
 /**
@@ -22,7 +22,7 @@ object WorldSerializer : KSerializer<Level> {
  * This serializes the id of the world.
  */
 object WorldIdSerializer : KSerializer<Level> {
-   override val descriptor = StringDesc("World")
-   override fun deserialize(decoder: Decoder) = TODO("Not yet implemented")
-   override fun serialize(encoder: Encoder, value: Level) = encoder.encodeString(value.id.toString())
+  override val descriptor = StringDesc("World")
+  override fun deserialize(decoder: Decoder) = TODO("Not yet implemented")
+  override fun serialize(encoder: Encoder, value: Level) = encoder.encodeString(value.id.toString())
 }

@@ -8,8 +8,8 @@ package dream.extension
  */
 @Target(AnnotationTarget.CLASS)
 annotation class Module(
-   val name: String,
-   val version: String = "1.0",
-   val author: String = "",
-   val colaborators: Array<String> = [],
+  val name: String,
+  val version: String = "1.0",
+  val author: String = "",
+  val colaborators: Array<String> = [],
 )

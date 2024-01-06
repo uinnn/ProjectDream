@@ -2,8 +2,8 @@
 
 package dream.utils
 
-import com.soywiz.kds.random.*
-import kotlin.random.*
+import com.soywiz.kds.random.FastRandom
+import kotlin.random.Random
 
 /**
  * The random instance used to generate random numbers.
@@ -29,7 +29,7 @@ fun randomLong(from: Long, until: Long, rnd: Random = Random) = rnd.nextLong(fro
 fun randomFloat(rnd: Random = Random) = rnd.nextFloat()
 fun randomFloat(max: Float, rnd: Random = Random) = randomDouble(max.toDouble(), rnd).toFloat()
 fun randomFloat(from: Float, until: Float, rnd: Random = Random) =
-   randomDouble(from.toDouble(), until.toDouble(), rnd).toFloat()
+  randomDouble(from.toDouble(), until.toDouble(), rnd).toFloat()
 
 fun randomDouble(rnd: Random = Random) = rnd.nextDouble()
 fun randomDouble(max: Double, rnd: Random = Random) = rnd.nextDouble(max)

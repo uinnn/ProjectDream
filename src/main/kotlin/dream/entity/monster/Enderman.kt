@@ -1,3 +1,5 @@
 package dream.entity.monster
 
-class Enderman
+import dream.entity.base.*
+
+class Enderman : Mob()

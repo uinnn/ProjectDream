@@ -1,8 +1,8 @@
 package dream.network
 
-import com.mojang.authlib.*
-import dream.chat.*
-import dream.serializer.*
+import com.mojang.authlib.GameProfile
+import dream.chat.Component
+import dream.serializer.ProfileSerializer
 import kotlinx.serialization.*
 
 typealias ProfileList = MutableList<@Serializable(ProfileSerializer::class) GameProfile>
@@ -17,10 +17,10 @@ typealias ProfileList = MutableList<@Serializable(ProfileSerializer::class) Game
  */
 @Serializable
 data class ServerStatusResponse(
-   var motd: Component,
-   var protocol: ProtocolVersion,
-   var playerCount: PlayerCountData,
-   var icon: String,
+  var motd: Component,
+  var protocol: ProtocolVersion,
+  var playerCount: PlayerCountData,
+  var icon: String,
 )
 
 /**
@@ -38,7 +38,7 @@ data class ProtocolVersion(var name: String, var protocol: Int)
  */
 @Serializable
 data class PlayerCountData(
-   @SerialName("max") var maxPlayers: Int,
-   @SerialName("online") var onlinePlayers: Int,
-   @SerialName("sample") var players: ProfileList = ArrayList(),
+  @SerialName("max") var maxPlayers: Int,
+  @SerialName("online") var onlinePlayers: Int,
+  @SerialName("sample") var players: ProfileList = ArrayList(),
 )

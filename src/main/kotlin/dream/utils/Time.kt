@@ -2,21 +2,21 @@ package dream.utils
 
 import org.joda.time.*
 import org.joda.time.format.*
-import kotlin.time.Duration
 import java.util.*
+import kotlin.time.Duration
 
 /**
  * Builds a new [DateTimeFormat].
  */
 inline fun timeFormat(builder: DateTimeFormatterBuilder.() -> Unit): DateTimeFormatter {
-   return DateTimeFormatterBuilder().apply(builder).toFormatter()
+  return DateTimeFormatterBuilder().apply(builder).toFormatter()
 }
 
 /**
  * Builds a new [DateTimeParser].
  */
 inline fun timeParser(builder: DateTimeFormatterBuilder.() -> Unit): DateTimeParser {
-   return DateTimeFormatterBuilder().apply(builder).toParser()
+  return DateTimeFormatterBuilder().apply(builder).toParser()
 }
 
 /**
@@ -28,17 +28,17 @@ inline fun timeParser(builder: DateTimeFormatterBuilder.() -> Unit): DateTimePar
  * `
  */
 val TIME_FORMAT = timeFormat {
-   appendDayOfMonth(2)
-   appendLiteral('/')
-   appendMonthOfYear(2)
-   appendLiteral('/')
-   appendYear(2, 4)
-   appendLiteral(' ')
-   appendHourOfDay(2)
-   appendLiteral(':')
-   appendMinuteOfHour(2)
-   appendLiteral(':')
-   appendSecondOfMinute(2)
+  appendDayOfMonth(2)
+  appendLiteral('/')
+  appendMonthOfYear(2)
+  appendLiteral('/')
+  appendYear(2, 4)
+  appendLiteral(' ')
+  appendHourOfDay(2)
+  appendLiteral(':')
+  appendMinuteOfHour(2)
+  appendLiteral(':')
+  appendSecondOfMinute(2)
 }
 
 /**
@@ -53,29 +53,29 @@ val TIME_FORMAT = timeFormat {
  * `
  */
 val TIME_PARSER = timeFormat {
-   appendDayOfMonth(2)
-   appendLiteral('/')
-   appendMonthOfYear(2)
-   appendLiteral('/')
-   appendYear(2, 4)
-   appendOptional(
-      timeParser {
-         appendLiteral(' ')
-         appendHourOfDay(2)
-         appendOptional(
+  appendDayOfMonth(2)
+  appendLiteral('/')
+  appendMonthOfYear(2)
+  appendLiteral('/')
+  appendYear(2, 4)
+  appendOptional(
+    timeParser {
+      appendLiteral(' ')
+      appendHourOfDay(2)
+      appendOptional(
+        timeParser {
+          appendLiteral(':')
+          appendMinuteOfHour(2)
+          appendOptional(
             timeParser {
-               appendLiteral(':')
-               appendMinuteOfHour(2)
-               appendOptional(
-                  timeParser {
-                     appendLiteral(':')
-                     appendSecondOfMinute(2)
-                  }
-               )
+              appendLiteral(':')
+              appendSecondOfMinute(2)
             }
-         )
-      }
-   )
+          )
+        }
+      )
+    }
+  )
 }
 
 /**
@@ -134,68 +134,68 @@ val DateTime.isLeapYear get() = year().isLeap
  * Gets the year of this date as text.
  */
 fun LocalDateTime.yearAsText(short: Boolean = false, locale: Locale? = null): String {
-   return if (short) year().getAsShortText(locale) else year().getAsText(locale)
+  return if (short) year().getAsShortText(locale) else year().getAsText(locale)
 }
 
 /**
  * Gets the month of this date as text.
  */
 fun LocalDateTime.monthAsText(short: Boolean = false, locale: Locale? = null): String {
-   return if (short) monthOfYear().getAsShortText(locale) else monthOfYear().getAsText(locale)
+  return if (short) monthOfYear().getAsShortText(locale) else monthOfYear().getAsText(locale)
 }
 
 /**
  * Gets the day of year of this date as text.
  */
 fun LocalDateTime.dayOfYearAsText(short: Boolean = false, locale: Locale? = null): String {
-   return if (short) dayOfYear().getAsShortText(locale) else dayOfYear().getAsText(locale)
+  return if (short) dayOfYear().getAsShortText(locale) else dayOfYear().getAsText(locale)
 }
 
 /**
  * Gets the day of week of this date as text.
  */
 fun LocalDateTime.dayOfWeekAsText(short: Boolean = false, locale: Locale? = null): String {
-   return if (short) dayOfWeek().getAsShortText(locale) else dayOfWeek().getAsText(locale)
+  return if (short) dayOfWeek().getAsShortText(locale) else dayOfWeek().getAsText(locale)
 }
 
 /**
  * Gets the day of month of this date as text.
  */
 fun LocalDateTime.dayOfMonthAsText(short: Boolean = false, locale: Locale? = null): String {
-   return if (short) dayOfMonth().getAsShortText(locale) else dayOfMonth().getAsText(locale)
+  return if (short) dayOfMonth().getAsShortText(locale) else dayOfMonth().getAsText(locale)
 }
 
 /**
  * Gets the hours of day of this date as text.
  */
 fun LocalDateTime.hoursAsText(short: Boolean = false, locale: Locale? = null): String {
-   return if (short) hourOfDay().getAsShortText(locale) else hourOfDay().getAsText(locale)
+  return if (short) hourOfDay().getAsShortText(locale) else hourOfDay().getAsText(locale)
 }
 
 /**
  * Gets the minutes of hour of this date as text.
  */
 fun LocalDateTime.minutesAsText(short: Boolean = false, locale: Locale? = null): String {
-   return if (short) minuteOfHour().getAsShortText(locale) else minuteOfHour().getAsText(locale)
+  return if (short) minuteOfHour().getAsShortText(locale) else minuteOfHour().getAsText(locale)
 }
 
 /**
  * Gets the second of minutes of this date as text.
  */
 fun LocalDateTime.secondAsText(short: Boolean = false, locale: Locale? = null): String {
-   return if (short) secondOfMinute().getAsShortText(locale) else secondOfMinute().getAsText(locale)
+  return if (short) secondOfMinute().getAsShortText(locale) else secondOfMinute().getAsText(locale)
 }
 
 /**
  * Gets the millis of day of this date as text.
  */
 fun LocalDateTime.millisOfDayAsText(short: Boolean = false, locale: Locale? = null): String {
-   return if (short) millisOfDay().getAsShortText(locale) else millisOfDay().getAsText(locale)
+  return if (short) millisOfDay().getAsShortText(locale) else millisOfDay().getAsText(locale)
 }
 
 /**
  * Gets the millis of second of this date as text.
  */
 fun LocalDateTime.millisOfSecondAsText(short: Boolean = false, locale: Locale? = null): String {
-   return if (short) millisOfSecond().getAsShortText(locale) else millisOfSecond().getAsText(locale)
+  return if (short) millisOfSecond().getAsShortText(locale) else millisOfSecond().getAsText(locale)
 }

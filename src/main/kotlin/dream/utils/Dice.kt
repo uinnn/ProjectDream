@@ -1,6 +1,6 @@
 package dream.utils
 
-import dream.utils.stat.range.*
+import dream.utils.stat.range.OpenDoubleRange
 
 /**
  * Assigns a probabilty to each distinct [T] item, and randomly selects [T] values given those probabilities.
@@ -8,63 +8,63 @@ import dream.utils.stat.range.*
  * In other words, this is a Probability Density Function (PDF) for discrete [T] values.
  */
 open class Dice<T>(val probabilities: MutableMap<T, Double>) {
-   constructor(vararg values: Pair<T, Double>) : this(values.toMutableMap())
-   
-   /**
-    * The sum of all probabilities.
-    */
-   open val total = probabilities.values.sum()
-   
-   /**
-    * The distribution of the probabilities.
-    */
-   protected open var distribution = probabilities.run {
+  constructor(vararg values: Pair<T, Double>) : this(values.toMutableMap())
+
+  /**
+   * The sum of all probabilities.
+   */
+  open val total = probabilities.values.sum()
+
+  /**
+   * The distribution of the probabilities.
+   */
+  protected open var distribution = probabilities.run {
+    var binStart = 0.0
+    asSequence()
+      .sortedBy { it.value }
+      .map { it.key to OpenDoubleRange(binStart, it.value + binStart) }
+      .onEach { binStart = it.second.endExclusive }
+      .toMap()
+  }
+
+  /**
+   * Gets a random chance for this dice based on [total].
+   */
+  fun random() = randomDouble(total)
+
+  /**
+   * Randomly selects an entry with probability by given [chance].
+   */
+  fun rollEntryWith(chance: Double) = distribution.first { chance in it.value }
+
+  /**
+   * Randomly selects an entry with probability.
+   */
+  fun rollEntry() = rollEntryWith(random())
+
+  /**
+   * Randomly selects a [T] value with probability by given [chance].
+   */
+  fun rollWith(chance: Double) = rollEntryWith(chance).key
+
+  /**
+   * Randomly selects a [T] value with probability.
+   */
+  fun roll() = rollWith(random())
+
+  /**
+   * Estabilishs all probabilities of this dice.
+   */
+  fun estabilish() {
+    distribution = probabilities.run {
       var binStart = 0.0
       asSequence()
-         .sortedBy { it.value }
-         .map { it.key to OpenDoubleRange(binStart, it.value + binStart) }
-         .onEach { binStart = it.second.endExclusive }
-         .toMap()
-   }
-   
-   /**
-    * Gets a random chance for this dice based on [total].
-    */
-   fun random() = randomDouble(total)
-   
-   /**
-    * Randomly selects an entry with probability by given [chance].
-    */
-   fun rollEntryWith(chance: Double) = distribution.first { chance in it.value }
-   
-   /**
-    * Randomly selects an entry with probability.
-    */
-   fun rollEntry() = rollEntryWith(random())
-   
-   /**
-    * Randomly selects a [T] value with probability by given [chance].
-    */
-   fun rollWith(chance: Double) = rollEntryWith(chance).key
-   
-   /**
-    * Randomly selects a [T] value with probability.
-    */
-   fun roll() = rollWith(random())
-   
-   /**
-    * Estabilishs all probabilities of this dice.
-    */
-   fun estabilish() {
-      distribution = probabilities.run {
-         var binStart = 0.0
-         asSequence()
-            .sortedBy { it.value }
-            .map { it.key to OpenDoubleRange(binStart, it.value + binStart) }
-            .onEach { binStart = it.second.endExclusive }
-            .toMap()
-      }
-   }
+        .sortedBy { it.value }
+        .map { it.key to OpenDoubleRange(binStart, it.value + binStart) }
+        .onEach { binStart = it.second.endExclusive }
+        .toMap()
+    }
+  }
 }
 
 /**
@@ -75,36 +75,36 @@ open class Dice<T>(val probabilities: MutableMap<T, Double>) {
  * This is a mutable version of [Dice].
  */
 class MutableDice<T>(probabilities: MutableMap<T, Double>) : Dice<T>(probabilities) {
-   constructor(vararg values: Pair<T, Double>) : this(values.toMutableMap())
-   
-   override var total = super.total
-      private set
-   
-   /**
-    * Adds a new choice to this dice by given [value] with [chance].
-    */
-   fun with(value: T, chance: Double, estabilish: Boolean = true): MutableDice<T> {
-      probabilities[value] = chance
-      total += chance
-      
-      if (estabilish)
-         estabilish()
-      
-      return this
-   }
-   
-   /**
-    * Removes a present choice of this dice by given [value].
-    */
-   fun without(value: T, estabilish: Boolean = true): MutableDice<T> {
-      val chance = probabilities.remove(value) ?: return this
-      total -= chance
-      
-      if (estabilish)
-         estabilish()
-      
-      return this
-   }
+  constructor(vararg values: Pair<T, Double>) : this(values.toMutableMap())
+
+  override var total = super.total
+    private set
+
+  /**
+   * Adds a new choice to this dice by given [value] with [chance].
+   */
+  fun with(value: T, chance: Double, estabilish: Boolean = true): MutableDice<T> {
+    probabilities[value] = chance
+    total += chance
+
+    if (estabilish)
+      estabilish()
+
+    return this
+  }
+
+  /**
+   * Removes a present choice of this dice by given [value].
+   */
+  fun without(value: T, estabilish: Boolean = true): MutableDice<T> {
+    val chance = probabilities.remove(value) ?: return this
+    total -= chance
+
+    if (estabilish)
+      estabilish()
+
+    return this
+  }
 }
 
 

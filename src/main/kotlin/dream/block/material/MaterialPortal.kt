@@ -5,8 +5,8 @@ import dream.item.*
 /**
  * Represents a portal material.
  */
-public class MaterialPortal(pallete: MapPallete) : Material(pallete) {
-   public override val isSolid: Boolean get() = false
-   public override val blocksLight: Boolean get() = false
-   public override val blocksMovement: Boolean get() = false
+class MaterialPortal(pallete: MapPallete) : Material(pallete) {
+  override val isSolid: Boolean get() = false
+  override val blocksLight: Boolean get() = false
+  override val blocksMovement: Boolean get() = false
 }

@@ -14,34 +14,34 @@ typealias ServerLoginPacket = ServerPacket<LoginPacketHandler>
  * * `handle` is for client-side packets control
  */
 interface LoginPacketHandler : PacketHandler {
-   
-   /**
-    * Handle client-side [ClientPacketLoginStart] packet.
-    */
-   fun handleLoginStart(packetIn: ClientPacketLoginStart)
-   
-   /**
-    * Handle client-side [ClientPacketEncryptionResponse] packet.
-    */
-   fun handleEncryptionResponse(packetIn: ClientPacketEncryptionResponse)
-   
-   /**
-    * Process server-side [ServerPacketEncryptionRequest] packet.
-    */
-   fun processEncryptionRequest(packet: ServerPacketEncryptionRequest)
-   
-   /**
-    * Process server-side [ServerPacketLoginSuccess] packet.
-    */
-   fun processLoginSuccess(packet: ServerPacketLoginSuccess)
-   
-   /**
-    * Process server-side [ServerPacketDisconnect] packet.
-    */
-   fun processDisconnect(packet: ServerPacketDisconnect)
-   
-   /**
-    * Process server-side [ServerPacketEnableCompression] packet.
-    */
-   fun processEnableCompression(packet: ServerPacketEnableCompression)
+
+  /**
+   * Handle client-side [CPacketLoginStart] packet.
+   */
+  fun handleLoginStart(packetIn: CPacketLoginStart)
+
+  /**
+   * Handle client-side [CPacketEncryptionResponse] packet.
+   */
+  fun handleEncryptionResponse(packetIn: CPacketEncryptionResponse)
+
+  /**
+   * Process server-side [SPacketEncryptionRequest] packet.
+   */
+  fun processEncryptionRequest(packet: SPacketEncryptionRequest)
+
+  /**
+   * Process server-side [SPacketLoginSuccess] packet.
+   */
+  fun processLoginSuccess(packet: SPacketLoginSuccess)
+
+  /**
+   * Process server-side [SPacketDisconnect] packet.
+   */
+  fun processDisconnect(packet: SPacketDisconnect)
+
+  /**
+   * Process server-side [SPacketEnableCompression] packet.
+   */
+  fun processEnableCompression(packet: SPacketEnableCompression)
 }

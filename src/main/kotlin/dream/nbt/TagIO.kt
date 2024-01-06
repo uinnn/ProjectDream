@@ -11,65 +11,65 @@ import java.util.zip.*
  * IO Utility for writing and reading NBT from file/streams.
  */
 object TagIO {
-   
-   fun read(data: ObjectInputStream, close: Boolean = true): Tag {
-      val type = TagRegistry[data.readByte()]
-      val tag = type.load(data)
-      if (close) data.close()
-      return tag
-   }
-   
-   /**
-    * Reads a NBT in given [input].
-    *
-    * @param close optionally closes [input].
-    */
-   fun read(input: InputStream, close: Boolean = true): Tag {
-      return read(input.toObjectNBTStream(), close)
-   }
-   
-   /**
-    * Reads a NBT in given [file].
-    *
-    * @param close optionally closes [file] stream.
-    */
-   fun read(file: File, close: Boolean = true): Tag = read(file.inputStream(), close)
-   
-   /**
-    * Reads a [CompoundTag] in given [file].
-    *
-    * @param close optionally closes [file] stream.
-    */
-   fun readCompound(file: File, close: Boolean = true): CompoundTag = read(file, close) as CompoundTag
-   
-   /**
-    * Reads a [CompoundTag] in given [input].
-    *
-    * @param close optionally closes [input].
-    */
-   fun readCompound(input: InputStream, close: Boolean = true): CompoundTag = read(input, close) as CompoundTag
-   
-   fun write(data: ObjectOutputStream, value: Tag, close: Boolean = true) {
-      data.writeByte(value.id)
-      value.write(data)
-      if (close) data.close()
-   }
-   
-   /**
-    * Writes [value] in [output].
-    *
-    * @param close optionally closes [output].
-    */
-   fun write(output: OutputStream, value: Tag, close: Boolean = true) {
-      write(output.toObjectNBTStream(), value, close)
-   }
-   
-   /**
-    * Writes [value] in [file].
-    *
-    * @param close optionally closes [file] stream.
-    */
-   fun write(file: File, value: Tag, close: Boolean = true) = write(file.outputStream(), value, close)
+
+  fun read(data: ObjectInputStream, close: Boolean = true): Tag {
+    val type = TagRegistry[data.readByte()]
+    val tag = type.load(data)
+    if (close) data.close()
+    return tag
+  }
+
+  /**
+   * Reads a NBT in given [input].
+   *
+   * @param close optionally closes [input].
+   */
+  fun read(input: InputStream, close: Boolean = true): Tag {
+    return read(input.toObjectNBTStream(), close)
+  }
+
+  /**
+   * Reads a NBT in given [file].
+   *
+   * @param close optionally closes [file] stream.
+   */
+  fun read(file: File, close: Boolean = true): Tag = read(file.inputStream(), close)
+
+  /**
+   * Reads a [CompoundTag] in given [file].
+   *
+   * @param close optionally closes [file] stream.
+   */
+  fun readCompound(file: File, close: Boolean = true): CompoundTag = read(file, close) as CompoundTag
+
+  /**
+   * Reads a [CompoundTag] in given [input].
+   *
+   * @param close optionally closes [input].
+   */
+  fun readCompound(input: InputStream, close: Boolean = true): CompoundTag = read(input, close) as CompoundTag
+
+  fun write(data: ObjectOutputStream, value: Tag, close: Boolean = true) {
+    data.writeByte(value.id)
+    value.write(data)
+    if (close) data.close()
+  }
+
+  /**
+   * Writes [value] in [output].
+   *
+   * @param close optionally closes [output].
+   */
+  fun write(output: OutputStream, value: Tag, close: Boolean = true) {
+    write(output.toObjectNBTStream(), value, close)
+  }
+
+  /**
+   * Writes [value] in [file].
+   *
+   * @param close optionally closes [file] stream.
+   */
+  fun write(file: File, value: Tag, close: Boolean = true) = write(file.outputStream(), value, close)
 }
 
 /**

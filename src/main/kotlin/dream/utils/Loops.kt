@@ -1,7 +1,7 @@
 package dream.utils
 
-import kotlin.contracts.*
 import java.util.*
+import kotlin.contracts.contract
 
 /**
  * Executes the given function [action] specified number of [times].
@@ -9,11 +9,11 @@ import java.util.*
  * Working like a countdown, this will be start on index [times] until [downTo].
  */
 inline fun countdown(times: Int, downTo: Int = 0, action: (Int) -> Unit) {
-   contract { callsInPlace(action) }
-   
-   for (index in times downTo downTo) {
-      action(index)
-   }
+  contract { callsInPlace(action) }
+
+  for (index in times downTo downTo) {
+    action(index)
+  }
 }
 
 /**
@@ -22,10 +22,10 @@ inline fun countdown(times: Int, downTo: Int = 0, action: (Int) -> Unit) {
  * This will start from the first element to the last element.
  */
 inline fun <T> MutableList<T>.forEachRemove(action: (T) -> Unit) {
-   for (value in this) {
-      action(value)
-      remove(value)
-   }
+  for (value in this) {
+    action(value)
+    remove(value)
+  }
 }
 
 /**
@@ -34,13 +34,13 @@ inline fun <T> MutableList<T>.forEachRemove(action: (T) -> Unit) {
  * This will start from the last element to the first element.
  */
 inline fun <T> MutableList<T>.forEachPoll(action: (T) -> Unit) {
-   var n = size
-   while (n >= 0) {
-      val element = get(n)
-      action(element)
-      remove(element)
-      n--
-   }
+  var n = size
+  while (n >= 0) {
+    val element = get(n)
+    action(element)
+    remove(element)
+    n--
+  }
 }
 
 /**
@@ -49,10 +49,10 @@ inline fun <T> MutableList<T>.forEachPoll(action: (T) -> Unit) {
  * This will start from the first element to the last element.
  */
 inline fun <T> Queue<T>.forEachRemove(action: (T) -> Unit) {
-   for (value in this) {
-      action(value)
-      remove(value)
-   }
+  for (value in this) {
+    action(value)
+    remove(value)
+  }
 }
 
 /**
@@ -61,5 +61,5 @@ inline fun <T> Queue<T>.forEachRemove(action: (T) -> Unit) {
  * This will start from the last element to the first element.
  */
 inline fun <T> Queue<T>.forEachPoll(action: (T) -> Unit) {
-   while (isNotEmpty()) action(poll())
+  while (isNotEmpty()) action(poll())
 }

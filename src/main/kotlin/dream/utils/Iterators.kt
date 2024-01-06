@@ -1,6 +1,6 @@
 package dream.utils
 
-import com.google.common.collect.*
+import com.google.common.collect.Iterators
 
 operator fun <T> Iterator<T>.plus(other: Iterator<T>): MutableIterator<T> = Iterators.concat(this, other)
 fun <T> Iterator<T>.add(other: Iterator<T>): MutableIterator<T> = Iterators.concat(this, other)

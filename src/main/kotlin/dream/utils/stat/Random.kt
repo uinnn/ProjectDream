@@ -1,7 +1,7 @@
 package dream.utils.stat
 
-import com.soywiz.kds.random.*
-import dream.utils.*
+import com.soywiz.kds.random.fastRandom
+import dream.utils.list
 
 /**
  * Samples a single random element `T` from a `List<T>`, and throws an error if no elements exist
@@ -12,8 +12,8 @@ fun <T> List<T>.randomFirst() = randomFirstOrNull() ?: throw NoSuchElementExcept
  * Samples a single random element `T` from a `List<T>`, and returns `null` if no elements exist
  */
 fun <T> List<T>.randomFirstOrNull(): T? {
-   if (isEmpty()) return null
-   return fastRandom()
+  if (isEmpty()) return null
+  return fastRandom()
 }
 
 /**
@@ -45,15 +45,15 @@ fun <T> Sequence<T>.randomDistinct(sampleSize: Int) = toList().randomDistinct(sa
  * Samples `n` distinct random elements `T` from an `Iterable<T>`
  */
 fun <T> List<T>.randomDistinct(amount: Int): List<T> {
-   return list(amount) { fastRandom() }.distinct()
+  return list(amount) { fastRandom() }.distinct()
 }
 
 /**
  * Samples `n` distinct random elements `T` from an `Iterable<T>`
  */
 fun <T> Iterable<T>.randomDistinct(amount: Int): List<T> {
-   if (this is List) return randomDistinct(amount)
-   return toList().randomDistinct(amount)
+  if (this is List) return randomDistinct(amount)
+  return toList().randomDistinct(amount)
 }
 
 /**
@@ -65,14 +65,14 @@ fun <T> Sequence<T>.random(sampleSize: Int) = toList().random(sampleSize)
  * Samples `n` random elements `T` from an `Iterable<T>`
  */
 fun <T> List<T>.random(amount: Int): List<T> {
-   return list(amount) { fastRandom() }
+  return list(amount) { fastRandom() }
 }
 
 /**
  * Samples `n` random elements `T` from an `Iterable<T>`
  */
 fun <T> Iterable<T>.random(amount: Int): List<T> {
-   if (this is List) return random(amount)
-   return toList().random(amount)
+  if (this is List) return random(amount)
+  return toList().random(amount)
 }
 

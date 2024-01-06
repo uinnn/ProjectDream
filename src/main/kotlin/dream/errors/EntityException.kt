@@ -1,7 +1,5 @@
 package dream.errors
 
-import dream.entity.type.*
-
 /**
  * Represents a base exception for entities.
  */

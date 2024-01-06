@@ -1,7 +1,7 @@
 package dream.collections
 
-import dream.misc.*
-import dream.utils.*
+import dream.misc.Open
+import dream.utils.size
 
 /**
  * A SizedList.
@@ -10,50 +10,50 @@ import dream.utils.*
  * if a list is reached in their limit, no entry will be added.
  */
 @Open
-public class SizedList<T>(var limit: Int, capacity: Int = limit) : ArrayList<T>(capacity) {
-   
-   constructor(limit: Int, elements: Collection<T>) : this(limit) {
-      addAll(elements)
-   }
-   
-   constructor(limit: Int, elements: Iterable<T>) : this(limit) {
-      addAll(elements)
-   }
-   
-   /**
-    * Trims this SizedList to [limit].
-    */
-   fun trim() {
-      repeat(size - limit) {
-         removeAt(limit + it)
-      }
-   }
-   
-   // add limiter
-   override fun set(index: Int, element: T): T {
-      return if (index <= limit) super.set(index, element) else element
-   }
-   
-   // add limiter
-   override fun add(element: T): Boolean {
-      return if (size + 1 > limit) false else super.add(element)
-   }
-   
-   // add limiter
-   override fun add(index: Int, element: T) {
-      if (index <= limit) {
-         super.add(index, element)
-      }
-   }
-   
-   // add limiter
-   override fun addAll(elements: Collection<T>): Boolean {
-      return if (size + elements.size > limit) {
-         super.addAll(elements.take(size - elements.size))
-      } else {
-         super.addAll(elements)
-      }
-   }
+class SizedList<T>(var limit: Int, capacity: Int = limit) : ArrayList<T>(capacity) {
+
+  constructor(limit: Int, elements: Collection<T>) : this(limit) {
+    addAll(elements)
+  }
+
+  constructor(limit: Int, elements: Iterable<T>) : this(limit) {
+    addAll(elements)
+  }
+
+  /**
+   * Trims this SizedList to [limit].
+   */
+  fun trim() {
+    repeat(size - limit) {
+      removeAt(limit + it)
+    }
+  }
+
+  // add limiter
+  override fun set(index: Int, element: T): T {
+    return if (index <= limit) super.set(index, element) else element
+  }
+
+  // add limiter
+  override fun add(element: T): Boolean {
+    return if (size + 1 > limit) false else super.add(element)
+  }
+
+  // add limiter
+  override fun add(index: Int, element: T) {
+    if (index <= limit) {
+      super.add(index, element)
+    }
+  }
+
+  // add limiter
+  override fun addAll(elements: Collection<T>): Boolean {
+    return if (size + elements.size > limit) {
+      super.addAll(elements.take(size - elements.size))
+    } else {
+      super.addAll(elements)
+    }
+  }
 }
 
 

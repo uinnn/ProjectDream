@@ -9,74 +9,74 @@ import kotlinx.serialization.*
  */
 @Open
 interface Component : Iterable<Component> {
-   
-   /**
-    * The style of this component.
-    */
-   var style: Style
-   
-   /**
-    * Get the unformatted text of this component.
-    */
-   val unformattedText: String
-   
-   /**
-    * Get the formatted text of this component.
-    */
-   val formatedText: String
-   
-   /**
-    * Gets all subcomponent of this root component.
-    */
-   val components: MutableList<Component>
-   
-   /**
-    * Appends the given text to the end of this component.
-    */
-   fun add(text: String): Component
-   
-   /**
-    * Appends the given component to the end of this component.
-    */
-   fun add(component: Component): Component
-   
-   /**
-    * Creates a copy of this component.
-    */
-   fun copy(): Component
-   
-   /**
-    * Stringify this component to Json.
-    */
-   fun toJson(): String {
-      return ChatJson.encodeToString(this)
-   }
-   
-   companion object {
-      
-      /**
-       * Deserializes a component by the given [string].
-       */
-      fun fromString(string: String): Component {
-         val parser = ChatJson
-         
-         return runCatching {
-            parser.decodeFromString<ComponentText>(string)
-         }.recoverCatching {
-            parser.decodeFromString<ComponentScore>(string)
-         }.recoverCatching {
-            parser.decodeFromString<ComponentSelector>(string)
-         }.getOrThrow()
-      }
-   }
+
+  /**
+   * The style of this component.
+   */
+  var style: Style
+
+  /**
+   * Get the unformatted text of this component.
+   */
+  val unformattedText: String
+
+  /**
+   * Get the formatted text of this component.
+   */
+  val formatedText: String
+
+  /**
+   * Gets all subcomponent of this root component.
+   */
+  val components: MutableList<Component>
+
+  /**
+   * Appends the given text to the end of this component.
+   */
+  fun add(text: String): Component
+
+  /**
+   * Appends the given component to the end of this component.
+   */
+  fun add(component: Component): Component
+
+  /**
+   * Creates a copy of this component.
+   */
+  fun copy(): Component
+
+  /**
+   * Stringify this component to Json.
+   */
+  fun toJson(): String {
+    return ChatJson.encodeToString(this)
+  }
+
+  companion object {
+
+    /**
+     * Deserializes a component by the given [string].
+     */
+    fun fromString(string: String): Component {
+      val parser = ChatJson
+
+      return runCatching {
+        parser.decodeFromString<ComponentText>(string)
+      }.recoverCatching {
+        parser.decodeFromString<ComponentScore>(string)
+      }.recoverCatching {
+        parser.decodeFromString<ComponentSelector>(string)
+      }.getOrThrow()
+    }
+  }
 }
 
 /**
  * Sets the hover event for this component.
  */
 fun Component.hover(event: HoverEvent?): Component {
-   style.hover(event)
-   return this
+  style.hover(event)
+  return this
 }
 
 /**
@@ -108,8 +108,8 @@ fun Component.showEntity(value: String) = hover(EntityHover(value))
  * Sets the click event for this component.
  */
 fun Component.click(event: ClickEvent?): Component {
-   style.click(event)
-   return this
+  style.click(event)
+  return this
 }
 
 /**
@@ -146,6 +146,6 @@ fun Component.twitchInfo(value: String) = click(TwitchInfoClick(value))
  * Sets the color for this component.
  */
 fun Component.color(color: Color?): Component {
-   style.color(color)
-   return this
+  style.color(color)
+  return this
 }
