@@ -1,32 +1,9 @@
 # ProjectDream
 
-Project Dream is a unique Minecraft project developed by Uin. The project started development one year ago, and it is a fully
-non-Mojang code Minecraft 1.8.9 version, written entirely in Kotlin.
+Custom Minecraft Server non-based NMS implementation. Is a full rewritten of mojang code for Minecraft 1.8.9 in Kotlin.
 
-One of the most impressive things about Project Dream is the fact that it is a complete reimplementation of Minecraft in Kotlin.
-This means that the entire codebase has been rewritten from scratch, which is no small feat. 
-This approach allows developers to have complete control over the game's mechanics and behavior, 
-which enables them to implement unique features and improvements that are not available in the vanilla game.
+This is under development by a single person as a pure hobby. No agreements or licenses are required in the project. Feel free to do whatever you want with the currently present code. It is not affiliated with Mojang. The project has been in development for almost 2 years, despite being on hold for months depending on my enthusiasm to create it.
 
-Another notable aspect of Project Dream is the dedication to using Kotlin as the primary programming language.
-Kotlin is a modern programming language that is gaining popularity in the software development community due to its concise syntax,
-enhanced type safety, and null safety features.
-The decision to use Kotlin in the development of Project Dream showcases the potential for new languages
-to be used in game development and highlights the benefits of using modern tools and technologies.
-
-Project Dream is still in development, but the progress made so far is impressive.
-The game is shaping up to be a unique and innovative take on Minecraft, with features and gameplay mechanics that set it apart from the vanilla game. 
-With its dedication to Kotlin and a commitment to creating a new experience for Minecraft players.
-
-Project Dream is fully extensible, and their design is built to allow developers change everything.
-
-#### Note:
-Project Dream is being built with **VANILLA** 1.8.9 features. **A LOT** of code present in the last commit can or can't be present in the final code.
-THIS IS NOT STABLE. As a single person developing this, is it for my own fun and **don't** have any financial purposes or Mojang contribuition.
-
-#### All credits go to Mojang.
-
-### Examples
 
 ### Example 1
 #### The following code snippet collects all slots of the container that are food, and adds their nutrition value to the player nutrition without removing the food.
