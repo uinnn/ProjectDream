@@ -14,6 +14,5 @@ class SPacketEnableCompression(var threshold: Int) : ServerLoginPacket {
   }
 
   override fun process(handler: LoginPacketHandler) {
-    handler.processEnableCompression(this)
   }
 }

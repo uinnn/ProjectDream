@@ -1,6 +1,6 @@
 package dream.pos
 
-import com.soywiz.kds.random.*
+import korlibs.datastructure.random.fastRandom
 
 /**
  * All rotations.

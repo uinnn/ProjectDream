@@ -9,6 +9,7 @@ import dream.misc.*
 import dream.nbt.types.*
 import dream.network.*
 import dream.packet.game.*
+import dream.pos.Pos
 import dream.server.management.*
 import dream.stats.*
 import dream.utils.*
@@ -24,16 +25,9 @@ import java.util.*
 @Open
 class PlayerList(val server: Server) : Tickable, PlayerStorage {
   companion object {
-    @JvmField
     val BANNED_PLAYERS_FILE = file("banned-players.json")
-    
-    @JvmField
     val BANNED_IPS_FILE = file("banned-ips.json")
-    
-    @JvmField
     val OPS_FILE = file("ops.json")
-    
-    @JvmField
     val WHITELIST_FILE = file("whitelist.json")
   }
   
@@ -163,8 +157,38 @@ class PlayerList(val server: Server) : Tickable, PlayerStorage {
   /**
    * Creates a [Player] instance for the specified [profile].
    */
-  fun createPlayer(profile: Profile): Player {
-    return players[profile.id]!!
+  fun createPlayer(profile: Profile, network: NetworkManager): Player {
+    val connection = PlayerConnection(server, network)
+    val interaction = PlayerInteraction(server.mainLevel)
+    val player = Player(profile, server, connection, interaction)
+    connection.player = player
+    network.handler = connection
+    interaction.player = player
+    return player
+  }
+
+  /**
+   * Initializes the connection for [player].
+   */
+  fun initConnection(network: NetworkManager, player: Player) {
+    server.profileCache.addEntry(player.profile)
+    read(player)
+
+    val world = server.mainLevel
+    player.apply {
+      level = world
+      interaction.level = world
+
+      sendPacket(SPacketJoin(player.serialId, false, Gamemode.CREATIVE, 0, Difficulty.EASY, 3, LevelType.DEFAULT, true))
+      sendPacket(SPacketPayload("MC|Brand", packetBuffer { writeString("Project Dream") }))
+      sendPacket(SPacketSpawnPos(Pos(0, 120, 0)))
+      sendPacket(CPacketAbilities(false, false, true, false, 0.25f, 0.25f))
+      sendPacket(SPacketHeldItemChange(heldSlot))
+
+      openContainer.addListener(this)
+    }
+
+    onLogin(player)
   }
   
   /**
@@ -179,8 +203,6 @@ class PlayerList(val server: Server) : Tickable, PlayerStorage {
    */
   fun onLoggout(player: Player) {
     write(player)
-    val level = player.level
-    
   }
   
   /**

@@ -10,5 +10,5 @@ typealias ServerHandshakePacket = ServerPacket<HandshakePacketHandler>
  * Base interface for handshake packet handler's.
  */
 interface HandshakePacketHandler : PacketHandler {
-  fun processHandshake(packet: SPacketHandshake)
+  fun processHandshake(packet: PacketHandshake)
 }

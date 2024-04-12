@@ -1,22 +1,27 @@
 package dream.network
 
-import com.google.common.util.concurrent.*
-import dream.api.*
-import dream.chat.*
-import dream.errors.*
-import dream.misc.*
-import dream.packet.login.*
-import dream.server.*
-import dream.utils.*
-import io.netty.bootstrap.*
-import io.netty.channel.*
-import io.netty.channel.epoll.*
-import io.netty.channel.local.*
-import io.netty.channel.nio.*
-import io.netty.channel.socket.*
-import io.netty.channel.socket.nio.*
-import io.netty.handler.timeout.*
-import java.net.*
+import com.google.common.util.concurrent.ThreadFactoryBuilder
+import dream.api.Tickable
+import dream.chat.text
+import dream.errors.Crash
+import dream.misc.Open
+import dream.packet.handshaking.VanillaHandshakePacketHandler
+import dream.packet.login.SPacketDisconnect
+import dream.server.Server
+import dream.utils.childHandler
+import dream.utils.sync
+import io.netty.bootstrap.ServerBootstrap
+import io.netty.channel.ChannelFuture
+import io.netty.channel.ChannelOption
+import io.netty.channel.EventLoopGroup
+import io.netty.channel.epoll.Epoll
+import io.netty.channel.epoll.EpollEventLoopGroup
+import io.netty.channel.epoll.EpollServerSocketChannel
+import io.netty.channel.nio.NioEventLoopGroup
+import io.netty.channel.socket.ServerSocketChannel
+import io.netty.channel.socket.nio.NioServerSocketChannel
+import io.netty.handler.timeout.ReadTimeoutHandler
+import java.net.InetAddress
 
 /**
  * Represents an network system.
@@ -65,14 +70,13 @@ class NetworkSystem(val server: Server) : Tickable {
           it.pipeline()
             .addLast("timeout", ReadTimeoutHandler(30))
             .addLast("legacy_query", PingResponseHandler(this))
-            .addLast("splitter", PacketSplitter())
+            .addLast("splitter", PacketSplitter)
             .addLast("decoder", PacketDecoder(PacketDirection.SERVER))
-            .addLast("prepender", PacketPrepender())
+            .addLast("prepender", PacketPrepender)
             .addLast("encoder", PacketEncoder(PacketDirection.CLIENT))
 
           val network = NetworkManager(PacketDirection.SERVER)
-          // TODO: set network packet handler.
-          // network.handler = NetHandlerHandshakeTCP(server, network)
+          network.handler = VanillaHandshakePacketHandler(network, server)
           networks += network
           it.pipeline().addLast("packet_handler", network)
         }
@@ -86,7 +90,7 @@ class NetworkSystem(val server: Server) : Tickable {
   /**
    * Adds a channel that listens locally
    */
-  fun addLocalEndpoint(): SocketAddress {
+  /*fun addLocalEndpoint(): SocketAddress {
     var channel: ChannelFuture
 
     synchronized(endpoints) {
@@ -94,10 +98,7 @@ class NetworkSystem(val server: Server) : Tickable {
         .channel(LocalServerChannel::class.java)
         .childHandler {
           val network = NetworkManager(PacketDirection.SERVER)
-
-          // TODO: set packet handler
-          // network.handler = NetHandlerHandshakeMemory(server, network)
-
+          network.handler = VanillaHandshakePacketHandler(network, server)
           networks += network
           it.pipeline().addLast("packet_handler", network)
         }
@@ -110,7 +111,7 @@ class NetworkSystem(val server: Server) : Tickable {
     }
 
     return channel.channel().localAddress()
-  }
+  }*/
 
   /**
    * Shuts down all open endpoints.
@@ -126,7 +127,7 @@ class NetworkSystem(val server: Server) : Tickable {
    * gracefully manage processing failures and cleans up dead connections.
    */
   override fun tick(partial: Int) {
-    networks.forEachSync { network ->
+    networks.forEach { network ->
       if (network.hasChannel) {
         if (!network.isChannelOpen) {
           networks -= network
@@ -167,13 +168,13 @@ class NetworkSystem(val server: Server) : Tickable {
       )
     }
 
-    val SERVER_LOCAL_EVENTLOOP by lazy {
+    /*val SERVER_LOCAL_EVENTLOOP by lazy {
       LocalEventLoopGroup(
         ThreadFactoryBuilder()
           .setNameFormat("Netty Local Server IO #%d")
           .setDaemon(true)
           .build()
       )
-    }
+    }*/
   }
 }

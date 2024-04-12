@@ -1,7 +1,7 @@
 package dream.pos
 
-import com.soywiz.kds.random.*
-import dream.utils.*
+import dream.utils.Predicate
+import korlibs.datastructure.random.fastRandom
 
 /**
  * Represents all surface plane type.

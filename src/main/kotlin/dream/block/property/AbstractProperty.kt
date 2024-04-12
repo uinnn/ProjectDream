@@ -1,8 +1,8 @@
 package dream.block.property
 
-import com.soywiz.kds.*
-import dream.misc.*
-import kotlin.reflect.*
+import dream.misc.Open
+import korlibs.datastructure.hashCode
+import kotlin.reflect.KClass
 
 /**
  * A base property implementation.

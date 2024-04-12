@@ -1,8 +1,8 @@
 package dream.chat
 
-import dream.item.*
-import dream.misc.*
-import kotlinx.serialization.*
+import dream.item.ItemStack
+import dream.misc.Open
+import kotlinx.serialization.encodeToString
 
 /**
  * Base top-level interface for any chat component.
@@ -28,7 +28,13 @@ interface Component : Iterable<Component> {
   /**
    * Gets all subcomponent of this root component.
    */
-  val components: MutableList<Component>
+  var childrens: MutableList<Component>
+
+  /**
+   * Gets if this component is a empty component.
+   */
+  val isEmpty: Boolean
+    get() = this === EMPTY
 
   /**
    * Appends the given text to the end of this component.
@@ -53,6 +59,11 @@ interface Component : Iterable<Component> {
   }
 
   companion object {
+
+    /**
+     * An empty component.
+     */
+    val EMPTY = ComponentText("")
 
     /**
      * Deserializes a component by the given [string].

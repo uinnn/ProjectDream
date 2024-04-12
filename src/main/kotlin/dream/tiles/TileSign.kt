@@ -40,7 +40,7 @@ class TileSign : Tile(Tiles.SIGN) {
  * Represents a sign component text.
  */
 @Serializable
-data class SignComponent(var text: String, var clickEvent: SignClickEvent? = null) : ComponentStyle() {
+data class SignComponent(var text: String, var clickEvent: SignClickEvent? = null) : BaseComponent() {
   override val unformattedText: String get() = text
 
   fun run(value: String): SignComponent {
@@ -55,7 +55,7 @@ data class SignComponent(var text: String, var clickEvent: SignClickEvent? = nul
 
   override fun copy() = ComponentText(text).also {
     it.style = style.shallowCopy()
-    components.forEach(it::add)
+    childrens.forEach(it::add)
   }
 }
 

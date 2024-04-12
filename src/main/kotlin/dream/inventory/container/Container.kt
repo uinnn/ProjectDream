@@ -1,11 +1,13 @@
 package dream.inventory.container
 
-import dream.entity.player.*
-import dream.errors.*
+import dream.entity.player.Player
+import dream.errors.MinecraftException
 import dream.inventory.*
-import dream.inventory.slot.*
-import dream.item.*
-import dream.misc.*
+import dream.inventory.slot.Slot
+import dream.item.EmptyItemStack
+import dream.item.ItemStack
+import dream.item.stackOf
+import dream.misc.Open
 
 /**
  * Represents an abstract container that contains slots and provides common functionality.
@@ -318,7 +320,7 @@ abstract class Container : Iterable<Slot> {
    */
   fun onDrag(player: Player, slot: Int, button: Int): ItemStack {
     return when (slot) {
-      -999 -> {}
+      -999 -> { EmptyItemStack }
       else -> getSlot(slot).onDrag(this, player, button)
     }
   }

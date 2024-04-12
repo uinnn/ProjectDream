@@ -2,13 +2,16 @@
 
 package dream.utils
 
-import com.soywiz.kds.random.FastRandom
+import korlibs.datastructure.random.FastRandom
 import kotlin.random.Random
+import kotlin.random.asJavaRandom
 
 /**
  * The random instance used to generate random numbers.
  */
-val Random = FastRandom()
+val Random = FastRandom
+
+fun randomGaussian(rnd: Random = Random) = rnd.asJavaRandom().nextGaussian(3.0,3.0)
 
 fun randomByte(rnd: Random = Random) = rnd.nextInt().toByte()
 fun randomByte(max: Byte, rnd: Random = Random) = randomInt(max.toInt(), rnd).toByte()

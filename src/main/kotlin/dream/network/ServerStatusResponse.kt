@@ -3,7 +3,8 @@ package dream.network
 import com.mojang.authlib.GameProfile
 import dream.chat.Component
 import dream.serializer.ProfileSerializer
-import kotlinx.serialization.*
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
 typealias ProfileList = MutableList<@Serializable(ProfileSerializer::class) GameProfile>
 

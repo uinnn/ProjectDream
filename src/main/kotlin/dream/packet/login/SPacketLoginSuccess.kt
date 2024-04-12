@@ -17,6 +17,5 @@ class SPacketLoginSuccess(var profile: GameProfile) : ServerLoginPacket {
   }
 
   override fun process(handler: LoginPacketHandler) {
-    handler.processLoginSuccess(this)
   }
 }

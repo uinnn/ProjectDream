@@ -14,8 +14,8 @@ data class BlockData(val block: Block, var properties: List<Prop>, var states: L
   val baseState get() = states[0]
   val allowedValues get() = properties.map(Prop::allowedValues)
 
-  constructor(block: Block) : this(block, emptyList(), emptyList())
-  constructor(block: Block, vararg props: Prop) : this(block) {
+  //constructor(block: Block) : this(block, emptyList(), emptyList())
+  constructor(block: Block, vararg props: Prop) : this(block, ArrayList(), ArrayList()) {
     properties = props.sortedBy { it.name }
 
     val data = LinkedHashMap<PropertyMap, IState>()

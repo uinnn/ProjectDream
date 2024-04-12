@@ -2,8 +2,11 @@
 
 package dream.utils
 
-import com.soywiz.kmem.*
-import kotlin.reflect.*
+import korlibs.memory.hasBits
+import korlibs.memory.mask
+import korlibs.memory.setBits
+import korlibs.memory.unsetBits
+import kotlin.reflect.KClass
 
 // BYTE
 
@@ -111,6 +114,14 @@ fun Long.unsetBits(bits: Int) = this and bits.inv()
 fun Long.setBitsIf(bits: Int, onlyIf: Boolean) = if (onlyIf) this or bits else this
 fun Long.hasBits(bits: Int, min: Int) = (this and bits) > min
 fun Long.hasBits(bits: Int) = (toInt() and bits) == bits
+
+fun Long.extract(offset: Long, count: Long): Long = (this ushr offset) and count.mask()
+
+fun Long.insert(value: Long, offset: Long, count: Long): Long {
+  val mask = count.mask()
+  val clearValue = this and (mask shl offset).inv()
+  return clearValue or ((value and mask) shl offset)
+}
 
 fun <T : Enum<T>> Long.setBits(enum: Enum<T>) = setBits(enum.mask)
 fun <T : Enum<T>> Long.setBits(vararg enum: Enum<T>) = enum.calculate { v, t -> t.setBits(v.mask) }

@@ -1,8 +1,8 @@
 package dream.packet.game
 
-import com.soywiz.kds.*
-import dream.entity.base.*
-import dream.network.*
+import dream.entity.base.Entity
+import dream.network.PacketBuffer
+import korlibs.datastructure.mapInt
 
 class SPacketDestroyEntities(var entities: IntArray) : ServerGamePacket {
   

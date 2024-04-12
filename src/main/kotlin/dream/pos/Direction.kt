@@ -1,8 +1,8 @@
 package dream.pos
 
-import com.soywiz.kds.random.*
 import dream.api.*
 import dream.utils.*
+import korlibs.datastructure.random.fastRandom
 import kotlin.math.*
 
 /**

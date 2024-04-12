@@ -10,7 +10,7 @@ data class ComponentScore(
   var name: String,
   var objective: String,
   var value: String = "",
-) : ComponentStyle() {
+) : BaseComponent() {
 
   // TODO: Add support for [ComponentScore] and Scoreboard
   override val unformattedText: String
@@ -18,7 +18,7 @@ data class ComponentScore(
 
   override fun copy() = ComponentScore(name, objective, value).also {
     it.style = style.shallowCopy()
-    components.forEach(it::add)
+    childrens.forEach(it::add)
   }
 }
 

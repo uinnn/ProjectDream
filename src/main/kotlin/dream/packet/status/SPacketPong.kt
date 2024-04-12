@@ -14,6 +14,5 @@ class SPacketPong(var clientTime: Long) : ServerStatusPacket {
   }
 
   override fun process(handler: StatusPacketHandler) {
-    handler.processPong(this)
   }
 }

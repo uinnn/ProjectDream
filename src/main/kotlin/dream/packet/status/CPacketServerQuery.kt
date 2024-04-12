@@ -1,16 +1,13 @@
 package dream.packet.status
 
-import dream.network.*
+import dream.network.PacketBuffer
 
 /**
  * Clientbound Server query packet.
  *
  * Empty packet.
  */
-class CPacketServerQuery() : ClientStatusPacket {
-
-  constructor(buf: PacketBuffer) : this()
-
+object CPacketServerQuery : ClientStatusPacket {
   override fun write(buf: PacketBuffer) {
   }
 

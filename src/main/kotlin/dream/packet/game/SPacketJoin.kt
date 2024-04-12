@@ -1,9 +1,10 @@
 package dream.packet.game
 
-import com.soywiz.kmem.*
-import dream.entity.player.*
-import dream.level.*
-import dream.network.*
+import dream.entity.player.Gamemode
+import dream.level.Difficulty
+import dream.level.LevelType
+import dream.network.PacketBuffer
+import korlibs.memory.hasFlags
 
 /**
  * Serverbound player packet join.

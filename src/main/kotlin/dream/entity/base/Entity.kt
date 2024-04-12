@@ -1,7 +1,5 @@
 package dream.entity.base
 
-import com.soywiz.kmem.toByte
-import com.soywiz.kmem.toIntFloor
 import dream.Sound
 import dream.api.*
 import dream.block.Block
@@ -31,6 +29,8 @@ import dream.pos.Loc
 import dream.pos.Pos
 import dream.pos.Vec
 import dream.utils.*
+import korlibs.memory.toByte
+import korlibs.memory.toIntFloor
 import java.util.*
 import kotlin.coroutines.CoroutineContext
 
@@ -794,7 +794,7 @@ abstract class Entity : Identifiable, Localizable, CompoundStorable, Tickable, N
   fun setAngles(yaw: Float, pitch: Float) {
     val oldYaw = this.yaw
     val oldPitch = this.pitch
-    this.yaw = this.yaw + yaw * 0.15f
+    this.yaw += yaw * 0.15f
     this.pitch = between(-90f, this.pitch + pitch * 0.15f, 90f)
     prevYaw += this.yaw - oldYaw
     prevPitch += this.pitch - oldPitch

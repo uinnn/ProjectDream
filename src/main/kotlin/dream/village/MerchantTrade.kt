@@ -1,9 +1,10 @@
 package dream.village
 
-import dream.item.*
-import dream.misc.*
-import dream.nbt.*
-import dream.nbt.types.*
+import dream.item.EmptyItemStack
+import dream.item.ItemStack
+import dream.misc.Open
+import dream.nbt.CompoundStorable
+import dream.nbt.types.CompoundTag
 
 /**
  * Represents an trade recipe of an merchant.
@@ -36,8 +37,7 @@ class MerchantTrade(
    * Checks if the given items can be used to trade on this recipe.
    */
   fun canTrade(first: ItemStack, second: ItemStack = EmptyItemStack): Boolean {
-    return buyItem.isSimilar(first) && first.amount >= buyItem.amount
-      && (!hasSecondBuyItem || secondBuyItem.isSimilar(second) && second.amount >= secondBuyItem.amount)
+    return first.isSimilarAtLeast(buyItem) && (!hasSecondBuyItem || second.isSimilarAtLeast(secondBuyItem))
   }
 
   /**

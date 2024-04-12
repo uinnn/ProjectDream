@@ -17,6 +17,5 @@ class SPacketDisconnect(var reason: Component) : ServerLoginPacket {
   }
 
   override fun process(handler: LoginPacketHandler) {
-    handler.processDisconnect(this)
   }
 }

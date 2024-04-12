@@ -1,6 +1,6 @@
 package dream.utils
 
-import com.soywiz.kds.random.*
+import korlibs.datastructure.random.FastRandom
 
 /**
  * Returns the size of this iterable.

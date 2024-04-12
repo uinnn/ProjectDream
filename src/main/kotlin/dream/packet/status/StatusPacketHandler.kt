@@ -8,10 +8,6 @@ typealias ServerStatusPacket = ServerPacket<StatusPacketHandler>
 
 /**
  * Packet handler for status-related packets.
- *
- * ### Details:
- * * `process` is for server-side packets control.
- * * `handle` is for client-side packets control
  */
 interface StatusPacketHandler : PacketHandler {
 
@@ -24,14 +20,4 @@ interface StatusPacketHandler : PacketHandler {
    * Handle client-side [CPacketServerQuery] packet.
    */
   fun handleServerQuery(packet: CPacketServerQuery)
-
-  /**
-   * Process server-side [SPacketPong] packet.
-   */
-  fun processPong(packet: SPacketPong)
-
-  /**
-   * Process server-side [SPacketServerInfo] packet.
-   */
-  fun processServerInfo(packet: SPacketServerInfo)
 }

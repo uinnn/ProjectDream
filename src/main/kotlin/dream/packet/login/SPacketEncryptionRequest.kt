@@ -26,6 +26,5 @@ class SPacketEncryptionRequest(
   }
 
   override fun process(handler: LoginPacketHandler) {
-    handler.processEncryptionRequest(this)
   }
 }

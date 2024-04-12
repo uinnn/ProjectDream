@@ -9,6 +9,7 @@ import dream.inventory.*
 import dream.inventory.container.*
 import dream.item.*
 import dream.item.food.*
+import dream.level.Level
 import dream.network.*
 import dream.pos.*
 import dream.server.*
@@ -18,15 +19,21 @@ import java.net.*
 /**
  * Represents a player.
  */
-abstract class Player(
+class Player(
   val profile: Profile,
   var server: Server,
   var connection: PlayerConnection,
   var interaction: PlayerInteraction,
-  override val displayName: Component,
-  override val entity: Entity?,
-  override var sendFeedback: Boolean,
-) : EntityLiving(), ContainerListener, CommandSender {
+) : EntityLiving(), ContainerListener {
+
+  /*
+  override val name: String
+  override val pos: Pos
+  override val level: Level
+  override val displayName: Component get() = text(name)
+  override val entity: Entity? get() = this
+  override var sendFeedback: Boolean = true
+   */
   
   /**
    * Gets the network of this player.

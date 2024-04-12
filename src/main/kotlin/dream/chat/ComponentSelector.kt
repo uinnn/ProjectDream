@@ -6,12 +6,12 @@ import kotlinx.serialization.Serializable
  * Represents a text chat component.
  */
 @Serializable
-data class ComponentSelector(var selector: String) : ComponentStyle() {
+data class ComponentSelector(var selector: String) : BaseComponent() {
   override val unformattedText: String get() = selector
 
   override fun copy() = ComponentSelector(selector).also {
     it.style = style.shallowCopy()
-    components.forEach(it::add)
+    childrens.forEach(it::add)
   }
 }
 

@@ -3,18 +3,18 @@ package dream.chat
 /**
  * Base component style for any chat component.
  */
-abstract class ComponentStyle : Component {
-  override val components: MutableList<Component> = ArrayList()
+abstract class BaseComponent : Component {
+  override var childrens: MutableList<Component> = ArrayList(4)
 
   override var style: Style = Style()
     set(value) {
       field = value
-      components.forEach { it.style.parent(value) }
+      childrens.forEach { it.style.parent(value) }
     }
 
   override val formatedText: String
     get() = buildString {
-      components.forEach {
+      childrens.forEach {
         append(it.style.formatted())
         append(it.unformattedText)
         append(Color.RESET)
@@ -23,7 +23,7 @@ abstract class ComponentStyle : Component {
 
   override val unformattedText: String
     get() = buildString {
-      components.forEach { append(it.unformattedText) }
+      childrens.forEach { append(it.unformattedText) }
     }
 
   override fun add(text: String): Component {
@@ -32,14 +32,14 @@ abstract class ComponentStyle : Component {
 
   override fun add(component: Component): Component {
     component.style.parent(RootStyle)
-    components.add(component)
+    childrens.add(component)
     return this
   }
 
   override fun iterator(): Iterator<Component> {
     // in vanilla minecraft, ComponentStyle make a copy for each entry before creating a iterator
     // in dream minecraft software, this not creates a copy
-    return (components + this).iterator()
+    return (childrens + this).iterator()
 
     /* Vanilla Minecraft Software
     return (components + this)
@@ -53,11 +53,11 @@ abstract class ComponentStyle : Component {
      */
   }
 
-  override fun hashCode() = 31 * style.hashCode() * components.hashCode()
-  override fun toString() = "ComponentStyle(style=$style, siblings=$components)"
+  override fun hashCode() = 31 * style.hashCode() * childrens.hashCode()
+  override fun toString() = "BaseComponent(style=$style, siblings=$childrens)"
   override fun equals(other: Any?): Boolean = when {
     this === other -> true
-    other !is ComponentStyle -> false
-    else -> components == other.components && style == other.style
+    other !is BaseComponent -> false
+    else -> childrens == other.childrens && style == other.style
   }
 }

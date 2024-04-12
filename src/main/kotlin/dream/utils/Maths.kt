@@ -2,9 +2,12 @@
 
 package dream.utils
 
-import com.soywiz.kmem.*
+import korlibs.memory.isPowerOfTwo
+import korlibs.memory.nextPowerOfTwo
 import net.jafama.FastMath
-import kotlin.math.*
+import kotlin.math.abs
+import kotlin.math.floor
+import kotlin.math.sqrt
 
 val SQRT_2 = sqrt(2.0)
 

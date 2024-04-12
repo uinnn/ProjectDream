@@ -1,10 +1,10 @@
 package dream.item.food
 
-import com.soywiz.kds.*
-import dream.entity.player.*
-import dream.nbt.*
-import dream.nbt.types.*
-import dream.utils.*
+import dream.entity.player.Player
+import dream.nbt.CompoundStorable
+import dream.nbt.types.CompoundTag
+import dream.utils.between
+import korlibs.datastructure.hashCode
 
 /**
  * Represents a food stats for a player.

@@ -2,7 +2,6 @@
 
 package dream.item
 
-import com.soywiz.kds.hashCode
 import dream.Key
 import dream.api.Keyable
 import dream.api.Locale
@@ -36,6 +35,7 @@ import dream.pos.Direction
 import dream.pos.Pos
 import dream.tab.CreativeTab
 import dream.utils.*
+import korlibs.datastructure.hashCode
 
 /**
  * Represents an Item Stack in inventory.
@@ -47,58 +47,58 @@ data class ItemStack(
   var metadata: Int = 0,
   var tag: CompoundTag = CompoundTag(),
 ) : Stackable, CompoundStorable, Keyable, Locale, Nameable, Comparable<ItemStack> {
-  
+
   /**
    * Constructs a new empty [ItemStack] with Air item and 0 amount.
    *
    * Use [EmptyItemStack] if you are constructing a empty item.
    */
   constructor() : this(Items.AIR, 0)
-  
+
   /**
    * Constructs a new [ItemStack] from [tag].
    */
   constructor(tag: CompoundTag) : this() {
     load(tag)
   }
-  
+
   /**
    * Gets the key of this item.
    */
   override val key: Key get() = item.key
-  
+
   /**
    * Gets the id of this item.
    */
   val id: Int get() = item.id
-  
+
   /**
    * Checks if this item is empty (their [amount] below or equal to 0).
    */
   val isEmpty: Boolean get() = amount <= 0
-  
+
   /**
    * Number of ticks that this item has in inventory.
    *
    * If a player removes this item of an inventory this will be setted to 0.
    */
   var ticks = 0
-  
+
   /**
    * Number of animation frames to go when receiving an item.
    */
   var popTime = 0
-  
+
   /**
    * Place block checker for adventure mode.
    */
   var placeCheck = AdventureCheck("CanPlaceOn")
-  
+
   /**
    * Break block checker for adventure mode.
    */
   var breakCheck = AdventureCheck("CanDestroy")
-  
+
   /**
    * The entity representation of this item.
    *
@@ -106,13 +106,13 @@ data class ItemStack(
    * to determinate this item standing in the frame.
    */
   var entityRepresentation: Entity? = null
-  
+
   /**
    * Gets if this item has an entity representation.
    */
   val hasEntity: Boolean
     get() = entityRepresentation != null
-  
+
   /**
    * Returns the [ItemFrame] representation of this item.
    *
@@ -120,85 +120,85 @@ data class ItemStack(
    */
   val itemFrame: ItemFrame?
     get() = entityRepresentation as? ItemFrame
-  
+
   /**
    * Returns if this item is on an item frame.
    */
   val isOnFrame: Boolean
     get() = itemFrame != null
-  
+
   /**
    * Returns if this item tag is not empty.
    */
   val hasTag: Boolean get() = tag.isNotEmpty()
-  
+
   /**
    * Returns if this item is air.
    */
   val isAir: Boolean get() = item is ItemAir
-  
+
   /**
    * Returns if this item is tool.
    */
   val isTool: Boolean get() = item is ItemTool
-  
+
   /**
    * Gets the tool associated to this item, or null if is not a [ItemTool]
    */
   val tool get() = item as? ItemTool
-  
+
   /**
    * Returns if this item is armor.
    */
   val isArmor: Boolean get() = item is ItemArmor
-  
+
   /**
    * Gets the armor associated to this item, or null if is not a [ItemArmor]
    */
   val armor get() = item as? ItemArmor
-  
+
   /**
    * Returns if this item is food.
    */
   val isFood: Boolean get() = item is ItemFood
-  
+
   /**
    * Gets the food associated to this item, or null if item is not [ItemFood].
    */
   val food: Food? get() = (item as? ItemFood)?.food
-  
+
   /**
    * Returns if this item is a block.
    */
   val isBlock: Boolean get() = item is ItemBlock
-  
+
   /**
    * Gets the block associated to this item, or null if item is not [ItemBlock].
    */
   val block: Block? get() = item.block
-  
+
   /**
    * If this item has subtypes.
    *
    * Some items like dyes, wools and others, have various item varieties.
    */
   val hasSubtypes: Boolean get() = item.hasSubtypes
-  
+
   /**
    * If this item has any effects.
    */
   val hasEffect: Boolean get() = item.hasEffect(this)
-  
+
   /**
    * Gets the animation of this item.
    */
   val animation: ItemAnimation get() = item.getAnimation(this)
-  
+
   /**
    * Gets the use duration of this item.
    */
   val useDuration: Int get() = item.getUseDuration(this)
-  
+
   /**
    * Gets the display name of this item.
    *
@@ -209,7 +209,7 @@ data class ItemStack(
     set(value) {
       addDisplay("Name", value.toTag())
     }
-  
+
   /**
    * Gets the name tag of this item.
    */
@@ -222,12 +222,12 @@ data class ItemStack(
         clearName()
       }
     }
-  
+
   /**
    * Gets if this item has a custom display name.
    */
   override val hasName: Boolean get() = hasDisplay("Name")
-  
+
   /**
    * Gets the lore of this item.
    *
@@ -259,12 +259,12 @@ data class ItemStack(
         clearLore()
       }
     }
-  
+
   /**
    * Gets if this item has a custom display lore.
    */
   val hasLore: Boolean get() = hasDisplay("Lore")
-  
+
   /**
    * Gets the repair cost in anvil of this item.
    */
@@ -273,7 +273,7 @@ data class ItemStack(
     set(value) {
       tag["RepairCost"] = value
     }
-  
+
   /**
    * Gets the color hex value of this item.
    *
@@ -290,13 +290,13 @@ data class ItemStack(
         addDisplay("color", value.toTag())
       }
     }
-  
+
   /**
    * Returns if this item has color tag.
    */
   val hasColor: Boolean
     get() = hasDisplay("color")
-  
+
   /**
    * Returns if this item accepts color.
    *
@@ -304,61 +304,61 @@ data class ItemStack(
    */
   val acceptsColor: Boolean
     get() = isArmor && (item as ItemArmor).material.hasColor
-  
+
   /**
    * Gets the creative tab of this item.
    */
   val tab: CreativeTab?
     get() = item.tab
-  
+
   /**
    * Returns if this item has a creative tab present.
    */
   val hasTab: Boolean
     get() = item.hasTab
-  
+
   /**
    * Gets the rarity of this item.
    */
   val rarity: ItemRarity
     get() = item.getRarity(this)
-  
+
   /**
    * Gets if this item is damaged.
    */
   val isDamaged: Boolean
     get() = item.isDamageable(this) && metadata > 0
-  
+
   /**
    * Gets if this item is damageable.
    */
   val isDamageable: Boolean
     get() = maxDurability > 0 && !isUnbreakable
-  
+
   /**
    * Gets the max durability of this item.
    */
   val maxDurability: Int
     get() = item.maxDurability
-  
+
   /**
    * Gets the max stack of this item.
    */
   val maxStack: Int
     get() = item.maxStack
-  
+
   /**
    * If this item will be rendered fully 3D.
    */
   val fullyRender: Boolean
     get() = item.fullyRender
-  
+
   /**
    * Gets the unlocalized name of this item.
    */
   override val unlocalName: String
     get() = item.getUnlocalizedName(this)
-  
+
   /**
    * Gets the `"display"` tag of this item.
    *
@@ -366,13 +366,13 @@ data class ItemStack(
    */
   val display: CompoundTag?
     get() = tag.compoundOrNull("display")
-  
+
   /**
    * Gets if this item has `"display"` tag.
    */
   val hasDisplay: Boolean
     get() = display != null
-  
+
   /**
    * Gets the `"ench"` tag of this item.
    *
@@ -387,7 +387,7 @@ data class ItemStack(
         tag.remove("ench")
       }
     }
-  
+
   /**
    * Gets all enchantments by this item.
    */
@@ -398,13 +398,13 @@ data class ItemStack(
         Enchantments.getDataOrNull(it)
       }
     }
-  
+
   /**
    * Gets if this item has any enchantments.
    */
   val isEnchanted: Boolean
     get() = enchantmentTag != null
-  
+
   /**
    * Gets the `"AttributeModifiers"` tag of this item.
    *
@@ -419,13 +419,13 @@ data class ItemStack(
         tag.remove("AttributeModifiers")
       }
     }
-  
+
   /**
    * Gets if this item has any attributes.
    */
   val hasAttributes: Boolean
     get() = attributeTag != null
-  
+
   /**
    * Gets if this item is unbreakable
    */
@@ -434,7 +434,7 @@ data class ItemStack(
     set(value) {
       tag["Unbreakable"] = value
     }
-  
+
   /**
    * Gets the hide flags of this item.
    */
@@ -443,13 +443,13 @@ data class ItemStack(
     set(value) {
       tag["HideFlags"] = value
     }
-  
+
   /**
    * Verify if this item has the specified hide [flag] present.
    */
   fun hasFlag(flag: HideFlag) = tag.hasBits("HideFlags", flag)
   operator fun contains(flag: HideFlag) = hasFlag(flag)
-  
+
   /**
    * Adds the specified hide [flag] on this item.
    */
@@ -457,7 +457,7 @@ data class ItemStack(
     tag.setBits("HideFlags", flag)
     return this
   }
-  
+
   /**
    * Adds all hide [flags] on this item.
    */
@@ -465,10 +465,10 @@ data class ItemStack(
     for (flag in flags) {
       addFlag(flag)
     }
-    
+
     return this
   }
-  
+
   /**
    * Removes the specified hide [flag] on this item.
    */
@@ -476,7 +476,7 @@ data class ItemStack(
     tag.unsetBits("HideFlags", flag)
     return this
   }
-  
+
   /**
    * Removes all hide [flags] on this item.
    */
@@ -484,30 +484,30 @@ data class ItemStack(
     for (flag in flags) {
       removeFlag(flag)
     }
-    
+
     return this
   }
-  
+
   /**
    * Verify and updates the cached results of the adventure place checker.
    */
   fun canAdventurePlace(block: Block) = placeCheck.verify(tag, block)
-  
+
   /**
    * Verify and updates the cached results of the adventure break checker.
    */
   fun canAdventureBreak(block: Block) = breakCheck.verify(tag, block)
-  
+
   /**
    * Returns if this item has [key] in [subTag].
    */
   fun hasTag(key: String) = tag.has(key)
-  
+
   /**
    * Returns if this item has [key] in [subTag].
    */
   fun hasTag(key: String, type: TagType<out Tag>) = tag.has(key, type)
-  
+
   /**
    * Returns a sub tag behind [subTag] specified by [key].
    *
@@ -517,16 +517,16 @@ data class ItemStack(
     if (hasTag(key, CompoundType)) {
       return tag.compound(key)
     }
-    
+
     if (create) {
       val tag = CompoundTag()
       this.tag[key] = tag
       return tag
     }
-    
+
     return CompoundTag()
   }
-  
+
   /**
    * Returns a sub compound tag behind [subTag] specified by [key] or null if not present.
    *
@@ -536,16 +536,16 @@ data class ItemStack(
     if (hasTag(key, CompoundType)) {
       return tag.compound(key)
     }
-    
+
     if (create) {
       val tag = CompoundTag()
       this.tag[key] = tag
       return tag
     }
-    
+
     return null
   }
-  
+
   /**
    * Returns a sub list tag behind [subTag] specified by [key].
    *
@@ -555,16 +555,16 @@ data class ItemStack(
     if (hasTag(key, ListType)) {
       return tag.list(key)
     }
-    
+
     if (create) {
       val tag = ListTag<T>()
       this.tag[key] = tag
       return tag
     }
-    
+
     return ListTag()
   }
-  
+
   /**
    * Returns a sub list tag behind [subTag] specified by [key] or null if not present.
    *
@@ -574,16 +574,16 @@ data class ItemStack(
     if (hasTag(key, ListType)) {
       return tag.list(key)
     }
-    
+
     if (create) {
       val tag = ListTag<T>()
       this.tag[key] = tag
       return tag
     }
-    
+
     return null
   }
-  
+
   /**
    * Adds a new tag on the main tag of this item.
    */
@@ -591,7 +591,7 @@ data class ItemStack(
     set(key, tag)
     return this
   }
-  
+
   /**
    * Adds a new tag on the display tag of this item.
    */
@@ -599,7 +599,7 @@ data class ItemStack(
     subTag("display", true)[key] = tag
     return this
   }
-  
+
   /**
    * Removes [key] on [tag].
    */
@@ -607,7 +607,7 @@ data class ItemStack(
     tag.remove(key)
     return this
   }
-  
+
   /**
    * Removes [key] on [display] tag and removes display tag if empty.
    */
@@ -617,60 +617,60 @@ data class ItemStack(
     if (display.isEmpty()) {
       tag.remove("display")
     }
-    
+
     return this
   }
-  
+
   /**
    * Gets a possible existent display tag by [key].
    */
   final inline fun <reified T : Tag> getDisplay(key: String): T? {
     return display?.getTag(key)
   }
-  
+
   /**
    * Returns if the display tag of this item has [key].
    */
   fun hasDisplay(key: String): Boolean {
     return display?.has(key) == true
   }
-  
+
   /**
    * Returns if the display tag of this item has [key].
    */
   fun hasDisplay(key: String, type: TagType<out Tag>): Boolean {
     return display?.has(key, type) == true
   }
-  
+
   /**
    * Clear any custom display name of this item.
    */
   fun clearName() = removeDisplay("Name")
-  
+
   /**
    * Clear any custom display lore of this item.
    */
   fun clearLore() = removeDisplay("Lore")
-  
+
   /**
    * Clear any display associated tag of this item.
    */
   fun clearDisplay() = removeTag("display")
-  
+
   /**
    * Gets the display tag of this item or creates a new one.
    */
   fun getOrCreateDisplay(): CompoundTag {
     return tag.getOrAdd("display") { CompoundTag() }
   }
-  
+
   /**
    * Gets the lore tag of this item or creates a new one.
    */
   fun getOrCreateLore(): ListTag<StringTag> {
     return getOrCreateDisplay().getOrAdd("Lore") { ListTag() }
   }
-  
+
   /**
    * Adds a lore on this item.
    */
@@ -678,7 +678,7 @@ data class ItemStack(
     getOrCreateLore().add(str.toTag())
     return this
   }
-  
+
   /**
    * Adds a lore on this item.
    */
@@ -686,7 +686,7 @@ data class ItemStack(
     getOrCreateLore().add(index, str.toTag())
     return this
   }
-  
+
   /**
    * Adds a lore on this item.
    */
@@ -694,7 +694,7 @@ data class ItemStack(
     getOrCreateLore().addAll(str.toTag())
     return this
   }
-  
+
   /**
    * Adds a lore on this item.
    */
@@ -702,7 +702,7 @@ data class ItemStack(
     getOrCreateLore().addAll(index, str.toTag())
     return this
   }
-  
+
   /**
    * Adds the specified [enchantment] with given [level] on this item.
    */
@@ -712,21 +712,21 @@ data class ItemStack(
     tag += data
     return this
   }
-  
+
   /**
    * Removes the specified [enchantment] if present on this item.
    */
   fun disenchant(enchantment: Enchantment): ItemStack {
     val enchs = enchantmentTag ?: return this
-    
+
     enchs.removeIf { it.hasEnchantment(enchantment) }
     if (enchs.isEmpty()) {
       tag.remove("ench")
     }
-    
+
     return this
   }
-  
+
   /**
    * Returns if this item is enchanted with [enchantment].
    */
@@ -734,7 +734,7 @@ data class ItemStack(
     val enchs = enchantmentTag ?: return false
     return enchs.any { it.hasEnchantment(enchantment) }
   }
-  
+
   /**
    * Returns the enchantment compound tag represented by [enchantment]
    * present on this item tag.
@@ -743,7 +743,7 @@ data class ItemStack(
     val enchs = enchantmentTag ?: return null
     return enchs.find { it.hasEnchantment(enchantment) }
   }
-  
+
   /**
    * Gets the enchantment level of [enchantment] on this item.
    */
@@ -751,14 +751,14 @@ data class ItemStack(
     val tag = enchantmentTag(enchantment) ?: return 0
     return tag.int("lvl")
   }
-  
+
   /**
    * Gets if this item has a custom entity when dropped.
    */
   fun hasCustomEntity(level: Level): Boolean {
     return item.hasCustomEntity(level, this)
   }
-  
+
   /**
    * Determines if this Item is fire immune.
    *
@@ -767,14 +767,14 @@ data class ItemStack(
   fun isFireImmune(entity: EntityItem): Boolean {
     return item.isFireImmune(entity.level, entity, this)
   }
-  
+
   /**
    * Gets the lifespan in ticks for [EntityItem] before removes this item.
    */
   fun lifespan(level: Level): Int {
     return item.lifespan(level, this)
   }
-  
+
   /**
    * Creates an entity associated to this item.
    *
@@ -791,7 +791,7 @@ data class ItemStack(
       entity
     }
   }
-  
+
   /**
    * Creates an entity associated to this item.
    *
@@ -802,14 +802,14 @@ data class ItemStack(
   fun createEntity(level: Level, pos: Pos): Entity {
     return createEntity(level, pos.x, pos.y, pos.z)
   }
-  
+
   /**
    * Gets if this item can be dropped.
    */
   fun canDrop(level: Level, x: Double, y: Double, z: Double): Boolean {
     return item.canDrop(level, this, x, y, z)
   }
-  
+
   /**
    * Drops this item.
    *
@@ -819,7 +819,7 @@ data class ItemStack(
     if (isAir || amount <= 0) {
       return null
     }
-    
+
     return if (ignoreCanDrop || canDrop(level, x, y, z)) {
       val entity = createEntity(level, x, y, z)
       item.onDrop(level, this, entity, x, y, z)
@@ -828,7 +828,7 @@ data class ItemStack(
       null
     }
   }
-  
+
   /**
    * Drops this item.
    *
@@ -837,59 +837,59 @@ data class ItemStack(
   fun drop(level: Level, pos: Pos, ignoreCanDrop: Boolean = false): Entity? {
     return drop(level, pos.x, pos.y, pos.z, ignoreCanDrop)
   }
-  
+
   /**
    * Called every tick since is in inventory of [entity].
    */
   fun onTick(entity: Entity, slot: Int, selected: Boolean) {
     if (popTime > 0) popTime--
-    
+
     ticks++
     item.onTick(entity.level, this, entity, slot, selected)
   }
-  
+
   /**
    * Called to tick item while dropped as [EntityItem].
    */
   fun onEntityTick(entity: EntityItem) {
     item.onEntityTick(entity.level, this, entity)
   }
-  
+
   /**
    * Called to tick item when player is using.
    */
   fun onUseTick(player: Player) {
     item.onUseTick(player.level, this, player)
   }
-  
+
   /**
    * Called to tick armor on the armor slot.
    */
   fun onArmorTick(entity: Entity, slot: Int) {
     item.onArmorTick(entity.level, this, entity, slot)
   }
-  
+
   /**
    * Called when [player] stops using this item.
    */
   fun onStoppedUsing(player: Player, timeLeft: Int) {
     item.onStoppedUsing(player.level, this, player, timeLeft)
   }
-  
+
   /**
    * Called when a player right clicks in a block using this item.
    */
   fun onUse(player: Player, pos: Pos, direction: Direction, hit: Pos = Pos.ZERO): Boolean {
     return item.onUse(player.level, this, player, pos, direction, hit)
   }
-  
+
   /**
    * Called whenever this item is equipped and the player right clicks using this item.
    */
   fun onRightClick(player: Player): ItemStack {
     return item.onRightClick(player.level, this, player)
   }
-  
+
   /**
    * Called when the player finishes using this Item (e.g. finishes eating.).
    *
@@ -898,28 +898,28 @@ data class ItemStack(
   fun onFinishUse(player: Player): ItemStack {
     return item.onFinishUse(player.level, this, player)
   }
-  
+
   /**
    * Called when [player] right-clicks on [target] using this item.
    */
   fun onInteract(player: Player, target: Entity): Boolean {
     return item.onInteract(player.level, this, player, target)
   }
-  
+
   /**
    * Hurts the given [target] entity by [attacker] using this item.
    */
   fun hurt(attacker: Creature, target: Entity): Boolean {
     return item.hurt(attacker.level, this, attacker, target)
   }
-  
+
   /**
    * Called when [player] mines [block] succesfully using this item.
    */
   fun mine(player: Player, block: Block, pos: Pos): Boolean {
     return item.mine(player.level, this, player, block, pos)
   }
-  
+
   /**
    * Returns true if players can use this item to affect
    * the world (e.g. placing blocks) when not in creative.
@@ -927,45 +927,45 @@ data class ItemStack(
   fun canEditBlocks(player: Player): Boolean {
     return item.canEditBlocks(player.level, this, player)
   }
-  
+
   /**
    * Returns if this item is repaired by using [repair] in anvil.
    */
   fun isRepairable(repair: ItemStack): Boolean {
     return item.isRepairable(this, repair)
   }
-  
+
   /**
    * Gets destroy speed multiplier of this item when breaking [block].
    */
   fun getDestroySpeed(block: Block): Float {
     return item.getDestroySpeed(this, block)
   }
-  
+
   /**
    * Verify if this item can harvest [block].
    */
   fun canHarvest(block: Block): Boolean {
     return item.canHarvest(this, block)
   }
-  
+
   /**
    * Whether this Item can be used to hide player head for enderman.
    */
   fun isEnderMask(player: Player, enderman: Enderman): Boolean {
     return item.isEnderMask(player.level, this, player, enderman)
   }
-  
+
   /**
    * Grows this item by 1.
    */
   operator fun inc() = grow(1)
-  
+
   /**
    * Shrinks this item by 1.
    */
   operator fun dec() = shrink(1)
-  
+
   /**
    * Adds [quantity] to the stack of this item.
    */
@@ -973,7 +973,7 @@ data class ItemStack(
     amount += quantity
     return this
   }
-  
+
   /**
    * Removes [quantity] to the stack of this item.
    */
@@ -981,7 +981,7 @@ data class ItemStack(
     amount -= quantity
     return this
   }
-  
+
   /**
    * Removes [quantity] to the stack of this item.
    * @return if the new amount is below or equal to 0.
@@ -990,7 +990,7 @@ data class ItemStack(
     amount -= quantity
     return isEmpty
   }
-  
+
   /**
    * Splits this item by the given [quantity].
    *
@@ -1013,21 +1013,21 @@ data class ItemStack(
     shrink(min)
     return copy(min)
   }
-  
+
   /**
    * Returns if this item is of type [T].
    */
   final inline fun <reified T : Item> its(): Boolean {
     return item is T
   }
-  
+
   /**
    * Returns if this item is of type [item].
    */
   fun its(item: Item): Boolean {
     return this.item::class.isInstance(item)
   }
-  
+
   /**
    * Executes [action] if this item stack is air.
    */
@@ -1036,7 +1036,7 @@ data class ItemStack(
       action(this)
     }
   }
-  
+
   /**
    * Executes [action] if this item stack is not air.
    */
@@ -1045,7 +1045,7 @@ data class ItemStack(
       action(this)
     }
   }
-  
+
   /**
    * Executes [action] if this item stack item is equals to [T].
    */
@@ -1054,7 +1054,7 @@ data class ItemStack(
       action(this)
     }
   }
-  
+
   /**
    * Executes [action] if this item stack item is not equals to [T].
    */
@@ -1063,14 +1063,14 @@ data class ItemStack(
       action(this)
     }
   }
-  
+
   /**
    * Gets this item or null if this item is air.
    */
   fun orNull(): ItemStack? {
     return if (isAir) null else this
   }
-  
+
   /**
    * Creates a copy of this item stack.
    */
@@ -1079,7 +1079,7 @@ data class ItemStack(
     copy.ticks = ticks
     return copy
   }
-  
+
   /**
    * Copies this item with given [amount].
    */
@@ -1088,21 +1088,21 @@ data class ItemStack(
     copy.ticks = ticks
     return copy
   }
-  
+
   /**
    * Creates a copy of this item stack or null if this item is air.
    */
   fun copyOrNull(): ItemStack? {
     return if (isAir) null else copy()
   }
-  
+
   /**
    * Copies this item with given [amount] or null if this item is air.
    */
   fun copyOrNull(amount: Int): ItemStack? {
     return if (isAir) null else copy(amount)
   }
-  
+
   /**
    * Applies the given [builder] to the tag of this item.
    */
@@ -1110,7 +1110,7 @@ data class ItemStack(
     tag.apply(builder)
     return this
   }
-  
+
   /**
    * Creates a new [Component] with all data from this item.
    *
@@ -1121,10 +1121,10 @@ data class ItemStack(
     if (hasName) {
       name.style.italic(true)
     }
-    
+
     return text("[").add(name).add("]").showItem(this).color(rarity.color)
   }
-  
+
   /**
    * Verifies if this item is similar to [other], without comparing their stacks.
    *
@@ -1132,10 +1132,21 @@ data class ItemStack(
    */
   fun isSimilar(other: ItemStack, checkTag: Boolean = true): Boolean {
     if (this === other) return true
-    
+
     return item == other.item && metadata == other.metadata && if (checkTag) tag == other.tag else true
   }
-  
+
+  /**
+   * Verifies if this item is similar to [other], checking if the stack of this item
+   * is higher or equals than [min] param.
+   *
+   * @param min the min amount of stack of this item to be valided as true.
+   * @param checkTag if checks the tag of both is equals.
+   */
+  fun isSimilarAtLeast(other: ItemStack, min: Int = other.amount, checkTag: Boolean = true): Boolean {
+    return isSimilar(other, checkTag) && amount >= min
+  }
+
   /**
    * Checks if this ItemStack is equal to the specified ItemStack.
    *
@@ -1146,27 +1157,27 @@ data class ItemStack(
    */
   fun isEquals(other: ItemStack, checkTag: Boolean = true, checkAmount: Boolean = true): Boolean {
     if (this === other) return true
-    
+
     val similar = isSimilar(other, checkTag)
     return if (!checkAmount) similar else similar && amount == other.amount
   }
-  
+
   override fun equals(other: Any?): Boolean {
     if (other !is ItemStack) return false
-    
+
     return isEquals(other)
   }
-  
+
   /**
    * Verifies if [tag] has [key] presents.
    */
   operator fun contains(key: String) = key in tag
-  
+
   /**
    * Verifies if the stack of this item equals or lower than [amount].
    */
   operator fun contains(amount: Int) = amount <= this.amount
-  
+
   /**
    * Compares the stack of this item by [amount]
    */
@@ -1174,12 +1185,12 @@ data class ItemStack(
   override fun compareTo(other: ItemStack): Int {
     return amount.compareTo(other.amount)
   }
-  
+
   /**
    * Gets a tag by the specified [key].
    */
   operator fun get(key: String) = tag[key]
-  
+
   operator fun set(key: String, value: Tag) = tag.set(key, value)
   operator fun set(key: String, value: Boolean) = set(key, ByteTag.of(value))
   operator fun set(key: String, value: Byte) = set(key, ByteTag.of(value))
@@ -1192,7 +1203,7 @@ data class ItemStack(
   operator fun set(key: String, value: String) = set(key, StringTag.of(value))
   operator fun set(key: String, value: IntArray) = set(key, IntArrayTag(value))
   operator fun <T : Any> set(key: String, adapter: TagAdapter<T>, value: T) = adapter.write(key, tag, value)
-  
+
   /**
    * Saves this item inside of [tag].
    */
@@ -1205,7 +1216,7 @@ data class ItemStack(
       tag["tag"] = this.tag
     }
   }
-  
+
   /**
    * Loads this item by [tag].
    */
@@ -1218,23 +1229,23 @@ data class ItemStack(
       item.readTag(this, this.tag)
     }
   }
-  
+
   override fun toString(): String {
     return "ItemStack(item=$item, metadata=$metadata, amount=$amount, tag=$tag)"
   }
-  
+
   override fun hashCode(): Int {
     return hashCode(item, amount, metadata, tag)
   }
-  
+
   private fun CompoundTag.withEnch(enchantment: Enchantment, level: Int): CompoundTag {
     set("id", enchantment.id.toShort())
     set("lvl", level)
     return this
   }
-  
+
   companion object {
-    
+
     /**
      * Empty [ItemStack].
      *
@@ -1243,7 +1254,7 @@ data class ItemStack(
      * This not supports changing their tag.
      */
     val EMPTY get() = EmptyItemStack
-    
+
     /**
      * Decodes [data] to a [ItemStack].
      */

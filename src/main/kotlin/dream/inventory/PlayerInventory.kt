@@ -1,13 +1,16 @@
 package dream.inventory
 
-import com.soywiz.kmem.*
-import dream.collections.*
-import dream.entity.player.*
-import dream.item.*
-import dream.misc.*
-import dream.nbt.*
-import dream.nbt.types.*
-import dream.utils.*
+import dream.collections.ItemList
+import dream.entity.player.Player
+import dream.item.EmptyItemStack
+import dream.item.ItemStack
+import dream.misc.Open
+import dream.nbt.ListStorable
+import dream.nbt.types.CompoundTag
+import dream.nbt.types.ListTag
+import dream.nbt.types.createItem
+import dream.utils.and
+import korlibs.memory.clamp
 
 /**
  * Represents the player's inventory.

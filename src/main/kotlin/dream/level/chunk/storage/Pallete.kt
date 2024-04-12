@@ -62,7 +62,7 @@ class Pallete(var yBase: Int, storeSkylight: Boolean) {
    * @return The state ID of the block at the specified coordinates.
    */
   fun getStateId(x: Int, y: Int, z: Int): Int {
-    return data[posToIndex(x, y, z)].code
+    return data[posToChunkIndex(x, y, z)].code
   }
   
   /**
@@ -140,7 +140,7 @@ class Pallete(var yBase: Int, storeSkylight: Boolean) {
       }
     }
     
-    data[posToIndex(x, y, z)] = state.id.toChar()
+    data[posToChunkIndex(x, y, z)] = state.id.toChar()
   }
   
   /**

@@ -16,14 +16,14 @@ class NibbleArray(val data: ByteArray = ByteArray(2048)) {
    * Returns the nibble of data corresponding to the passed in x, y, z. y is at most 6 bits, z is at most 4.
    */
   operator fun get(x: Int, y: Int, z: Int): Int {
-    return get(posToIndex(x, y, z))
+    return get(posToChunkIndex(x, y, z))
   }
 
   /**
    * Arguments are x, y, z, val. Sets the nibble of data at x << 11 | z << 7 | y to val.
    */
   operator fun set(x: Int, y: Int, z: Int, value: Int) {
-    set(posToIndex(x, y, z), value)
+    set(posToChunkIndex(x, y, z), value)
   }
 
   /**

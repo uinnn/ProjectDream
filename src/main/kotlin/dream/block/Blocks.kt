@@ -17,11 +17,11 @@ object Blocks : NamespacedRegistry<Key, Block>() {
   @JvmField
   val AIR = register0(0, "air", BlockAir())
   @JvmField
-  val STONE = register0(1, "stone", Block())
+  val STONE = register0(1, "stone", BlockBookshelf())
   @JvmField
-  val VINES = register0(-1, "stone", Block())
+  val VINES = register0(2, "vines", BlockChest())
   @JvmField
-  val LADDER = register0(-1, "stone", Block())
+  val LADDER = register0(3, "ladder", Block())
 
   override fun register(id: Int, key: Key, value: Block) {
     super.register(id, key, value)

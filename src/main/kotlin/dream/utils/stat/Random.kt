@@ -1,7 +1,7 @@
 package dream.utils.stat
 
-import com.soywiz.kds.random.fastRandom
 import dream.utils.list
+import korlibs.datastructure.random.fastRandom
 
 /**
  * Samples a single random element `T` from a `List<T>`, and throws an error if no elements exist

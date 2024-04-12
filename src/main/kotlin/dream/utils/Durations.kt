@@ -1,6 +1,8 @@
 package dream.utils
 
-import com.soywiz.klock.*
+import korlibs.time.DateTimeSpan
+import korlibs.time.MonthSpan
+import korlibs.time.TimeSpan
 import org.joda.time.*
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.days

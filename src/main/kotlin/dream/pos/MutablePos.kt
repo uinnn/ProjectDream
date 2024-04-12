@@ -1,11 +1,11 @@
 package dream.pos
 
-import com.soywiz.kmem.*
-import dream.entity.base.*
-import dream.nbt.*
-import dream.nbt.types.*
-import dream.serializer.*
-import kotlinx.serialization.*
+import dream.entity.base.Entity
+import dream.nbt.CompoundStorable
+import dream.nbt.types.CompoundTag
+import dream.serializer.MutablePosSerializer
+import korlibs.memory.clamp
+import kotlinx.serialization.Serializable
 
 /**
  * Represents a base mutable coordinate-system.

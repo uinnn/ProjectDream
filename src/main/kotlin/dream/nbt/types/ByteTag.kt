@@ -1,10 +1,15 @@
 package dream.nbt.types
 
-import com.soywiz.kmem.*
-import dream.nbt.*
-import dream.serializer.*
+import dream.nbt.NumberTag
+import dream.nbt.TagParse
+import dream.nbt.TagType
+import dream.serializer.ByteTagSerializer
+import korlibs.memory.toByte
 import kotlinx.serialization.Serializable
-import java.io.*
+import java.io.ObjectInput
+import java.io.ObjectInputStream
+import java.io.ObjectOutput
+import java.io.ObjectOutputStream
 
 /**
  * Represents an NBT tag of type [Byte].

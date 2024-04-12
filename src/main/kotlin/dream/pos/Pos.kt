@@ -2,26 +2,23 @@
 
 package dream.pos
 
-import com.soywiz.kds.*
-import com.soywiz.kmem.*
-import dream.block.*
-import dream.block.state.*
-import dream.collision.*
-import dream.entity.base.*
-import dream.level.*
-import dream.level.chunk.*
-import dream.misc.*
-import dream.nbt.types.*
-import dream.serializer.*
+import dream.block.Block
+import dream.block.Blocks
+import dream.block.state.IState
+import dream.collision.AABB
+import dream.entity.base.Entity
+import dream.level.Level
+import dream.level.chunk.Chunk
+import dream.misc.Open
+import dream.nbt.types.CompoundTag
+import dream.nbt.types.LongTag
+import dream.serializer.PosSerializer
 import dream.utils.*
-import dream.utils.PI
-import dream.utils.acos
-import dream.utils.cos
-import dream.utils.max
-import dream.utils.min
-import dream.utils.sin
-import kotlinx.serialization.*
-import kotlin.math.*
+import korlibs.datastructure.hashCode
+import korlibs.memory.toIntFloor
+import kotlinx.serialization.Serializable
+import kotlin.math.abs
+import kotlin.math.sqrt
 
 /**
  * Represents a Vector.
@@ -114,7 +111,7 @@ data class Pos(val x: Double, val y: Double, val z: Double) : Comparable<Pos> {
    * @return The tile entity at this position, or null if no tile entity exists.
    */
   fun tileAt(level: Level) = level.getTile(this)
-  
+
   /**
    * Retrieves the state at this position in the specified level, or null if the position is out of bounds.
    *
@@ -122,7 +119,7 @@ data class Pos(val x: Double, val y: Double, val z: Double) : Comparable<Pos> {
    * @return The state at this position, or null if the position is out of bounds.
    */
   fun stateAtOrNull(level: Level) = level.getStateOrNull(this)
-  
+
   /**
    * Retrieves the state at this position in the specified level.
    * If the position is out of bounds, the default state is returned.
@@ -132,7 +129,7 @@ data class Pos(val x: Double, val y: Double, val z: Double) : Comparable<Pos> {
    * @return The state at this position, or the default state if the position is out of bounds.
    */
   fun stateAt(level: Level, default: IState = Blocks.AIR.state) = level.getState(this, default)
-  
+
   /**
    * Sets the state at this position in the specified level.
    *
@@ -141,7 +138,7 @@ data class Pos(val x: Double, val y: Double, val z: Double) : Comparable<Pos> {
    * @param flags The optional flags to modify the behavior of the state setting. (default: 3)
    */
   fun setStateAt(level: Level, state: IState, flags: Int = 3) = level.setState(this, state, flags)
-  
+
   /**
    * Retrieves the block at this position in the specified level, or null if the position is out of bounds.
    *
@@ -149,7 +146,7 @@ data class Pos(val x: Double, val y: Double, val z: Double) : Comparable<Pos> {
    * @return The block at this position, or null if the position is out of bounds.
    */
   fun blockAtOrNull(level: Level) = level.getBlockOrNull(this)
-  
+
   /**
    * Retrieves the block at this position in the specified level.
    * If the position is out of bounds, the default block is returned.
@@ -159,7 +156,7 @@ data class Pos(val x: Double, val y: Double, val z: Double) : Comparable<Pos> {
    * @return The block at this position, or the default block if the position is out of bounds.
    */
   fun blockAt(level: Level, default: Block = Blocks.AIR) = level.getBlock(this, default)
-  
+
   /**
    * Sets the block at this position in the specified level.
    *
@@ -168,7 +165,7 @@ data class Pos(val x: Double, val y: Double, val z: Double) : Comparable<Pos> {
    * @param flags The optional flags to modify the behavior of the block setting. (default: 3)
    */
   fun setBlockAt(level: Level, block: Block, flags: Int = 3) = level.setBlock(this, block, flags)
-  
+
   /**
    * Gets the chunk at this pos on [level].
    */
@@ -748,14 +745,14 @@ data class Pos(val x: Double, val y: Double, val z: Double) : Comparable<Pos> {
    * Gets a codified pos based on the floored coordinates of this pos.
    */
   fun asLong(): Long {
-    return (x.toBits() shl 42) or (y.toBits() shl 21) or z.toBits()
+    return 0L.insert(x.toBits(), 0, 28).insert(y.toBits(), 28, 8).insert(z.toBits(), 36, 28)
   }
-  
+
   /**
    * Creates a [LongTag] used to store this pos in long.
    */
   fun toLongTag() = asLong().toTag()
-  
+
   /**
    * Gets the unique index based on the floored X,Y,Z coordinates for this pos.
    *
@@ -781,15 +778,15 @@ data class Pos(val x: Double, val y: Double, val z: Double) : Comparable<Pos> {
    * }
    * ```
    */
-  fun toIndex() = posToIndex(flooredX, flooredY, flooredZ)
-  
+  fun toChunkIndex() = posToChunkIndex(flooredX, flooredY, flooredZ)
+
   /**
    * Gets an [AABB] around this pos with specified radius.
    */
   fun around(x: Double, y: Double, z: Double): AABB {
     return AABB(this.x - x, this.y - y, this.z - z, this.x + x, this.y + y, this.z + z)
   }
-  
+
   /**
    * Returns if this pos intersects [box].
    */
@@ -832,7 +829,7 @@ data class Pos(val x: Double, val y: Double, val z: Double) : Comparable<Pos> {
      */
     @JvmField
     val ZERO = Pos()
-    
+
     /**
      * Decodes the X coordinate of a codified number.
      */
@@ -847,7 +844,7 @@ data class Pos(val x: Double, val y: Double, val z: Double) : Comparable<Pos> {
      * Decodes the Z coordinate of a codified number.
      */
     fun getBitsZ(codified: Long): Long = codified and 0x1FFFFF
-    
+
     /**
      * Decodes the X coordinate of a codified number.
      */
@@ -862,7 +859,7 @@ data class Pos(val x: Double, val y: Double, val z: Double) : Comparable<Pos> {
      * Decodes the Z coordinate of a codified number.
      */
     fun getZ(codified: Long): Double = Double.fromBits(getBitsZ(codified))
-    
+
     /**
      * Gets a codified coordinates as long represented by `X` `Y` `Z`
      */
@@ -915,4 +912,4 @@ data class Pos(val x: Double, val y: Double, val z: Double) : Comparable<Pos> {
  * }
  * ```
  */
-fun posToIndex(x: Int, y: Int, z: Int) = y shl 8 or (z shl 4) or x
+fun posToChunkIndex(x: Int, y: Int, z: Int) = y shl 8 or (z shl 4) or x

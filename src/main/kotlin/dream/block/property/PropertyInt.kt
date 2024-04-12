@@ -1,6 +1,6 @@
 package dream.block.property
 
-import com.soywiz.kds.*
+import korlibs.datastructure.hashCode
 
 /**
  * A Int range block property.

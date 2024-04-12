@@ -1,18 +1,28 @@
 package dream.entity.player
 
-import dream.api.*
-import dream.block.*
-import dream.inventory.*
-import dream.item.*
-import dream.item.tool.*
-import dream.level.*
-import dream.misc.*
-import dream.packet.game.*
-import dream.pos.*
-import dream.tiles.*
+import dream.api.Tickable
+import dream.item.EmptyItemStack
+import dream.item.ItemStack
+import dream.item.tool.ItemSword
+import dream.level.Level
+import dream.misc.Open
+import dream.packet.game.SPacketBlockChange
+import dream.pos.Direction
+import dream.pos.Pos
 
 @Open
-class PlayerInteraction(var level: Level, var player: Player) : Tickable {
+class PlayerInteraction(var level: Level) : Tickable {
+
+  /**
+   * The player that is interacting with the world.
+   */
+  lateinit var player: Player
+
+  /**
+   * Checks if the player of this interaction has been initialized.
+   */
+  val hasPlayer get() = ::player.isInitialized
+
 
   var isDigging = false
   var digTick = 0
@@ -183,6 +193,7 @@ class PlayerInteraction(var level: Level, var player: Player) : Tickable {
   }
   
   fun activateBlockOrUseItem(item: ItemStack, pos: Pos, side: Direction, hit: Pos) {
+    /*
     if (player.isSpectator) {
       var tile = level.getTile(pos)
       if (tile is LockableContainer) {
@@ -237,6 +248,8 @@ class PlayerInteraction(var level: Level, var player: Player) : Tickable {
         stack.onItemUse(player, worldIn, pos, side, offsetX, offsetY, offsetZ)
       }
     }
+
+     */
   }
 
   

@@ -22,7 +22,9 @@ interface PacketHandler {
   /**
    * Called when any packet is receivied from client.
    */
-  fun onReceivePacket(packet: HandledPacket, manager: NetworkManager, context: ChannelHandlerContext)
+  fun onReceivePacket(packet: HandledPacket, manager: NetworkManager, context: ChannelHandlerContext) {
+    packet.process(this)
+  }
   
   /**
    * Simulates a receive packet action from client/server packet types.
@@ -31,7 +33,9 @@ interface PacketHandler {
    *
    * Also this not calls for [Packet.canReceive].
    */
-  fun simulateReceivePacket(packet: HandledPacket)
+  fun simulateReceivePacket(packet: HandledPacket) {
+    packet.process(this)
+  }
   
   /**
    * Invoked when disconnecting.

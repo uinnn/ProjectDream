@@ -1,19 +1,21 @@
 package dream.packet.game
 
-import dream.block.*
 import dream.block.state.*
 import dream.level.*
 import dream.network.*
 import dream.pos.*
 
+/**
+ * Serverbound packet for block change
+ */
 class SPacketBlockChange(var pos: Pos, var state: IState) : ServerGamePacket {
   
   constructor(level: Level, pos: Pos) : this(pos, level.getState(pos))
-  constructor(buf: PacketBuffer) : this(buf.readPos(), Blocks.stateById(buf.readVarInt()))
+  constructor(buf: PacketBuffer) : this(buf.readPos(), buf.readState())
   
   override fun write(buf: PacketBuffer) {
     buf.writePos(pos)
-    buf.writeVarInt(state.id)
+    buf.writeState(state)
   }
   
   override fun process(handler: GamePacketHandler) {

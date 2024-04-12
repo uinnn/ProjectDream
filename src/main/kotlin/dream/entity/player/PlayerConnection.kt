@@ -20,11 +20,22 @@ import io.netty.channel.*
 class PlayerConnection(
   val server: Server,
   val network: NetworkManager,
-  var player: Player,
 ) : GamePacketHandler, Tickable {
-  
-  constructor(original: PlayerConnection) : this(original.server, original.network, original.player)
-  
+
+  constructor(original: PlayerConnection) : this(original.server, original.network) {
+    this.player = original.player
+  }
+
+  /**
+   * The player associated with this connection.
+   */
+  lateinit var player: Player
+
+  /**
+   * Checks if the player of this connection has been initialized.
+   */
+  val hasPlayer get() = ::player.isInitialized
+
   /**
    * Ticks amount of this connection.
    */

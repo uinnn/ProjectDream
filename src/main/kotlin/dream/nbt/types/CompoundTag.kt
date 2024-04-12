@@ -2,18 +2,25 @@
 
 package dream.nbt.types
 
-import com.soywiz.kmem.*
-import dream.enchantment.*
-import dream.item.*
+import dream.enchantment.Enchantment
+import dream.item.EmptyItemStack
+import dream.item.ItemStack
 import dream.nbt.*
-import dream.nbt.adapter.*
-import dream.serializer.*
+import dream.nbt.adapter.TagAdapter
+import dream.serializer.CompoundTagSerializer
 import dream.utils.*
+import korlibs.memory.hasBits
+import korlibs.memory.setBits
+import korlibs.memory.unsetBits
 import kotlinx.serialization.Serializable
-import java.io.*
+import java.io.ObjectInput
+import java.io.ObjectInputStream
+import java.io.ObjectOutput
+import java.io.ObjectOutputStream
 import java.util.*
-import kotlin.contracts.*
-import kotlin.experimental.*
+import kotlin.contracts.InvocationKind
+import kotlin.contracts.contract
+import kotlin.experimental.ExperimentalTypeInference
 
 /**
  * An implementation of [MapTag] as compound.

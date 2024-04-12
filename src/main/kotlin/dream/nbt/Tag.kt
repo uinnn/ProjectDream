@@ -1,12 +1,19 @@
 package dream.nbt
 
-import com.soywiz.korio.compression.*
-import com.soywiz.korio.compression.deflate.*
-import dream.misc.*
-import dream.nbt.types.*
-import dream.utils.*
-import it.unimi.dsi.fastutil.io.*
-import java.io.*
+import dream.misc.Open
+import dream.nbt.types.CompoundTag
+import dream.nbt.types.EmptyTag
+import dream.utils.fastInputStream
+import it.unimi.dsi.fastutil.io.FastByteArrayOutputStream
+import korlibs.io.compression.CompressionContext
+import korlibs.io.compression.CompressionMethod
+import korlibs.io.compression.compress
+import korlibs.io.compression.deflate.ZLib
+import korlibs.io.compression.uncompress
+import java.io.DataInputStream
+import java.io.DataOutputStream
+import java.io.ObjectOutput
+import java.io.Serializable
 
 /**
  * Represents a abstract NBT tag.

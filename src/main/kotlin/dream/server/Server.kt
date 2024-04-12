@@ -10,6 +10,7 @@ import dream.coroutines.*
 import dream.level.*
 import dream.misc.*
 import dream.network.*
+import dream.server.management.ProfileCache
 import dream.utils.*
 import java.io.*
 import java.net.*
@@ -22,7 +23,7 @@ import kotlin.coroutines.*
  * own implementation of this class.
  */
 @Open
-abstract class Server(val proxy: Proxy, val directory: File, profileDirectory: File = directory) : Scope {
+class Server(val proxy: Proxy, val directory: File, profileDirectory: File = directory) : Scope {
   companion object {
     /**
      * The instance of server.
@@ -50,25 +51,35 @@ abstract class Server(val proxy: Proxy, val directory: File, profileDirectory: F
   val profileRepository: GameProfileRepository = authService.createProfileRepository()
 
   /**
+   * The profile cache of this server.
+   */
+  val profileCache = ProfileCache(this, profileDirectory)
+
+  /**
    * Gets all levels loaded on this server.
    */
   val levels: MutableList<Level> = ArrayList()
-  val mainLevel = levels[0]
-  
+  val mainLevel get() = levels[0]
+
   /**
    * If the server only supports original players.
    */
   var isOnlineMode = false
-  
+
   /**
    * Gets the server view distance for rendering chunks.
    */
   var viewDistance = 8
-  
+
   /**
    * The [PlayerList] instance of this server.
    */
   var playerList = PlayerList(this)
+
+  /**
+   * The status response of this server.
+   */
+  var statusResponse = createStatusResponse()
 
   /**
    * Determinates if the server should use native transport on networks.
@@ -76,7 +87,7 @@ abstract class Server(val proxy: Proxy, val directory: File, profileDirectory: F
   fun shouldUseNativeTransport(): Boolean {
     return true
   }
-  
+
   /**
    * Sends a message to the server.
    *
@@ -85,5 +96,17 @@ abstract class Server(val proxy: Proxy, val directory: File, profileDirectory: F
   fun sendMessage(component: Component) {
     Console.message(component)
   }
-  
+
+  /**
+   * Creates and returns the status response for this server.
+   */
+  fun createStatusResponse(): ServerStatusResponse {
+    return ServerStatusResponse(
+      text("Project Dream developed by carrara."),
+      ProtocolVersion("Dream", 47),
+      PlayerCountData(1, 0),
+      ""
+    )
+  }
+
 }

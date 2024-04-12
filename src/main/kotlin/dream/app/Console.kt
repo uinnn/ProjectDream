@@ -2,10 +2,13 @@
 
 package dream.app
 
-import dream.chat.*
-import dream.command.*
-import dream.entity.base.*
-import dream.pos.*
+import dream.chat.Component
+import dream.chat.text
+import dream.command.CommandSender
+import dream.command.ResultStatsType
+import dream.entity.base.Entity
+import dream.pos.Pos
+import dream.server.Server
 
 /**
  * Represents the console sender.
@@ -17,15 +20,29 @@ object Console : CommandSender {
    */
   val logs = StringBuffer()
 
+  /**
+   * The name of the console.
+   */
   override val name = "Console"
+
+  /**
+   * The display name of the console.
+   */
   override val displayName = text(name)
-  override val pos = Pos.ZERO
-  override val level = TODO("insert the main server world.")
-  override val entity: Entity? = null
+
+  /**
+   * Returns if this sender should be notified about any executed commands.
+   */
   override var sendFeedback = true
 
+  override val pos get() = Pos.ZERO
+  override val level get() = Server.get().mainLevel
+  override val entity: Entity? get() = null
+
   override fun message(component: Component) {
-    logs.append(component.unformattedText)
+    val text = component.unformattedText
+    logs.append(text)
+    println(text)
   }
 
   override fun canUse(permLevel: Int, commandName: String): Boolean {

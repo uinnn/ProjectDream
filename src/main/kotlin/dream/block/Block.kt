@@ -3,7 +3,7 @@ package dream.block
 import dream.*
 import dream.api.*
 import dream.block.material.*
-import dream.block.property.*
+import dream.block.property.PropertyInt
 import dream.block.state.*
 import dream.collision.*
 import dream.entity.base.*
@@ -409,7 +409,7 @@ class Block(var material: Material, var pallete: MapPallete) : Keyable, Locale {
    * Creates the block data for this block.
    */
   fun createData(): BlockData {
-    return BlockData(this)
+    return BlockData(this, PropertyInt("meta", 1..2))
   }
   
   /**

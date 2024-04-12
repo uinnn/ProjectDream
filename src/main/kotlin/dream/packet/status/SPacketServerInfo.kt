@@ -1,9 +1,7 @@
 package dream.packet.status
 
-import dream.network.*
-import dream.utils.parseJson
-import kotlinx.serialization.encodeToString
-import kotlinx.serialization.json.Json
+import dream.network.PacketBuffer
+import dream.network.ServerStatusResponse
 
 /**
  * Serverbound Server info packet.
@@ -12,13 +10,12 @@ import kotlinx.serialization.json.Json
  */
 class SPacketServerInfo(var response: ServerStatusResponse) : ServerStatusPacket {
 
-  constructor(buf: PacketBuffer) : this(buf.readString().parseJson<ServerStatusResponse>())
+  constructor(buf: PacketBuffer) : this(buf.readJson<ServerStatusResponse>())
 
   override fun write(buf: PacketBuffer) {
-    buf.writeString(Json.encodeToString(response))
+    buf.writeJson(response)
   }
 
   override fun process(handler: StatusPacketHandler) {
-    handler.processServerInfo(this)
   }
 }

@@ -5,7 +5,7 @@ import dream.network.*
 /**
  * Serverbound Handshake packet.
  */
-class SPacketHandshake(
+data class PacketHandshake(
   var version: Int,
   var ip: String,
   var port: Int,

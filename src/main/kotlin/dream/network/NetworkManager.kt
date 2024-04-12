@@ -7,6 +7,7 @@ import dream.chat.*
 import dream.entity.player.*
 import dream.misc.*
 import dream.packet.*
+import dream.packet.login.SPacketDisconnect
 import dream.utils.*
 import io.netty.bootstrap.*
 import io.netty.channel.*
@@ -283,6 +284,14 @@ class NetworkManager(val direction: PacketDirection) : PacketChannelHandler() {
   }
 
   /**
+   * Disconnects this network manager sending them a disconnect packet and closing the channel.
+   */
+  fun disconnect(reason: Component) {
+    sendPacket(SPacketDisconnect(reason))
+    closeChannel(reason)
+  }
+
+  /**
    * Adds an encryptor + decryptor to the channel pipeline.
    *
    * @param key the secret key used for encrypted communication
@@ -358,11 +367,11 @@ class NetworkManager(val direction: PacketDirection) : PacketChannelHandler() {
       )
     }
 
-    val CLIENT_LOCAL_EVENTLOOP by lazy {
+    /*val CLIENT_LOCAL_EVENTLOOP by lazy {
       LocalEventLoopGroup(
         ThreadFactoryBuilder().setNameFormat("Netty Local Client IO #%d").setDaemon(true).build()
       )
-    }
+    }*/
 
     /**
      * Create a new network manager from the server host and connect it to the server
@@ -381,9 +390,9 @@ class NetworkManager(val direction: PacketDirection) : PacketChannelHandler() {
           it.config().setOption(ChannelOption.TCP_NODELAY, true)
           it.pipeline()
             .addLast("timeout", ReadTimeoutHandler(30))
-            .addLast("splitter", PacketSplitter())
+            .addLast("splitter", PacketSplitter)
             .addLast("decoder", PacketDecoder(PacketDirection.CLIENT))
-            .addLast("prepender", PacketPrepender())
+            .addLast("prepender", PacketPrepender)
             .addLast("encoder", PacketEncoder(PacketDirection.SERVER))
             .addLast("packet_handler", network)
         }
@@ -400,7 +409,7 @@ class NetworkManager(val direction: PacketDirection) : PacketChannelHandler() {
      * Establishes a connection to the socket supplied
      * and configures the channel pipeline.
      */
-    fun provideLocalClient(address: SocketAddress): NetworkManager {
+    /*fun provideLocalClient(address: SocketAddress): NetworkManager {
       val network = NetworkManager(PacketDirection.CLIENT)
 
       Bootstrap()
@@ -411,6 +420,6 @@ class NetworkManager(val direction: PacketDirection) : PacketChannelHandler() {
         .syncUninterruptibly()
 
       return network
-    }
+    }*/
   }
 }

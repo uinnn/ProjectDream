@@ -1,6 +1,6 @@
 package dream.utils
 
-import com.soywiz.kds.random.*
+import korlibs.datastructure.random.FastRandom
 import java.util.*
 
 /**
