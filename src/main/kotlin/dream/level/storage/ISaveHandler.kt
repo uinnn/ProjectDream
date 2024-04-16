@@ -35,7 +35,7 @@ interface ISaveHandler {
   /**
    * initializes and returns the chunk loader for the specified world provider.
    */
-  fun getChunkLoader(provider: LevelProvider): IChunkLoader
+  fun getChunkLoader(provider: LevelProvider): ChunkLoader
 
   /**
    * Saves the given World Info with the given NBTTagCompound as the Player.

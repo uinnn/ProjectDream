@@ -6,7 +6,7 @@ import dream.pos.*
 /**
  * Clientbound packet tab complete.
  */
-class CPacketTabComplete(var message: String, var targetPos: Pos? = null) : ClientGamePacket {
+data class CPacketTabComplete(var message: String, var targetPos: Pos? = null) : ClientGamePacket {
 
   /**
    * Gets if this packet has a target pos.

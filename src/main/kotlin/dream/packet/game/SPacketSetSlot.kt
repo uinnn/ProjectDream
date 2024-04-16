@@ -3,7 +3,7 @@ package dream.packet.game
 import dream.item.*
 import dream.network.*
 
-class SPacketSetSlot(var windowId: Int, var slot: Int, var item: ItemStack) : ServerGamePacket {
+data class SPacketSetSlot(var windowId: Int, var slot: Int, var item: ItemStack) : ServerGamePacket {
   
   init {
     // defensive copy

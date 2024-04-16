@@ -2,7 +2,7 @@ package dream.packet.game
 
 import dream.network.*
 
-class SPacketSetExperience(
+data class SPacketSetExperience(
   var progress: Float,
   var experience: Int,
   var level: Int

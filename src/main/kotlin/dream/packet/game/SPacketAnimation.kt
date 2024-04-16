@@ -6,7 +6,7 @@ import dream.network.*
 /**
  * Serverbound Animation packet.
  */
-class SPacketAnimation(var entityId: Int, var animation: EntityAnimation) : ServerGamePacket {
+data class SPacketAnimation(var entityId: Int, var animation: EntityAnimation) : ServerGamePacket {
 
   constructor(entity: Entity, type: EntityAnimation) : this(entity.serialId, type)
   

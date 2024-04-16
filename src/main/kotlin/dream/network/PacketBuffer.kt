@@ -1,47 +1,36 @@
 package dream.network
 
-import dream.Sound
-import dream.block.Block
-import dream.block.Blocks
-import dream.block.state.IState
-import dream.chat.Component
-import dream.collections.SizedList
-import dream.entity.Watcher
-import dream.entity.WatcherValue
-import dream.item.EmptyItemStack
-import dream.item.ItemStack
-import dream.item.itemOf
-import dream.misc.Open
-import dream.nbt.TagIO
-import dream.nbt.types.CompoundTag
-import dream.pos.Pos
-import dream.pos.Rot
-import dream.utils.and
-import dream.utils.or
-import dream.utils.shl
-import dream.village.MerchantTrade
-import dream.village.MerchantTradeList
+import com.google.common.base.*
+import dream.*
+import dream.block.*
+import dream.block.state.*
+import dream.chat.*
+import dream.collections.*
+import dream.entity.*
+import dream.item.*
+import dream.misc.*
+import dream.nbt.*
+import dream.nbt.types.*
+import dream.pos.*
+import dream.utils.*
+import dream.village.*
 import io.netty.buffer.*
-import io.netty.util.ByteProcessor
-import kotlinx.serialization.KSerializer
-import kotlinx.serialization.encodeToString
-import kotlinx.serialization.json.Json
-import java.io.InputStream
-import java.io.OutputStream
-import java.nio.ByteBuffer
-import java.nio.ByteOrder
-import java.nio.channels.FileChannel
-import java.nio.channels.GatheringByteChannel
-import java.nio.channels.ScatteringByteChannel
-import java.nio.charset.Charset
+import io.netty.handler.codec.*
+import io.netty.util.*
+import kotlinx.serialization.*
+import kotlinx.serialization.json.*
+import java.io.*
+import java.nio.*
+import java.nio.channels.*
+import java.nio.charset.*
 import java.util.*
-import kotlin.reflect.KClass
+import kotlin.reflect.*
 
 /**
  * Represents a packet buffer for sending/receiving between connections
  */
 @Open
-class PacketBuffer(private val buf: ByteBuf) : ByteBuf() {
+class PacketBuffer(protected val buf: ByteBuf) : ByteBuf() {
 
   constructor() : this(Unpooled.buffer())
   constructor(wrapped: ByteArray) : this(Unpooled.wrappedBuffer(wrapped))
@@ -53,12 +42,30 @@ class PacketBuffer(private val buf: ByteBuf) : ByteBuf() {
   fun readVarInt(): Int {
     var i = 0
     var j = 0
+
+    while (true) {
+      val b0 = readByte()
+      i = i or ((b0.toInt() and 127) shl (j++ * 7))
+
+      if (j > 5) {
+        throw RuntimeException("VarInt too big")
+      }
+
+      if ((b0.toInt() and 128) != 128) {
+        break
+      }
+    }
+
+    return i
+
+    /*var i = 0
+    var j = 0
     while (true) {
       val value = readByte()
       i = i or (value and 127 shl j++ * 7)
       if (value and 128 != 128.toByte()) break
     }
-    return i
+    return i*/
   }
 
   fun readVarLong(): Long {
@@ -80,12 +87,22 @@ class PacketBuffer(private val buf: ByteBuf) : ByteBuf() {
    */
   fun writeVarInt(value: Int): PacketBuffer {
     var input = value
-    while (input and -128 != 0) {
+    while ((input and -128) != 0) {
       writeByte(input and 127 or 128)
       input = input ushr 7
     }
+
     writeByte(input)
     return this
+
+
+    /* var input = value
+     while (input and -128 != 0) {
+       writeByte(input and 127 or 128)
+       input = input ushr 7
+     }
+     writeByte(input)
+     return this*/
   }
 
   fun writeVarLong(value: Long): PacketBuffer {
@@ -133,15 +150,61 @@ class PacketBuffer(private val buf: ByteBuf) : ByteBuf() {
   }
 
   fun writeString(value: String): PacketBuffer {
-    val bytes = value.toByteArray()
-    writeVarInt(bytes.size)
-    writeBytes(bytes)
-    return this
+    val bytes = value.toByteArray(Charsets.UTF_8)
+    if (bytes.size > 32767) {
+      throw EncoderException("String too big (was ${value.length} characters encoded, max is 32767)")
+    } else {
+      writeVarInt(bytes.size)
+      writeBytes(bytes)
+      return this
+    }
+
+    /*if (value.length > 32767) {
+      throw EncoderException("String too big (was ${value.length} characters encoded, max is 32767)")
+    }
+    writeVarInt(value.length)
+    writeCharSequence(value, Charsets.UTF_8)
+    return this*/
+    /* val bytes = value.toByteArray()
+     if (bytes.size > 32767) {
+       throw EncoderException("String too big (was " + value.length + " bytes encoded, max " + 32767 + ")")
+     } else {
+       writeVarInt(bytes.size)
+       writeBytes(bytes)
+       return this
+     }*/
   }
 
-  fun readString(): String {
+  fun readString(maxLength: Int = 32767): String {
     val size = readVarInt()
-    return String(readBytes(size).array())
+    when {
+      size > maxLength * 4 -> throw DecoderException("The received string length is longer than maximum allowed ($size > $maxLength)")
+      size < 0 -> throw DecoderException("The received string length is less than zero! Weird string!")
+      else -> {
+        val bytes = ByteArray(size)
+        readBytes(bytes)
+        val string = String(bytes, Charsets.UTF_8)
+        if (string.length > maxLength) {
+          throw DecoderException("The received string length is longer than maximum allowed ($size > $maxLength)")
+        }
+        return string
+      }
+    }
+
+    /*
+    if (size > maxLength * 4) {
+      throw DecoderException("The received encoded string buffer length is longer than maximum allowed (" + size + " > " + maxLength * 4 + ")")
+    } else if (size < 0) {
+      throw DecoderException("The received encoded string buffer length is less than zero! Weird string!")
+    } else {
+      //val s = String(readBytes(i).array(), Charsets.UTF_8)
+      val s = readCharSequence(size, Charsets.UTF_8).toString()
+      if (s.length > maxLength) {
+        throw DecoderException("The received string length is longer than maximum allowed ($size > $maxLength)")
+      } else {
+        return s
+      }
+    }*/
   }
 
   fun writeState(state: IState): PacketBuffer {
@@ -203,13 +266,14 @@ class PacketBuffer(private val buf: ByteBuf) : ByteBuf() {
     return UUID(readLong(), readLong())
   }
 
-  fun writeComponent(component: Component): PacketBuffer {
+  fun writeComponent(component: ComponentText): PacketBuffer {
     writeString(component.toJson())
     return this
   }
 
-  fun readComponent(): Component {
-    return Component.fromString(readString())
+  fun readComponent(): ComponentText {
+    return ChatJson.decodeFromString<ComponentText>(readString())
+    //return Component.fromString(readString())
   }
 
   fun writeCompound(tag: CompoundTag?): PacketBuffer {
@@ -1184,7 +1248,12 @@ class PacketBuffer(private val buf: ByteBuf) : ByteBuf() {
   }
 
   override fun toString(): String {
-    return buf.toString()
+    return buildString {
+      val bytes = ByteArray(readableBytes())
+      readBytes(bytes)
+      val str = String(bytes, Charsets.UTF_8)
+      append(str)
+    }
   }
 
   override fun retain(increment: Int): ByteBuf {
@@ -1250,7 +1319,9 @@ inline fun ByteArray.toPacketBuffer(action: PacketBuffer.() -> Unit): PacketBuff
  */
 internal fun varInt(input: Int): Int {
   for (i in 1..4) {
-    if (input and -1 shl i * 7 == 0) return i
+    if ((input and (-1 shl i * 7)) == 0) {
+      return i
+    }
   }
 
   return 5

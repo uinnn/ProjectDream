@@ -8,7 +8,7 @@ import java.util.*
 /**
  * Serverbound packet spawn player.
  */
-class SPacketSpawnPlayer(
+data class SPacketSpawnPlayer(
   var id: Int,
   var uuid: UUID,
   var x: Int,

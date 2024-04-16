@@ -31,7 +31,7 @@ class CompoundTag : MapTag<String, Tag>, java.io.Serializable {
   override val type
     get() = Type
 
-  constructor()
+  constructor() : super()
   constructor(size: Int) : super(size)
   constructor(values: Map<String, Tag>) : super(values)
   constructor(vararg values: Pair<String, Tag>) : super(*values)

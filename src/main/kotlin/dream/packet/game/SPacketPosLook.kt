@@ -4,7 +4,7 @@ import dream.network.*
 import dream.pos.*
 import dream.utils.*
 
-class SPacketPosLook(
+data class SPacketPosLook(
   var x: Double,
   var y: Double,
   var z: Double,

@@ -3,7 +3,7 @@ package dream.packet.game
 import dream.entity.base.*
 import dream.network.*
 
-class SPacketEntityVelocity(
+data class SPacketEntityVelocity(
   var entityId: Int,
   var motionX: Int,
   var motionY: Int,

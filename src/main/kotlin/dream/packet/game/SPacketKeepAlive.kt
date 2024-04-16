@@ -6,7 +6,7 @@ import dream.network.*
 /**
  * Serverbound Keep alive connection packet.
  */
-class SPacketKeepAlive(var entityId: Int) : ServerGamePacket {
+data class SPacketKeepAlive(var entityId: Int) : ServerGamePacket {
 
   constructor(entity: Entity) : this(entity.serialId)
 

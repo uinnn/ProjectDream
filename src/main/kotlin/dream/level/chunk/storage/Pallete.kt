@@ -3,6 +3,8 @@ package dream.level.chunk.storage
 import dream.block.*
 import dream.block.state.*
 import dream.misc.*
+import dream.nbt.CompoundStorable
+import dream.nbt.types.CompoundTag
 import dream.pos.*
 
 /**
@@ -11,7 +13,7 @@ import dream.pos.*
  * Each chunk section (chunks by 16x16x16) have a pallete to holds information of blocks.
  */
 @Open
-class Pallete(var yBase: Int, storeSkylight: Boolean) {
+class Pallete(var yBase: Int, storeSkylight: Boolean) : CompoundStorable {
   companion object {
     const val SIZE = 4096
   }
@@ -256,5 +258,51 @@ class Pallete(var yBase: Int, storeSkylight: Boolean) {
     tickBlocksCount = 0
     data.fill(Blocks.AIR.id.toChar())
   }
-  
+
+  override fun save(tag: CompoundTag) {
+    tag["Y"] = (yBase shr 4 and 255).toByte()
+    val blocks = ByteArray(data.size)
+    val blocksArray = NibbleArray()
+    var extraBlocksArray: NibbleArray? = null
+    for ((index, id) in data.withIndex()) {
+      val code = id.code
+      val x = index and 15
+      val y = index shr 8 and 15
+      val z = index shr 4 and 15
+      if (code shr 12 != 0) {
+        if (extraBlocksArray == null) {
+          extraBlocksArray = NibbleArray()
+        }
+        extraBlocksArray[x, y, z] = code shr 12
+      }
+      blocks[index] = (code shr 4 and 255).toByte()
+      blocksArray[x, y, z] = code and 15
+    }
+    tag["Blocks"] = blocks
+    tag["Data"] = blocksArray.data
+    if (extraBlocksArray != null) {
+      tag["Add"] = extraBlocksArray.data
+    }
+    tag["BlockLight"] = blocklight.data
+    tag["SkyLight"] = skylight!!.data
+  }
+
+  override fun load(tag: CompoundTag) {
+    yBase = tag.byte("Y").toInt() shl 4
+    val blocks = tag.byteArray("Blocks")
+    val blocksArray = NibbleArray(tag.byteArray("Data"))
+    val extraBlocksArray: NibbleArray? = if (tag.has("Add")) NibbleArray(tag.byteArray("Add")) else null
+    val data = CharArray(blocks.size)
+    for (index in data.indices) {
+      val x = index and 15
+      val y = index shr 8 and 15
+      val z = index shr 4 and 15
+      val extra = extraBlocksArray?.get(x, y, z) ?: 0
+      val block = (blocks[index].toInt() and 255) shl 4
+      data[index] = (extra shl 12 or block or blocksArray[x, y, z]).toChar()
+    }
+    this.data = data
+    blocklight = NibbleArray(tag.byteArray("BlockLight"))
+    skylight = NibbleArray(tag.byteArray("SkyLight"))
+  }
 }

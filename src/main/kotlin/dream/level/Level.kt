@@ -20,6 +20,7 @@ import dream.nbt.types.*
 import dream.pos.*
 import dream.tiles.*
 import dream.utils.*
+import korlibs.memory.*
 import java.util.*
 
 
@@ -146,7 +147,31 @@ abstract class Level(
    * Spawns the given entity on this level.
    */
   fun spawn(entity: Entity) {
-  
+    val x = (entity.x / 16.0).toIntFloor()
+    val z = (entity.z / 16.0).toIntFloor()
+    if (entity is Player) {
+      players += entity
+    }
+
+    chunkAt(x, z).addEntity(entity)
+    entitiesById[entity.serialId] = entity
+    entitiesByUUID[entity.id] = entity
+  }
+
+  fun removeEntity(entity: Entity) {
+    entity.setDead()
+    if (entity is Player) {
+      players -= entity
+    }
+
+    val x = entity.chunkX
+    val z = entity.chunkZ
+    if (entity.addedToChunk && isChunkLoaded(x, z, true)) {
+      chunkAt(x, z).removeEntity(entity)
+    }
+
+    entitiesById.remove(entity.serialId)
+    entitiesByUUID.remove(entity.id)
   }
   
   /**
@@ -419,7 +444,12 @@ abstract class Level(
   }
   
   override fun tick(partial: Int) {
-  
+    for (player in players) {
+      player.tick(partial)
+    }
+    for (entity in entities) {
+      entity.tick(partial)
+    }
   }
   
   /**

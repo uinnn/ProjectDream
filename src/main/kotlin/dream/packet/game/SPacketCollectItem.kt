@@ -8,7 +8,7 @@ import dream.network.*
  *
  * Called when collector collects an item on the ground.
  */
-class SPacketCollectItem(var itemId: Int, var collectorId: Int) : ServerGamePacket {
+data class SPacketCollectItem(var itemId: Int, var collectorId: Int) : ServerGamePacket {
 
   constructor(item: Entity, collector: Entity) : this(item.serialId, collector.serialId)
 

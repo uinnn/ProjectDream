@@ -2,19 +2,18 @@ package dream.entity.player
 
 import dream.*
 import dream.block.*
-import dream.chat.*
-import dream.command.*
 import dream.entity.base.*
 import dream.inventory.*
 import dream.inventory.container.*
 import dream.item.*
 import dream.item.food.*
-import dream.level.Level
 import dream.network.*
+import dream.packet.game.*
 import dream.pos.*
 import dream.server.*
 import dream.utils.*
 import java.net.*
+import java.util.*
 
 /**
  * Represents a player.
@@ -25,6 +24,13 @@ class Player(
   var connection: PlayerConnection,
   var interaction: PlayerInteraction,
 ) : EntityLiving(), ContainerListener {
+
+  override var name: String
+    get() = profile.name
+    set(value) {}
+
+  override val id: UUID
+    get() = profile.id
 
   /*
   override val name: String
@@ -445,19 +451,19 @@ class Player(
   }
   
   override fun update(container: Container, items: List<ItemStack>) {
-    TODO("Not yet implemented")
+    sendPacket(SPacketWindowItems())
   }
   
   override fun sendContent(container: Container, slot: Int, item: ItemStack) {
-    TODO("Not yet implemented")
+    sendPacket(SPacketSetSlot(container.id, slot, item))
   }
   
   override fun sendData(container: Container, id: Int, value: Int) {
-    TODO("Not yet implemented")
+    sendPacket(SPacketWindowProperty())
   }
   
   override fun sendProps(container: Container, inventory: IInventory) {
-    TODO("Not yet implemented")
+
   }
   
   fun sendContainer(container: Container) {

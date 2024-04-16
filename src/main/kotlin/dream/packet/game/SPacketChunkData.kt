@@ -7,7 +7,7 @@ import dream.network.PacketBuffer
 /**
  * Serverbound packet to send chunk data to client.
  */
-class SPacketChunkData(
+data class SPacketChunkData(
   var chunkX: Int,
   var chunkZ: Int,
   var continuous: Boolean,

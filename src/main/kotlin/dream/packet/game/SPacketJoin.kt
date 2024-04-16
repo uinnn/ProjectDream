@@ -9,7 +9,7 @@ import korlibs.memory.hasFlags
 /**
  * Serverbound player packet join.
  */
-class SPacketJoin(
+data class SPacketJoin(
   var entityId: Int,
   var hardcore: Boolean,
   var gamemode: Gamemode,

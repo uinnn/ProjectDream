@@ -7,7 +7,7 @@ import dream.level.chunk.Chunk
 /**
  * Represents a loader for chunks.
  */
-interface IChunkLoader : Tickable {
+interface ChunkLoader : Tickable {
 
   /**
    * Loads the specified (XZ) chunk into the specified level.

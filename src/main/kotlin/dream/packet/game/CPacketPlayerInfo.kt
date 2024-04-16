@@ -1,14 +1,14 @@
 package dream.packet.game
 
-import dream.entity.base.*
-import dream.network.*
+import dream.entity.base.Entity
+import dream.network.PacketBuffer
 
 /**
  * Clientbound packet player info.
  *
  * This is a base class for player move/look info.
  */
-class CPacketPlayerInfo(
+data class CPacketPlayerInfo(
   var x: Double = 0.0,
   var y: Double = 0.0,
   var z: Double = 0.0,

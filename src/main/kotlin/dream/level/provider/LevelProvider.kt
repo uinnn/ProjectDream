@@ -1,15 +1,26 @@
 package dream.level.provider
 
-import dream.level.*
-import dream.level.biome.*
-import dream.misc.*
-import dream.utils.*
+import dream.level.Level
+import dream.level.MoonPhase
+import dream.level.biome.ChunkManager
+import dream.misc.Open
+import dream.utils.PI
+import dream.utils.cos
+import dream.utils.sin
 
 /**
  * Represents a base provider for level.
  */
 @Open
-abstract class LevelProvider(val level: Level) {
+class LevelProvider {
+
+  lateinit var level: Level
+
+  fun registerWorld(level: Level) {
+    this.level = level
+    registerChunkManager()
+    generateLightBrightnessTable()
+  }
 
   /**
    * Determinates if this provider has sky.

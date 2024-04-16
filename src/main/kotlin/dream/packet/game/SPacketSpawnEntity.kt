@@ -7,7 +7,7 @@ import dream.utils.*
 /**
  * Serverbound Spawns entity packet.
  */
-class SPacketSpawnEntity(
+data class SPacketSpawnEntity(
   var entityId: Int,
   var type: Int,
   var x: Int,

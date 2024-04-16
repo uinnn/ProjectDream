@@ -1,11 +1,11 @@
 package dream.packet.game
 
-import dream.network.*
+import dream.network.PacketBuffer
 
 /**
  * Clientbound packet chat.
  */
-class CPacketChat(var message: String) : ClientGamePacket {
+data class CPacketChat(var message: String) : ClientGamePacket {
 
   // check for message char limit
   init {

@@ -2,7 +2,7 @@ package dream.packet.game
 
 import dream.network.*
 
-class SPacketEntityHeadLook(var entityId: Int, var yaw: Byte) : ServerGamePacket {
+data class SPacketEntityHeadLook(var entityId: Int, var yaw: Byte) : ServerGamePacket {
   
   constructor(buf: PacketBuffer) : this(buf.readVarInt(), buf.readByte())
   

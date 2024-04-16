@@ -22,38 +22,38 @@ import java.util.concurrent.*
  * Represents a chunk in a level.
  */
 @Open
-class Chunk(val level: Level, val x: Int, val z: Int) : CompoundStorable, Comparable<Chunk> {
+class Chunk(val level: Level, var x: Int, var z: Int) : CompoundStorable, Comparable<Chunk> {
   
   /**
    * Used to store block IDs, block MSBs, Sky-light maps, Block-light maps, and metadata.
    * Each entry corresponds to a logical segment of 16x16x16 blocks, stacked vertically.
    */
-  val palletes: MutableList<Pallete> = SizedList(16)
+  var palletes: MutableList<Pallete> = SizedList(16)
   
   /**
    * Contains a 16x16 mapping on the X/Z plane of the biome ID to which each colum belongs.
    */
-  val biomes = ByteArray(256) { -1 }
+  var biomes = ByteArray(256) { -1 }
   
   /**
    * Height map of this chunk.
    */
-  val heightMap = IntArray(256)
+  var heightMap = IntArray(256)
   
   /**
    * A map, similar to heightMap, that tracks how far down precipitation can fall.
    */
-  val precipitationHeightMap = IntArray(256) { -999 }
+  var precipitationHeightMap = IntArray(256) { -999 }
   
   /**
    * Which columns need their skylightMaps updated.
    */
-  val updateSkylightColumns = BooleanArray(256)
+  var updateSkylightColumns = BooleanArray(256)
   
   /**
    * A map that stores tile entities, with positions as keys.
    */
-  val tiles: MutableMap<Pos, Tile> = HashMap()
+  var tiles: MutableMap<Pos, Tile> = HashMap()
   
   /**
    * Returns the number of tile entities currently stored in the map.
@@ -64,7 +64,7 @@ class Chunk(val level: Level, val x: Int, val z: Int) : CompoundStorable, Compar
   /**
    * A set that stores entities.
    */
-  val entities: MutableSet<Entity> = HashSet()
+  var entities: MutableSet<Entity> = HashSet()
   
   /**
    * Returns a sequence of entities currently stored in the set.
@@ -123,7 +123,7 @@ class Chunk(val level: Level, val x: Int, val z: Int) : CompoundStorable, Compar
   /**
    * A queue for tiles entities.
    */
-  val tileQueue: ConcurrentLinkedQueue<Pos> = Queues.newConcurrentLinkedQueue()
+  var tileQueue: ConcurrentLinkedQueue<Pos> = Queues.newConcurrentLinkedQueue()
   
   /**
    * Checks if this chunk is empty.
@@ -907,10 +907,118 @@ class Chunk(val level: Level, val x: Int, val z: Int) : CompoundStorable, Compar
   }
   
   override fun save(tag: CompoundTag) {
-  
+    tag["V"] = 1.toByte()
+    tag["xPos"] = x
+    tag["zPos"] = z
+    tag["LastUpdate"] = level.time
+    tag["HeightMap"] = heightMap
+    tag["TerrainPopulated"] = isTerrainPopulated
+    tag["LightPopulated"] = isLightPopulated
+    tag["InhabitedTime"] = inhabitedTime
+
+    val sections = ListTag<CompoundTag>()
+    for (pallete in palletes) {
+      sections += pallete.store()
+    }
+
+    tag["Sections"] = sections
+    tag["Biomes"] = biomes
+
+    hasEntities = false
+    val entitiesTag = ListTag<CompoundTag>()
+    for (entity in entities) {
+      entitiesTag += entity.store()
+      hasEntities = true
+    }
+
+    tag["Entities"] = entitiesTag
+
+    val tilesTag = ListTag<CompoundTag>()
+    for (tile in tiles.values) {
+      tilesTag += tile.store()
+    }
+
+    tag["TileEntities"] = tilesTag
   }
   
   override fun load(tag: CompoundTag) {
-  
+    x = tag.int("xPos")
+    z = tag.int("zPos")
+    heightMap = tag.intArray("HeightMap")
+    isTerrainPopulated = tag.boolean("TerrainPopulated")
+    isLightPopulated = tag.boolean("LightPopulated")
+    inhabitedTime = tag.long("InhabitedTime")
+
+    val sections = tag.compoundList("Sections")
+    for ((index, section) in sections.withIndex()) {
+      val pallete = Pallete(0, true)
+      pallete.load(section)
+      palletes[index] = pallete
+    }
+
+    biomes = tag.byteArray("Biomes")
+
+    /*val entitiesTag = tag.compoundList("Entities")
+    for (entityTag in entitiesTag) {
+
+    }
+    */
   }
+
+
+  /*
+
+  *//**
+    * Reads the data stored in the passed NBTTagCompound and creates a Chunk with that data in the passed World.
+    * Returns the created Chunk.
+    *//*
+   private fun readChunkFromNBT(worldIn: Level, tag: CompoundTag): Chunk {
+
+     if (tag.hasKey("Biomes", 7)) {
+       chunk.setBiomeArray(tag.getByteArray("Biomes"))
+     }
+
+     val nbttaglist1: NBTTagList = tag.getTagList("Entities", 10)
+
+     if (nbttaglist1 != null) {
+       for (k2 in 0..<nbttaglist1.tagCount()) {
+         val nbttagcompound1: NBTTagCompound = nbttaglist1.getCompoundTagAt(k2)
+         val entity: Entity = EntityList.createEntityFromNBT(nbttagcompound1, worldIn)
+         chunk.setHasEntities(true)
+
+         if (entity != null) {
+           chunk.addEntity(entity)
+           var entity1: Entity? = entity
+
+           var nbttagcompound4: NBTTagCompound = nbttagcompound1
+           while (nbttagcompound4.hasKey("Riding", 10)) {
+             val entity2: Entity = EntityList.createEntityFromNBT(nbttagcompound4.getCompoundTag("Riding"), worldIn)
+
+             if (entity2 != null) {
+               chunk.addEntity(entity2)
+               entity1.mountEntity(entity2)
+             }
+
+             entity1 = entity2
+             nbttagcompound4 = nbttagcompound4.getCompoundTag("Riding")
+           }
+         }
+       }
+     }
+
+     val nbttaglist2: NBTTagList = tag.getTagList("TileEntities", 10)
+
+     if (nbttaglist2 != null) {
+       for (l2 in 0..<nbttaglist2.tagCount()) {
+         val nbttagcompound2: NBTTagCompound = nbttaglist2.getCompoundTagAt(l2)
+         val tileentity: TileEntity = TileEntity.createAndLoadEntity(nbttagcompound2)
+
+         if (tileentity != null) {
+           chunk.addTileEntity(tileentity)
+         }
+       }
+     }
+
+     return chunk
+   }*/
 }

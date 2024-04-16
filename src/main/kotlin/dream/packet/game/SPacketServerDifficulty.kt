@@ -1,12 +1,12 @@
 package dream.packet.game
 
-import dream.level.Difficulty
-import dream.network.PacketBuffer
+import dream.level.*
+import dream.network.*
 
 /**
  * Serverbound server difficulty packet.
  */
-class SPacketServerDifficulty(var difficulty: Difficulty, var isLocked: Boolean = false) : ServerGamePacket {
+data class SPacketServerDifficulty(var difficulty: Difficulty, var isLocked: Boolean = false) : ServerGamePacket {
 
   constructor(difficulty: Int, isLocked: Boolean = false) : this(Difficulty.byId(difficulty), isLocked)
 

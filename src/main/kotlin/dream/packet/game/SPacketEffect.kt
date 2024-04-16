@@ -1,37 +1,24 @@
 package dream.packet.game
 
-import dream.network.*
+import dream.network.PacketBuffer
+import dream.pos.Pos
 
-class SPacketEffect(
-  var entityId: Int,
-  var effectId: Byte,
-  var amplifier: Byte,
-  var duration: Int,
-  var hideParticles: Boolean,
+data class SPacketEffect(
+  var type: Int,
+  var pos: Pos,
+  var data: Int,
+  var relativeVolume: Boolean
 ) : ServerGamePacket {
-  
-  val isPermanent get() = duration == 32767
-  
-  //constructor(entityId: Int, effect: Effect) : this(entityId, effect)
-  
-  constructor(buf: PacketBuffer) : this(
-    entityId = buf.readVarInt(),
-    effectId = buf.readByte(),
-    amplifier = buf.readByte(),
-    duration = buf.readVarInt(),
-    hideParticles = buf.readBoolean()
-  )
-  
+
+  constructor(buf: PacketBuffer) : this(buf.readInt(), buf.readPos(), buf.readInt(), buf.readBoolean())
+
   override fun write(buf: PacketBuffer) {
-    buf.writeVarInt(entityId)
-    buf.writeByte(effectId.toInt())
-    buf.writeByte(amplifier.toInt())
-    buf.writeVarInt(duration)
-    buf.writeBoolean(hideParticles)
+    buf.writeInt(type)
+    buf.writePos(pos)
+    buf.writeInt(data)
+    buf.writeBoolean(relativeVolume)
   }
-  
+
   override fun process(handler: GamePacketHandler) {
-    TODO("Not yet implemented")
   }
-  
 }

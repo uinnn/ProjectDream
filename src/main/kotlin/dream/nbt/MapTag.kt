@@ -11,7 +11,7 @@ abstract class MapTag<K, V : Tag> : HashMap<K, V>, Tag, Serializable {
   override val genericValue: HashMap<K, V>
     get() = this
 
-  constructor() : super()
+  constructor() : super(8, 0.8f)
   constructor(size: Int) : super(size)
   constructor(values: Map<K, V>) : super(values)
   constructor(vararg values: Pair<K, V>) : super(values.toMap())

@@ -7,14 +7,14 @@ import dream.network.*
 /**
  * Serverbound Chat packet.
  */
-class SPacketChat(var message: Component, var type: ChatType = ChatType.CHAT) : ServerGamePacket {
+data class SPacketChat(var message: ComponentText, var type: ChatType = ChatType.CHAT) : ServerGamePacket {
 
   /**
    * Gets if this packet chat type is considered a chat in vanilla.
    */
   val isChat: Boolean get() = type.isChat
 
-  constructor(message: Component, type: Byte) : this(
+  constructor(message: ComponentText, type: Byte) : this(
     message,
     ChatType.byId(type)
   )

@@ -2,7 +2,7 @@ package dream.packet.game
 
 import dream.network.*
 
-class SPacketPayload(var channel: String, var data: PacketBuffer) : ServerGamePacket {
+data class SPacketPayload(var channel: String, var data: PacketBuffer) : ServerGamePacket {
   
   constructor(channel: String, data: ByteArray) : this(channel, PacketBuffer(data))
   

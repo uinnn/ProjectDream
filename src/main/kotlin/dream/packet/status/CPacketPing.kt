@@ -5,7 +5,7 @@ import dream.network.*
 /**
  * Clientbound Ping packet.
  */
-class CPacketPing(var clientTime: Long) : ClientStatusPacket {
+data class CPacketPing(var clientTime: Long) : ClientStatusPacket {
 
   constructor(buf: PacketBuffer) : this(buf.readLong())
 

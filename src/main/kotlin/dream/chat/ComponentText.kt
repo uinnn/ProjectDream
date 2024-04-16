@@ -1,6 +1,6 @@
 package dream.chat
 
-import kotlinx.serialization.*
+import kotlinx.serialization.Serializable
 
 /**
  * Represents a text chat component.
@@ -12,6 +12,10 @@ data class ComponentText(var text: String) : BaseComponent() {
   override fun copy() = ComponentText(text).also {
     it.style = style.shallowCopy()
     childrens.forEach(it::add)
+  }
+
+  override fun toJson(): String {
+    return ChatJson.encodeToString(serializer(), this)
   }
 }
 

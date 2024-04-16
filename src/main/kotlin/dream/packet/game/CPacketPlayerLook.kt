@@ -1,7 +1,7 @@
 package dream.packet.game
 
-import dream.entity.base.*
-import dream.network.*
+import dream.entity.base.Entity
+import dream.network.PacketBuffer
 
 /**
  * Clientbound packet player look.

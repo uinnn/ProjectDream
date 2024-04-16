@@ -2,7 +2,7 @@ package dream.packet.game
 
 import dream.network.*
 
-class SPacketEntityMove(
+data class SPacketEntityMove(
   var entityId: Int,
   var x: Byte = 0,
   var y: Byte = 0,

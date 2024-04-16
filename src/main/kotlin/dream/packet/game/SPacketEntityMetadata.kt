@@ -4,7 +4,7 @@ import dream.entity.*
 import dream.entity.base.*
 import dream.network.*
 
-class SPacketEntityMetadata(
+data class SPacketEntityMetadata(
   var entityId: Int,
   var values: List<WatcherValue>
 ) : ServerGamePacket {

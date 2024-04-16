@@ -8,7 +8,7 @@ import dream.pos.*
 /**
  * Clientbound packet use entity.
  */
-class CPacketUseEntity(var id: Int, var action: EntityUse, var hit: Pos? = null) : ClientGamePacket {
+data class CPacketUseEntity(var id: Int, var action: EntityUse, var hit: Pos? = null) : ClientGamePacket {
 
   /**
    * Gets if this packet uses hit data.

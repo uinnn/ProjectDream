@@ -1,10 +1,12 @@
 package dream.network
 
 import dream.misc.Open
-import dream.packet.*
+import dream.packet.Packet
+import dream.packet.PacketHandler
 import io.netty.buffer.ByteBuf
 import io.netty.channel.ChannelHandlerContext
-import io.netty.handler.codec.*
+import io.netty.handler.codec.ByteToMessageDecoder
+import io.netty.handler.codec.MessageToByteEncoder
 
 /**
  * Represents a message encoder for packets.
@@ -15,12 +17,11 @@ class PacketEncoder(val direction: PacketDirection) : MessageToByteEncoder<Handl
     val id = ctx.channel()
       .attr(NetworkManager.ATTRIBUTE_CONNECTION)
       .get()
-      .id(direction, msg) ?: return
+      .id(direction, msg) ?: error("Can't serialize unregistered packet")
 
-    PacketBuffer(out).apply {
-      writeVarInt(id)
-      msg.write(this)
-    }
+    val buffer = PacketBuffer(out)
+    buffer.writeVarInt(id)
+    msg.write(buffer)
   }
 }
 
@@ -34,9 +35,12 @@ class PacketDecoder(val direction: PacketDirection) : ByteToMessageDecoder() {
       return
     }
 
+    val buffer = PacketBuffer(buf)
+    val id = buffer.readVarInt()
+
     out += ctx.channel()
       .attr(NetworkManager.ATTRIBUTE_CONNECTION)
       .get()
-      .createPacket(direction, PacketBuffer(buf))
+      .createPacket(direction, id, buffer)
   }
 }

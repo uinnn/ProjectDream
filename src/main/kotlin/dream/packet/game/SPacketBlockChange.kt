@@ -8,7 +8,7 @@ import dream.pos.*
 /**
  * Serverbound packet for block change
  */
-class SPacketBlockChange(var pos: Pos, var state: IState) : ServerGamePacket {
+data class SPacketBlockChange(var pos: Pos, var state: IState) : ServerGamePacket {
   
   constructor(level: Level, pos: Pos) : this(pos, level.getState(pos))
   constructor(buf: PacketBuffer) : this(buf.readPos(), buf.readState())

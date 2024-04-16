@@ -1,6 +1,7 @@
 package dream.packet.handshaking
 
-import dream.network.*
+import dream.network.ConnectionState
+import dream.network.PacketBuffer
 
 /**
  * Serverbound Handshake packet.

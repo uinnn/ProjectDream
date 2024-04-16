@@ -1,13 +1,13 @@
 package dream.packet.login
 
-import dream.misc.decodePublicKey
-import dream.network.PacketBuffer
-import java.security.PublicKey
+import dream.misc.*
+import dream.network.*
+import java.security.*
 
 /**
  * Serverbound Request for encryption response packet.
  */
-class SPacketEncryptionRequest(
+data class SPacketEncryptionRequest(
   var hashedServerId: String,
   var key: PublicKey,
   var verifyToken: ByteArray,

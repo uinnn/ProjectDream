@@ -1,15 +1,15 @@
 package dream.packet.game
 
-import dream.item.*
-import dream.network.*
-import dream.pos.*
+import dream.item.ItemStack
+import dream.network.PacketBuffer
+import dream.pos.Pos
 
 /**
  * Clientbound packet block place.
  *
  * Called when player places a block.
  */
-class CPacketBlockPlace(
+data class CPacketBlockPlace(
   var pos: Pos,
   var placedDirection: Int,
   var item: ItemStack,

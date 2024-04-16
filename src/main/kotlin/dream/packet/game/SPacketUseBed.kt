@@ -8,7 +8,7 @@ import dream.network.*
  *
  * Called when player uses a bed.
  */
-class SPacketUseBed(var entityId: Int) : ServerGamePacket {
+data class SPacketUseBed(var entityId: Int) : ServerGamePacket {
 
   constructor(entity: Entity) : this(entity.serialId)
 

@@ -1,11 +1,10 @@
 package dream.packet.game
 
-import dream.entity.player.Player
-import dream.network.PacketBuffer
-import dream.utils.hasBits
-import dream.utils.setBitsIf
+import dream.entity.player.*
+import dream.network.*
+import dream.utils.*
 
-class SPacketAbilities(
+data class SPacketAbilities(
   var disableDamage: Boolean,
   var isFlying: Boolean,
   var allowFly: Boolean,

@@ -4,7 +4,7 @@ import dream.entity.player.*
 import dream.level.*
 import dream.network.*
 
-class SPacketRespawn(
+data class SPacketRespawn(
   var dimension: Dimension,
   var difficulty: Difficulty,
   var gamemode: Gamemode,

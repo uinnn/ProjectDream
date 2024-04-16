@@ -6,7 +6,7 @@ import dream.attribute.Operation
 import dream.network.*
 import java.util.ArrayList
 
-class SPacketEntityAttributes(
+data class SPacketEntityAttributes(
   var entityId: Int,
   var snapshots: MutableList<AttributeSnapshot> = ArrayList(4)
 ) : ServerGamePacket {

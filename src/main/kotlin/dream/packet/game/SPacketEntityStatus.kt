@@ -2,7 +2,7 @@ package dream.packet.game
 
 import dream.network.*
 
-class SPacketEntityStatus(var entityId: Int, var code: Byte) : ServerGamePacket {
+data class SPacketEntityStatus(var entityId: Int, var code: Byte) : ServerGamePacket {
   
   constructor(buf: PacketBuffer) : this(buf.readVarInt(), buf.readByte())
   

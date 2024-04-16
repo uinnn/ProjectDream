@@ -1,6 +1,5 @@
 package dream.packet.login
 
-import com.mojang.authlib.GameProfile
 import dream.api.Tickable
 import dream.app.message
 import dream.chat.Component
@@ -8,6 +7,7 @@ import dream.chat.text
 import dream.network.NetworkManager
 import dream.server.Server
 import dream.utils.OfflineUUID
+import dream.utils.Profile
 
 class VanillaLoginPacketHandler(
   val network: NetworkManager,
@@ -17,7 +17,7 @@ class VanillaLoginPacketHandler(
   /**
    * The profile trying to login.
    */
-  lateinit var profile: GameProfile
+  lateinit var profile: Profile
 
   /**
    * Checks if the profile has been initialized.
@@ -50,7 +50,7 @@ class VanillaLoginPacketHandler(
   }
 
   override fun handleEncryptionResponse(packetIn: CPacketEncryptionResponse) {
-    TODO("Not yet implemented")
+    println("received encryption packet $packetIn")
   }
 
   override fun onDisconnect(reason: Component) {
@@ -74,14 +74,19 @@ class VanillaLoginPacketHandler(
    */
   fun tryAccept() {
     if (!profile.isComplete) {
-      profile = GameProfile(OfflineUUID(profile.name), profile.name)
+      profile = Profile(OfflineUUID(profile.name), profile.name)
     }
 
     // TODO: check for whitelist/ban and others filters
 
     state = LoginState.ACCEPTED
     network.sendPacket(SPacketLoginSuccess(profile))
-    server.playerList.initConnection(network, server.playerList.createPlayer(profile, network))
+
+    println("accepted login request for $profile")
+    val player = server.playerList.createPlayer(profile, network)
+    println("player created")
+
+    server.playerList.initConnection(network, player)
   }
 }
 

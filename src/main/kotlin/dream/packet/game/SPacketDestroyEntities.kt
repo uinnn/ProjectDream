@@ -4,7 +4,7 @@ import dream.entity.base.Entity
 import dream.network.PacketBuffer
 import korlibs.datastructure.mapInt
 
-class SPacketDestroyEntities(var entities: IntArray) : ServerGamePacket {
+data class SPacketDestroyEntities(var entities: IntArray) : ServerGamePacket {
   
   //constructor(vararg entities: Int) : this(entities)
   

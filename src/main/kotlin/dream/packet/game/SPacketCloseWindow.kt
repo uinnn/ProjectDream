@@ -2,7 +2,7 @@ package dream.packet.game
 
 import dream.network.*
 
-class SPacketCloseWindow(var windowId: Int) : ServerGamePacket {
+data class SPacketCloseWindow(var windowId: Int) : ServerGamePacket {
   
   constructor(buf: PacketBuffer) : this(buf.readUnsignedByte().toInt())
   

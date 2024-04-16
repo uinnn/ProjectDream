@@ -6,7 +6,7 @@ import dream.network.*
 /**
  * Serverbound Sound packet.
  */
-class SPacketSound(
+data class SPacketSound(
   var sound: Sound,
   var x: Int,
   var y: Int,

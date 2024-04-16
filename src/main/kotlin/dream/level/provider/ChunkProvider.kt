@@ -1,6 +1,5 @@
 package dream.level.provider
 
-import dream.level.Level
 import dream.level.chunk.Chunk
 import dream.misc.IProgressUpdate
 import dream.pos.Pos
@@ -62,7 +61,7 @@ interface ChunkProvider {
 
   //fun getPossibleCreatures(creatureType: EnumCreatureType?, pos: BlockPos?): List<BiomeGenBase.SpawnListEntry?>?
 
-  fun getStrongholdGen(level: Level, structure: String, pos: Pos): Pos
+  //fun getStrongholdGen(level: Level, structure: String, pos: Pos): Pos
 
   fun getLoadedChunkCount(): Int
 

@@ -1,27 +1,22 @@
 package dream.network
 
-import com.google.common.util.concurrent.ThreadFactoryBuilder
-import dream.api.Tickable
-import dream.chat.text
-import dream.errors.Crash
-import dream.misc.Open
-import dream.packet.handshaking.VanillaHandshakePacketHandler
-import dream.packet.login.SPacketDisconnect
-import dream.server.Server
-import dream.utils.childHandler
-import dream.utils.sync
-import io.netty.bootstrap.ServerBootstrap
-import io.netty.channel.ChannelFuture
-import io.netty.channel.ChannelOption
-import io.netty.channel.EventLoopGroup
-import io.netty.channel.epoll.Epoll
-import io.netty.channel.epoll.EpollEventLoopGroup
-import io.netty.channel.epoll.EpollServerSocketChannel
-import io.netty.channel.nio.NioEventLoopGroup
-import io.netty.channel.socket.ServerSocketChannel
-import io.netty.channel.socket.nio.NioServerSocketChannel
-import io.netty.handler.timeout.ReadTimeoutHandler
-import java.net.InetAddress
+import com.google.common.util.concurrent.*
+import dream.api.*
+import dream.chat.*
+import dream.errors.*
+import dream.misc.*
+import dream.packet.handshaking.*
+import dream.packet.login.*
+import dream.server.*
+import dream.utils.*
+import io.netty.bootstrap.*
+import io.netty.channel.*
+import io.netty.channel.epoll.*
+import io.netty.channel.nio.*
+import io.netty.channel.socket.*
+import io.netty.channel.socket.nio.*
+import io.netty.handler.timeout.*
+import java.net.*
 
 /**
  * Represents an network system.
@@ -47,6 +42,38 @@ class NetworkSystem(val server: Server) : Tickable {
    */
   val networks = ArrayList<NetworkManager>().sync()
 
+  fun start() {
+    //val bossGroup = NioEventLoopGroup()
+    //val workerGroup = NioEventLoopGroup()
+    val b = ServerBootstrap()
+    b.group(EVENT_LOOPS)
+      .channel(NioServerSocketChannel::class.java)
+      //.option(ChannelOption.SO_BACKLOG, 128)
+      .childHandler {
+        it.config().setOption(ChannelOption.TCP_NODELAY, true)
+        it.pipeline()
+          .addLast("timeout", ReadTimeoutHandler(30))
+          .addLast("legacy_query", PingResponseHandler(this))
+          .addLast("splitter", PacketSplitter())
+          .addLast("decoder", PacketDecoder(PacketDirection.SERVER))
+          .addLast("prepender", PacketPrepender())
+          .addLast("encoder", PacketEncoder(PacketDirection.CLIENT))
+
+        val network = NetworkManager(PacketDirection.SERVER)
+        networks += network
+        it.pipeline().addLast("packet_handler", network)
+        network.handler = VanillaHandshakePacketHandler(network, server)
+      }
+
+
+    val f = b.bind(25565).syncUninterruptibly()
+
+    endpoints += f
+
+    f.channel().closeFuture().sync()
+
+  }
+
   /**
    * Adds a channel that listens on publicly accessible network ports
    */
@@ -64,15 +91,18 @@ class NetworkSystem(val server: Server) : Tickable {
       }
 
       endpoints += ServerBootstrap()
+        .group(group, NioEventLoopGroup())
         .channel(channelClass)
+        .option(ChannelOption.SO_BACKLOG, 128)
+        .childOption(ChannelOption.SO_KEEPALIVE, true)
         .childHandler {
           it.config().setOption(ChannelOption.TCP_NODELAY, true)
           it.pipeline()
             .addLast("timeout", ReadTimeoutHandler(30))
             .addLast("legacy_query", PingResponseHandler(this))
-            .addLast("splitter", PacketSplitter)
+            .addLast("splitter", PacketSplitter())
             .addLast("decoder", PacketDecoder(PacketDirection.SERVER))
-            .addLast("prepender", PacketPrepender)
+            .addLast("prepender", PacketPrepender())
             .addLast("encoder", PacketEncoder(PacketDirection.CLIENT))
 
           val network = NetworkManager(PacketDirection.SERVER)
@@ -80,7 +110,7 @@ class NetworkSystem(val server: Server) : Tickable {
           networks += network
           it.pipeline().addLast("packet_handler", network)
         }
-        .group(group)
+
         .localAddress(address, port)
         .bind()
         .syncUninterruptibly()
@@ -127,22 +157,26 @@ class NetworkSystem(val server: Server) : Tickable {
    * gracefully manage processing failures and cleans up dead connections.
    */
   override fun tick(partial: Int) {
-    networks.forEach { network ->
-      if (network.hasChannel) {
-        if (!network.isChannelOpen) {
-          networks -= network
-          network.checkDisconnected()
-        } else {
-          try {
-            network.processPackets(partial)
-          } catch (e: Exception) {
-            if (network.isLocalChannel) {
-              throw Crash("Ticking memory connection", e).category("Ticking Connection", network.toString())
-            }
+    synchronized(networks) {
+      val iterator = networks.iterator()
+      while (iterator.hasNext()) {
+        val network = iterator.next()
+        if (network.hasChannel) {
+          if (!network.isChannelOpen) {
+            iterator.remove()
+            network.checkDisconnected()
+          } else {
+            try {
+              network.processPackets(partial)
+            } catch (e: Exception) {
+              if (network.isLocalChannel) {
+                throw Crash("Ticking memory connection", e).category("Ticking Connection", network.toString())
+              }
 
-            val text = text("Internal Server Error")
-            network.sendPacket(SPacketDisconnect(text)) { network.closeChannel(text) }
-            network.disableAutoRead()
+              val text = text("Internal Server Error")
+              network.sendPacket(SPacketDisconnect(text)) { network.closeChannel(text) }
+              network.disableAutoRead()
+            }
           }
         }
       }

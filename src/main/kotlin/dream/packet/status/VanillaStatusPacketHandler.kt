@@ -16,11 +16,13 @@ class VanillaStatusPacketHandler(
   var handled = false
 
   override fun handlePing(packet: CPacketPing) {
+    println("received ping packet")
     network.sendPacket(SPacketPong(packet.clientTime))
     network.closeChannel(EXIT_MESSAGE)
   }
 
   override fun handleServerQuery(packet: CPacketServerQuery) {
+    println("received server query packet")
     if (handled) {
       network.closeChannel(EXIT_MESSAGE)
     } else {

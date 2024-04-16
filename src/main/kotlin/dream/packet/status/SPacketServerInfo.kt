@@ -8,7 +8,7 @@ import dream.network.ServerStatusResponse
  *
  * Sended when player updates server list.
  */
-class SPacketServerInfo(var response: ServerStatusResponse) : ServerStatusPacket {
+data class SPacketServerInfo(var response: ServerStatusResponse) : ServerStatusPacket {
 
   constructor(buf: PacketBuffer) : this(buf.readJson<ServerStatusResponse>())
 

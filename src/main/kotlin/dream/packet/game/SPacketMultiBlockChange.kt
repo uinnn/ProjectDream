@@ -10,7 +10,7 @@ import dream.pos.Pos
 /**
  * Serverbound packet used to change multiple blocks in a chunk at once.
  */
-class SPacketMultiBlockChange(
+data class SPacketMultiBlockChange(
   var coordinate: ChunkCoordinate,
   var changes: Array<ExtractedBlock>
 ) : ServerGamePacket {

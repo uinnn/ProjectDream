@@ -15,8 +15,7 @@ class PlayerContainer(val player: Player) : Container() {
     get() = player.inventory
 
   override fun canInteract(player: Player): Boolean {
-    TODO("Not yet implemented")
+    return true
   }
-
 
 }

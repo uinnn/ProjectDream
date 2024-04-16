@@ -5,7 +5,7 @@ import dream.network.*
 /**
  * Clientbound packet confirm transaction.
  */
-class CPacketConfirmTransaction(
+data class CPacketConfirmTransaction(
   var id: Int,
   var uniqueId: Short,
   var accepted: Boolean,

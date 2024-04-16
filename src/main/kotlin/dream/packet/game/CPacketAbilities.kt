@@ -7,7 +7,7 @@ import dream.utils.*
 /**
  * Clientbound packet abilities.
  */
-class CPacketAbilities(
+data class CPacketAbilities(
   var disableDamage: Boolean,
   var isFlying: Boolean,
   var allowFly: Boolean,

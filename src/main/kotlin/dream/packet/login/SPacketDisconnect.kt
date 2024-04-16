@@ -6,7 +6,7 @@ import dream.network.*
 /**
  * Serverbound Disconnect packet.
  */
-class SPacketDisconnect(var reason: Component) : ServerLoginPacket {
+data class SPacketDisconnect(var reason: ComponentText) : ServerLoginPacket {
 
   constructor(buf: PacketBuffer) : this(buf.readComponent())
 

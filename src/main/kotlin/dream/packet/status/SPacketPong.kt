@@ -5,7 +5,7 @@ import dream.network.*
 /**
  * Serverbound Pong packet.
  */
-class SPacketPong(var clientTime: Long) : ServerStatusPacket {
+data class SPacketPong(var clientTime: Long) : ServerStatusPacket {
 
   constructor(buf: PacketBuffer) : this(buf.readLong())
 

@@ -1,7 +1,7 @@
 package dream.packet.game
 
-import dream.entity.player.*
-import dream.network.*
+import dream.entity.player.ChatVisibility
+import dream.network.PacketBuffer
 
 /**
  * Clientbound packet settings.
@@ -15,7 +15,7 @@ import dream.network.*
  * * Colors
  * * Skin Options
  */
-class CPacketSettings(
+data class CPacketSettings(
   var language: String,
   var viewDistance: Int,
   var chatVisibility: ChatVisibility,

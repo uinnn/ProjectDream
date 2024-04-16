@@ -2,7 +2,7 @@ package dream.packet.game
 
 import dream.network.*
 
-class SPacketRemoveEffect(var entityId: Int, var effectId: Int) : ServerGamePacket {
+data class SPacketRemoveEffect(var entityId: Int, var effectId: Int) : ServerGamePacket {
   
   constructor(buf: PacketBuffer) : this(buf.readVarInt(), buf.readUnsignedByte().toInt())
   

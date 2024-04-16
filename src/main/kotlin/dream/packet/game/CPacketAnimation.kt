@@ -1,15 +1,15 @@
 package dream.packet.game
 
-import dream.network.*
+import dream.network.PacketBuffer
 
 /**
  * Clientbound packet animation.
  *
  * Empty packet, only used for swing player arms.
  */
-class CPacketAnimation() : ClientGamePacket {
+object CPacketAnimation : ClientGamePacket {
 
-  constructor(buf: PacketBuffer) : this()
+  //constructor(buf: PacketBuffer) : this()
 
   override fun write(buf: PacketBuffer) {
   }

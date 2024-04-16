@@ -6,7 +6,7 @@ import dream.utils.*
 /**
  * Clientbound Login start packet.
  */
-class CPacketLoginStart(var profile: Profile) : ClientLoginPacket {
+data class CPacketLoginStart(var profile: Profile) : ClientLoginPacket {
 
   constructor(buf: PacketBuffer) : this(Profile(null, buf.readString()))
 

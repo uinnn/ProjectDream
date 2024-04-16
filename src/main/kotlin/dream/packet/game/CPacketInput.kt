@@ -1,12 +1,13 @@
 package dream.packet.game
 
-import dream.network.*
-import dream.utils.*
+import dream.network.PacketBuffer
+import dream.utils.hasBits
+import dream.utils.setBitsIf
 
 /**
  * Clientbound packet input.
  */
-class CPacketInput(
+data class CPacketInput(
   var strafeSpeed: Float,
   var forwardSpeed: Float,
   var isJumping: Boolean,

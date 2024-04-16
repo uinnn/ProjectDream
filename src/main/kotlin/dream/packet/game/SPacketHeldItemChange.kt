@@ -2,7 +2,7 @@ package dream.packet.game
 
 import dream.network.*
 
-class SPacketHeldItemChange(var slot: Int) : ServerGamePacket {
+data class SPacketHeldItemChange(var slot: Int) : ServerGamePacket {
   
   constructor(buf: PacketBuffer) : this(buf.readByte().toInt())
   

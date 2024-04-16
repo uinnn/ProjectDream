@@ -3,7 +3,7 @@ package dream.packet.game
 import dream.item.*
 import dream.network.*
 
-class SPacketEntityEquipment(
+data class SPacketEntityEquipment(
   var entityId: Int,
   var slot: Int,
   var item: ItemStack,

@@ -5,7 +5,7 @@ import dream.level.*
 import dream.nbt.types.*
 import dream.network.*
 
-class SPacketEntityTag(var entityId: Int, var tag: CompoundTag) : ServerGamePacket {
+data class SPacketEntityTag(var entityId: Int, var tag: CompoundTag) : ServerGamePacket {
   
   constructor(entity: Entity, tag: CompoundTag) : this(entity.serialId, tag)
   

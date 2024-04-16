@@ -1,10 +1,12 @@
 package dream.packet.handshaking
 
-import dream.chat.*
-import dream.network.*
+import dream.chat.Component
+import dream.chat.text
+import dream.network.ConnectionState
+import dream.network.NetworkManager
 import dream.packet.login.VanillaLoginPacketHandler
 import dream.packet.status.VanillaStatusPacketHandler
-import dream.server.*
+import dream.server.Server
 import korlibs.io.lang.unsupported
 
 /**
@@ -39,5 +41,6 @@ class VanillaHandshakePacketHandler(
   }
 
   override fun onDisconnect(reason: Component) {
+    println("disconnected beucase ${reason.unformattedText}")
   }
 }

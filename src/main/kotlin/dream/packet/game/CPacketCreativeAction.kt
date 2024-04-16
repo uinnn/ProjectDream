@@ -1,12 +1,12 @@
 package dream.packet.game
 
-import dream.item.*
-import dream.network.*
+import dream.item.ItemStack
+import dream.network.PacketBuffer
 
 /**
  * Clientbound packet window creative action.
  */
-class CPacketCreativeAction(var slot: Int, var item: ItemStack) : ClientGamePacket {
+data class CPacketCreativeAction(var slot: Int, var item: ItemStack) : ClientGamePacket {
 
   constructor(buf: PacketBuffer) : this(buf.readShort().toInt(), buf.readItem())
 

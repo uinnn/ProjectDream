@@ -3,10 +3,10 @@ package dream.packet.game
 import dream.chat.*
 import dream.network.*
 
-class SPacketOpenWindow(
+data class SPacketOpenWindow(
   var windowId: Int,
   var type: String,
-  var title: Component,
+  var title: ComponentText,
   var slots: Int,
   var entityId: Int = 0,
 ) : ServerGamePacket {

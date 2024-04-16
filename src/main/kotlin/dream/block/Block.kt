@@ -358,9 +358,6 @@ class Block(var material: Material, var pallete: MapPallete) : Keyable, Locale {
    * @return The modified motion (velocity) of the entity after considering the interaction.
    */
   fun modifyAcceleration(level: Level, pos: Pos, entity: Entity, motion: Vec): Vec {
-    // Perform custom logic to modify the entity's acceleration based on the interaction with the block.
-    // This could involve altering the entity's motion vector, accounting for friction, collision effects, etc.
-    // For now, this function returns the unchanged motion vector.
     return motion
   }
   
@@ -375,7 +372,6 @@ class Block(var material: Material, var pallete: MapPallete) : Keyable, Locale {
    * @param distance The distance the entity fell.
    */
   fun onFall(level: Level, pos: Pos, entity: Entity, distance: Float) {
-    // Trigger the entity's onFall method to handle the fall event and provide distance information.
     entity.onFall(this, distance)
   }
   

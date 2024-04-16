@@ -7,7 +7,7 @@ import dream.utils.*
 /**
  * Serverbound Login success packet.
  */
-class SPacketLoginSuccess(var profile: GameProfile) : ServerLoginPacket {
+data class SPacketLoginSuccess(var profile: GameProfile) : ServerLoginPacket {
 
   constructor(buf: PacketBuffer) : this(Profile(uuid(buf.readString()), buf.readString()))
 

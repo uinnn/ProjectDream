@@ -3,7 +3,7 @@ package dream.packet.game
 import dream.entity.base.*
 import dream.network.*
 
-class SPacketEntityTeleport(
+data class SPacketEntityTeleport(
   var entityId: Int,
   val x: Int,
   val y: Int,

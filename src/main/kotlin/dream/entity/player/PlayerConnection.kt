@@ -40,12 +40,14 @@ class PlayerConnection(
    * Ticks amount of this connection.
    */
   var ticks = 0
-  
+
   override fun tick(partial: Int) {
+    if (ticks % 20 == 0) {
+      sendPacket(SPacketKeepAlive(player))
+    }
     ++ticks
-    
   }
-  
+
   /**
    * Called when any packet is receivied from client.
    */
@@ -54,7 +56,7 @@ class PlayerConnection(
       packet.process(this)
     }
   }
-  
+
   /**
    * Simulates a receive packet action from client/server packet types.
    *
@@ -63,7 +65,7 @@ class PlayerConnection(
   override fun simulateReceivePacket(packet: HandledPacket) {
     packet.process(this)
   }
-  
+
   /**
    * Sends the given packet to the client connection of [player].
    */
@@ -76,7 +78,7 @@ class PlayerConnection(
       }
     }
   }
-  
+
   /**
    * Sends the given packet to the client connection of [player].
    */
@@ -85,13 +87,12 @@ class PlayerConnection(
       try {
         network.sendPacket(packet, *listeners)
       } catch (e: Exception) {
-        throw getSendPacketException(
-          packet, e
-        ).categories(*listeners.mapArrayIndexed { index, listener -> "Listener #$index" to listener })
+        throw getSendPacketException(packet, e)
+          .categories(*listeners.mapArrayIndexed { index, listener -> "Listener #$index" to listener })
       }
     }
   }
-  
+
   /**
    * Sends the given packet to the client connection of [player].
    */
@@ -104,7 +105,7 @@ class PlayerConnection(
       }
     }
   }
-  
+
   /**
    * Disconnects a player with a reason.
    */
@@ -112,108 +113,109 @@ class PlayerConnection(
     val text = text(reason)
     sendPacket(SPacketDisconnect(text)) { network.closeChannel(text) }
     network.disableAutoRead()
-    //Futures.getUnchecked(server.addScheduledTask(this.netManager::checkDisconnected))
   }
-  
+
   override fun handleAbilities(packet: CPacketAbilities) {
-    TODO("Not yet implemented")
+    println("Received abilities packet $packet")
   }
-  
+
   override fun handleAnimation(packet: CPacketAnimation) {
-    TODO("Not yet implemented")
+    println("Received animation packet $packet")
   }
-  
+
   override fun handleBlockPlace(packet: CPacketBlockPlace) {
-    TODO("Not yet implemented")
+    println("Received block place packet $packet")
   }
-  
+
   override fun handleChat(packet: CPacketChat) {
-    TODO("Not yet implemented")
+    println("Received chat packet $packet")
   }
-  
+
   override fun handleWindowClick(packet: CPacketClickWindow) {
-    TODO("Not yet implemented")
+    println("Received click window packet $packet")
   }
-  
+
   override fun handleCloseWindow(packet: CPacketCloseWindow) {
-    TODO("Not yet implemented")
+    println("Received close window packet $packet")
   }
-  
+
   override fun handleConfirmTransaction(packet: CPacketConfirmTransaction) {
-    TODO("Not yet implemented")
+    println("Received confirm transaction packet $packet")
   }
-  
+
   override fun handleCreativeAction(packet: CPacketCreativeAction) {
-    TODO("Not yet implemented")
+    println("Received creative action packet $packet")
   }
-  
+
   override fun handleDig(packet: CPacketDig) {
-    TODO("Not yet implemented")
+    println("Received dig packet $packet")
   }
-  
+
   override fun handleEnchant(packet: CPacketEnchantItem) {
-    TODO("Not yet implemented")
+    println("Received enchant packet $packet")
   }
-  
+
   override fun handleAction(packet: CPacketEntityAction) {
-    TODO("Not yet implemented")
+    println("Received entity action packet $packet")
   }
-  
+
   override fun handleHeldItemChange(packet: CPacketHeldItemChange) {
-    TODO("Not yet implemented")
+    println("Received held item change packet $packet")
   }
-  
+
   override fun handleInput(packet: CPacketInput) {
-    TODO("Not yet implemented")
+    println("Received input packet $packet")
   }
-  
+
   override fun handleKeepAlive(packet: CPacketKeepAlive) {
-    TODO("Not yet implemented")
+    println("Received keep alive packet $packet")
   }
-  
+
   override fun handlePayload(packet: CPacketPayload) {
-    TODO("Not yet implemented")
+    println("Received payload packet $packet")
   }
-  
+
   override fun handlePlayerInfo(packet: CPacketPlayerInfo) {
-    TODO("Not yet implemented")
+    println("Received player info packet $packet")
   }
-  
+
   override fun handleResourcePack(packet: CPacketResourcePack) {
-    TODO("Not yet implemented")
+    println("Received resource pack packet $packet")
   }
-  
+
   override fun handleSettings(packet: CPacketSettings) {
-    TODO("Not yet implemented")
+    println("Received settings packet $packet")
   }
-  
+
   override fun handleSpectate(packet: CPacketSpectate) {
-    TODO("Not yet implemented")
+    println("Received spectate packet $packet")
   }
-  
+
   override fun handleStatus(packet: CPacketStatus) {
-    TODO("Not yet implemented")
+    println("Received status packet $packet")
   }
-  
+
   override fun handleTabComplete(packet: CPacketTabComplete) {
-    TODO("Not yet implemented")
+    println("Received tab complete packet $packet")
   }
-  
+
   override fun handleUpdateSign(packet: CPacketUpdateSign) {
-    TODO("Not yet implemented")
+    println("Received update sign packet $packet")
   }
-  
+
   override fun handleUseEntity(packet: CPacketUseEntity) {
-    TODO("Not yet implemented")
+    println("Received use entity packet $packet")
   }
-  
+
   override fun onDisconnect(reason: Component) {
-  
+    println("${player.name} lost connection: ${reason.unformattedText}")
+    server.playerList.onLoggout(player)
   }
-  
+
   private fun getSendPacketException(packet: HandledPacket, cause: Exception): MinecraftException {
-    return MinecraftException("Error while sending packet to player", cause).category("Player", player)
+    return MinecraftException("Error while sending packet to player", cause)
+      .category("Player", player)
       .category("Packet", packet)
   }
-  
+
 }

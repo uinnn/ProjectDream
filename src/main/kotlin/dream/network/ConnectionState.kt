@@ -2,102 +2,7 @@ package dream.network
 
 import com.google.common.collect.BiMap
 import com.google.common.collect.HashBiMap
-import dream.packet.game.CPacketAbilities
-import dream.packet.game.CPacketAnimation
-import dream.packet.game.CPacketBlockPlace
-import dream.packet.game.CPacketChat
-import dream.packet.game.CPacketClickWindow
-import dream.packet.game.CPacketCloseWindow
-import dream.packet.game.CPacketConfirmTransaction
-import dream.packet.game.CPacketCreativeAction
-import dream.packet.game.CPacketDig
-import dream.packet.game.CPacketEnchantItem
-import dream.packet.game.CPacketEntityAction
-import dream.packet.game.CPacketHeldItemChange
-import dream.packet.game.CPacketInput
-import dream.packet.game.CPacketKeepAlive
-import dream.packet.game.CPacketPayload
-import dream.packet.game.CPacketPlayerInfo
-import dream.packet.game.CPacketPlayerLook
-import dream.packet.game.CPacketPlayerMove
-import dream.packet.game.CPacketPlayerMoveLook
-import dream.packet.game.CPacketResourcePack
-import dream.packet.game.CPacketSettings
-import dream.packet.game.CPacketSpectate
-import dream.packet.game.CPacketStatus
-import dream.packet.game.CPacketTabComplete
-import dream.packet.game.CPacketUpdateSign
-import dream.packet.game.CPacketUseEntity
-import dream.packet.game.SPacketAbilities
-import dream.packet.game.SPacketAnimation
-import dream.packet.game.SPacketBlockAction
-import dream.packet.game.SPacketBlockChange
-import dream.packet.game.SPacketBlockDigAnimation
-import dream.packet.game.SPacketBorder
-import dream.packet.game.SPacketCamera
-import dream.packet.game.SPacketChangeGameState
-import dream.packet.game.SPacketChat
-import dream.packet.game.SPacketChunkBulk
-import dream.packet.game.SPacketChunkData
-import dream.packet.game.SPacketCloseWindow
-import dream.packet.game.SPacketCollectItem
-import dream.packet.game.SPacketCombat
-import dream.packet.game.SPacketConfirmTransaction
-import dream.packet.game.SPacketDestroyEntities
-import dream.packet.game.SPacketDisplayScoreboard
-import dream.packet.game.SPacketEffect
-import dream.packet.game.SPacketEntityAttach
-import dream.packet.game.SPacketEntityAttributes
-import dream.packet.game.SPacketEntityEquipment
-import dream.packet.game.SPacketEntityHeadLook
-import dream.packet.game.SPacketEntityLook
-import dream.packet.game.SPacketEntityMetadata
-import dream.packet.game.SPacketEntityMove
-import dream.packet.game.SPacketEntityMoveLook
-import dream.packet.game.SPacketEntityMovement
-import dream.packet.game.SPacketEntityStatus
-import dream.packet.game.SPacketEntityTag
-import dream.packet.game.SPacketEntityTeleport
-import dream.packet.game.SPacketEntityVelocity
-import dream.packet.game.SPacketExplosion
-import dream.packet.game.SPacketHeldItemChange
-import dream.packet.game.SPacketKeepAlive
-import dream.packet.game.SPacketMaps
-import dream.packet.game.SPacketMultiBlockChange
-import dream.packet.game.SPacketOpenWindow
-import dream.packet.game.SPacketParticle
-import dream.packet.game.SPacketPayload
-import dream.packet.game.SPacketPlayerListInfo
-import dream.packet.game.SPacketPlayerListItem
-import dream.packet.game.SPacketPosLook
-import dream.packet.game.SPacketRemoveEffect
-import dream.packet.game.SPacketResourcePack
-import dream.packet.game.SPacketRespawn
-import dream.packet.game.SPacketScoreboardObjective
-import dream.packet.game.SPacketServerDifficulty
-import dream.packet.game.SPacketSetExperience
-import dream.packet.game.SPacketSetSlot
-import dream.packet.game.SPacketSignEditor
-import dream.packet.game.SPacketSound
-import dream.packet.game.SPacketSpawnEntity
-import dream.packet.game.SPacketSpawnExp
-import dream.packet.game.SPacketSpawnMob
-import dream.packet.game.SPacketSpawnObject
-import dream.packet.game.SPacketSpawnPainting
-import dream.packet.game.SPacketSpawnPlayer
-import dream.packet.game.SPacketSpawnPos
-import dream.packet.game.SPacketStatistics
-import dream.packet.game.SPacketTabComplete
-import dream.packet.game.SPacketTeams
-import dream.packet.game.SPacketTimeUpdate
-import dream.packet.game.SPacketTitle
-import dream.packet.game.SPacketUpdateHealth
-import dream.packet.game.SPacketUpdateScore
-import dream.packet.game.SPacketUpdateSign
-import dream.packet.game.SPacketUpdateTile
-import dream.packet.game.SPacketUseBed
-import dream.packet.game.SPacketWindowItems
-import dream.packet.game.SPacketWindowProperty
+import dream.packet.game.*
 import dream.packet.handshaking.PacketHandshake
 import dream.packet.login.*
 import dream.packet.status.CPacketPing
@@ -125,7 +30,7 @@ enum class ConnectionState(val id: Int) {
    */
   HANDSHAKING(-1) {
     init {
-      registerPacket(PacketDirection.SERVER, PacketHandshake::class)
+      registerPacket(PacketDirection.SERVER, 0, PacketHandshake::class)
     }
   },
 
@@ -140,106 +45,106 @@ enum class ConnectionState(val id: Int) {
    */
   PLAY(0) {
     init {
-      // order is important
-      registerPacket(PacketDirection.CLIENT, SPacketKeepAlive::class)
-      registerPacket(PacketDirection.CLIENT, SPacketChat::class)
-      registerPacket(PacketDirection.CLIENT, SPacketTimeUpdate::class)
-      registerPacket(PacketDirection.CLIENT, SPacketEntityEquipment::class)
-      registerPacket(PacketDirection.CLIENT, SPacketSpawnPos::class)
-      registerPacket(PacketDirection.CLIENT, SPacketUpdateHealth::class)
-      registerPacket(PacketDirection.CLIENT, SPacketRespawn::class)
-      registerPacket(PacketDirection.CLIENT, SPacketPosLook::class)
-      registerPacket(PacketDirection.CLIENT, SPacketHeldItemChange::class)
-      registerPacket(PacketDirection.CLIENT, SPacketUseBed::class)
-      registerPacket(PacketDirection.CLIENT, SPacketAnimation::class)
-      registerPacket(PacketDirection.CLIENT, SPacketSpawnPlayer::class)
-      registerPacket(PacketDirection.CLIENT, SPacketCollectItem::class)
-      registerPacket(PacketDirection.CLIENT, SPacketSpawnObject::class)
-      registerPacket(PacketDirection.CLIENT, SPacketSpawnMob::class)
-      registerPacket(PacketDirection.CLIENT, SPacketSpawnPainting::class)
-      registerPacket(PacketDirection.CLIENT, SPacketSpawnExp::class)
-      registerPacket(PacketDirection.CLIENT, SPacketEntityVelocity::class)
-      registerPacket(PacketDirection.CLIENT, SPacketDestroyEntities::class)
-      registerPacket(PacketDirection.CLIENT, SPacketEntityMove::class)
-      registerPacket(PacketDirection.CLIENT, SPacketEntityMovement::class)
-      registerPacket(PacketDirection.CLIENT, SPacketEntityLook::class)
-      registerPacket(PacketDirection.CLIENT, SPacketEntityMoveLook::class)
-      registerPacket(PacketDirection.CLIENT, SPacketEntityTeleport::class)
-      registerPacket(PacketDirection.CLIENT, SPacketEntityHeadLook::class)
-      registerPacket(PacketDirection.CLIENT, SPacketEntityStatus::class)
-      registerPacket(PacketDirection.CLIENT, SPacketEntityAttach::class)
-      registerPacket(PacketDirection.CLIENT, SPacketEntityMetadata::class)
-      registerPacket(PacketDirection.CLIENT, SPacketEffect::class)
-      registerPacket(PacketDirection.CLIENT, SPacketRemoveEffect::class)
-      registerPacket(PacketDirection.CLIENT, SPacketSetExperience::class)
-      registerPacket(PacketDirection.CLIENT, SPacketEntityAttributes::class)
-      registerPacket(PacketDirection.CLIENT, SPacketChunkData::class)
-      registerPacket(PacketDirection.CLIENT, SPacketMultiBlockChange::class)
-      registerPacket(PacketDirection.CLIENT, SPacketBlockChange::class)
-      registerPacket(PacketDirection.CLIENT, SPacketBlockAction::class)
-      registerPacket(PacketDirection.CLIENT, SPacketBlockDigAnimation::class)
-      registerPacket(PacketDirection.CLIENT, SPacketChunkBulk::class)
-      registerPacket(PacketDirection.CLIENT, SPacketExplosion::class)
-      //registerPacket(PacketDirection.CLIENT, SPacketEffect::class)
-      registerPacket(PacketDirection.CLIENT, SPacketSound::class)
-      registerPacket(PacketDirection.CLIENT, SPacketParticle::class)
-      registerPacket(PacketDirection.CLIENT, SPacketChangeGameState::class)
-      registerPacket(PacketDirection.CLIENT, SPacketSpawnEntity::class)
-      registerPacket(PacketDirection.CLIENT, SPacketOpenWindow::class)
-      registerPacket(PacketDirection.CLIENT, SPacketCloseWindow::class)
-      registerPacket(PacketDirection.CLIENT, SPacketSetSlot::class)
-      registerPacket(PacketDirection.CLIENT, SPacketWindowItems::class)
-      registerPacket(PacketDirection.CLIENT, SPacketWindowProperty::class)
-      registerPacket(PacketDirection.CLIENT, SPacketConfirmTransaction::class)
-      registerPacket(PacketDirection.CLIENT, SPacketUpdateSign::class)
-      registerPacket(PacketDirection.CLIENT, SPacketMaps::class)
-      registerPacket(PacketDirection.CLIENT, SPacketUpdateTile::class)
-      registerPacket(PacketDirection.CLIENT, SPacketSignEditor::class)
-      registerPacket(PacketDirection.CLIENT, SPacketStatistics::class)
-      registerPacket(PacketDirection.CLIENT, SPacketPlayerListItem::class)
-      registerPacket(PacketDirection.CLIENT, SPacketAbilities::class)
-      registerPacket(PacketDirection.CLIENT, SPacketTabComplete::class)
-      registerPacket(PacketDirection.CLIENT, SPacketScoreboardObjective::class)
-      registerPacket(PacketDirection.CLIENT, SPacketUpdateScore::class)
-      registerPacket(PacketDirection.CLIENT, SPacketDisplayScoreboard::class)
-      registerPacket(PacketDirection.CLIENT, SPacketTeams::class)
-      registerPacket(PacketDirection.CLIENT, SPacketPayload::class)
-      registerPacket(PacketDirection.CLIENT, SPacketDisconnect::class)
-      registerPacket(PacketDirection.CLIENT, SPacketServerDifficulty::class)
-      registerPacket(PacketDirection.CLIENT, SPacketCombat::class)
-      registerPacket(PacketDirection.CLIENT, SPacketCamera::class)
-      registerPacket(PacketDirection.CLIENT, SPacketBorder::class)
-      registerPacket(PacketDirection.CLIENT, SPacketTitle::class)
-      registerPacket(PacketDirection.CLIENT, SPacketEnableCompression::class)
-      registerPacket(PacketDirection.CLIENT, SPacketPlayerListInfo::class)
-      registerPacket(PacketDirection.CLIENT, SPacketResourcePack::class)
-      registerPacket(PacketDirection.CLIENT, SPacketEntityTag::class)
-      registerPacket(PacketDirection.SERVER, CPacketKeepAlive::class)
-      registerPacket(PacketDirection.SERVER, CPacketChat::class)
-      registerPacket(PacketDirection.SERVER, CPacketUseEntity::class)
-      registerPacket(PacketDirection.SERVER, CPacketPlayerInfo::class)
-      registerPacket(PacketDirection.SERVER, CPacketPlayerMove::class)
-      registerPacket(PacketDirection.SERVER, CPacketPlayerLook::class)
-      registerPacket(PacketDirection.SERVER, CPacketPlayerMoveLook::class)
-      registerPacket(PacketDirection.SERVER, CPacketDig::class)
-      registerPacket(PacketDirection.SERVER, CPacketBlockPlace::class)
-      registerPacket(PacketDirection.SERVER, CPacketHeldItemChange::class)
-      registerPacket(PacketDirection.SERVER, CPacketAnimation::class)
-      registerPacket(PacketDirection.SERVER, CPacketEntityAction::class)
-      registerPacket(PacketDirection.SERVER, CPacketInput::class)
-      registerPacket(PacketDirection.SERVER, CPacketCloseWindow::class)
-      registerPacket(PacketDirection.SERVER, CPacketClickWindow::class)
-      registerPacket(PacketDirection.SERVER, CPacketConfirmTransaction::class)
-      registerPacket(PacketDirection.SERVER, CPacketCreativeAction::class)
-      registerPacket(PacketDirection.SERVER, CPacketEnchantItem::class)
-      registerPacket(PacketDirection.SERVER, CPacketUpdateSign::class)
-      registerPacket(PacketDirection.SERVER, CPacketAbilities::class)
-      registerPacket(PacketDirection.SERVER, CPacketTabComplete::class)
-      registerPacket(PacketDirection.SERVER, CPacketSettings::class)
-      registerPacket(PacketDirection.SERVER, CPacketStatus::class)
-      registerPacket(PacketDirection.SERVER, CPacketPayload::class)
-      registerPacket(PacketDirection.SERVER, CPacketSpectate::class)
-      registerPacket(PacketDirection.SERVER, CPacketResourcePack::class)
+      registerPacket(PacketDirection.CLIENT, 0, SPacketKeepAlive::class)
+      registerPacket(PacketDirection.CLIENT, 1, SPacketJoin::class)
+      registerPacket(PacketDirection.CLIENT, 2, SPacketChat::class)
+      registerPacket(PacketDirection.CLIENT, 3, SPacketTimeUpdate::class)
+      registerPacket(PacketDirection.CLIENT, 4, SPacketEntityEquipment::class)
+      registerPacket(PacketDirection.CLIENT, 5, SPacketSpawnPos::class)
+      registerPacket(PacketDirection.CLIENT, 6, SPacketUpdateHealth::class)
+      registerPacket(PacketDirection.CLIENT, 7, SPacketRespawn::class)
+      registerPacket(PacketDirection.CLIENT, 8, SPacketPosLook::class)
+      registerPacket(PacketDirection.CLIENT, 9, SPacketHeldItemChange::class)
+      registerPacket(PacketDirection.CLIENT, 10, SPacketUseBed::class)
+      registerPacket(PacketDirection.CLIENT, 11, SPacketAnimation::class)
+      registerPacket(PacketDirection.CLIENT, 12, SPacketSpawnPlayer::class)
+      registerPacket(PacketDirection.CLIENT, 13, SPacketCollectItem::class)
+      registerPacket(PacketDirection.CLIENT, 14, SPacketSpawnObject::class)
+      registerPacket(PacketDirection.CLIENT, 15, SPacketSpawnMob::class)
+      registerPacket(PacketDirection.CLIENT, 16, SPacketSpawnPainting::class)
+      registerPacket(PacketDirection.CLIENT, 17, SPacketSpawnExp::class)
+      registerPacket(PacketDirection.CLIENT, 18, SPacketEntityVelocity::class)
+      registerPacket(PacketDirection.CLIENT, 19, SPacketDestroyEntities::class)
+      registerPacket(PacketDirection.CLIENT, 20, SPacketEntityMove::class)
+      registerPacket(PacketDirection.CLIENT, 21, SPacketEntityMovement::class)
+      registerPacket(PacketDirection.CLIENT, 22, SPacketEntityLook::class)
+      registerPacket(PacketDirection.CLIENT, 23, SPacketEntityMoveLook::class)
+      registerPacket(PacketDirection.CLIENT, 24, SPacketEntityTeleport::class)
+      registerPacket(PacketDirection.CLIENT, 25, SPacketEntityHeadLook::class)
+      registerPacket(PacketDirection.CLIENT, 26, SPacketEntityStatus::class)
+      registerPacket(PacketDirection.CLIENT, 27, SPacketEntityAttach::class)
+      registerPacket(PacketDirection.CLIENT, 28, SPacketEntityMetadata::class)
+      registerPacket(PacketDirection.CLIENT, 29, SPacketEntityEffect::class)
+      registerPacket(PacketDirection.CLIENT, 30, SPacketRemoveEffect::class)
+      registerPacket(PacketDirection.CLIENT, 31, SPacketSetExperience::class)
+      registerPacket(PacketDirection.CLIENT, 32, SPacketEntityAttributes::class)
+      registerPacket(PacketDirection.CLIENT, 33, SPacketChunkData::class)
+      registerPacket(PacketDirection.CLIENT, 34, SPacketMultiBlockChange::class)
+      registerPacket(PacketDirection.CLIENT, 35, SPacketBlockChange::class)
+      registerPacket(PacketDirection.CLIENT, 36, SPacketBlockAction::class)
+      registerPacket(PacketDirection.CLIENT, 37, SPacketBlockDigAnimation::class)
+      registerPacket(PacketDirection.CLIENT, 38, SPacketChunkBulk::class)
+      registerPacket(PacketDirection.CLIENT, 39, SPacketExplosion::class)
+      registerPacket(PacketDirection.CLIENT, 40, SPacketEffect::class)
+      registerPacket(PacketDirection.CLIENT, 41, SPacketSound::class)
+      registerPacket(PacketDirection.CLIENT, 42, SPacketParticle::class)
+      registerPacket(PacketDirection.CLIENT, 43, SPacketChangeGameState::class)
+      registerPacket(PacketDirection.CLIENT, 44, SPacketSpawnEntity::class)
+      registerPacket(PacketDirection.CLIENT, 45, SPacketOpenWindow::class)
+      registerPacket(PacketDirection.CLIENT, 46, SPacketCloseWindow::class)
+      registerPacket(PacketDirection.CLIENT, 47, SPacketSetSlot::class)
+      registerPacket(PacketDirection.CLIENT, 48, SPacketWindowItems::class)
+      registerPacket(PacketDirection.CLIENT, 49, SPacketWindowProperty::class)
+      registerPacket(PacketDirection.CLIENT, 50, SPacketConfirmTransaction::class)
+      registerPacket(PacketDirection.CLIENT, 51, SPacketUpdateSign::class)
+      registerPacket(PacketDirection.CLIENT, 52, SPacketMaps::class)
+      registerPacket(PacketDirection.CLIENT, 53, SPacketUpdateTile::class)
+      registerPacket(PacketDirection.CLIENT, 54, SPacketSignEditor::class)
+      registerPacket(PacketDirection.CLIENT, 55, SPacketStatistics::class)
+      registerPacket(PacketDirection.CLIENT, 56, SPacketPlayerListItem::class)
+      registerPacket(PacketDirection.CLIENT, 57, SPacketAbilities::class)
+      registerPacket(PacketDirection.CLIENT, 58, SPacketTabComplete::class)
+      registerPacket(PacketDirection.CLIENT, 59, SPacketScoreboardObjective::class)
+      registerPacket(PacketDirection.CLIENT, 60, SPacketUpdateScore::class)
+      registerPacket(PacketDirection.CLIENT, 61, SPacketDisplayScoreboard::class)
+      registerPacket(PacketDirection.CLIENT, 62, SPacketTeams::class)
+      registerPacket(PacketDirection.CLIENT, 63, SPacketPayload::class)
+      registerPacket(PacketDirection.CLIENT, 64, SPacketDisconnect::class)
+      registerPacket(PacketDirection.CLIENT, 65, SPacketServerDifficulty::class)
+      registerPacket(PacketDirection.CLIENT, 66, SPacketCombat::class)
+      registerPacket(PacketDirection.CLIENT, 67, SPacketCamera::class)
+      registerPacket(PacketDirection.CLIENT, 68, SPacketBorder::class)
+      registerPacket(PacketDirection.CLIENT, 69, SPacketTitle::class)
+      registerPacket(PacketDirection.CLIENT, 70, SPacketEnableCompression::class)
+      registerPacket(PacketDirection.CLIENT, 71, SPacketPlayerListInfo::class)
+      registerPacket(PacketDirection.CLIENT, 72, SPacketResourcePack::class)
+      registerPacket(PacketDirection.CLIENT, 73, SPacketEntityTag::class)
+      registerPacket(PacketDirection.SERVER, 0, CPacketKeepAlive::class)
+      registerPacket(PacketDirection.SERVER, 1, CPacketChat::class)
+      registerPacket(PacketDirection.SERVER, 2, CPacketUseEntity::class)
+      registerPacket(PacketDirection.SERVER, 3, CPacketPlayerInfo::class)
+      registerPacket(PacketDirection.SERVER, 4, CPacketPlayerMove::class)
+      registerPacket(PacketDirection.SERVER, 5, CPacketPlayerLook::class)
+      registerPacket(PacketDirection.SERVER, 6, CPacketPlayerMoveLook::class)
+      registerPacket(PacketDirection.SERVER, 7, CPacketDig::class)
+      registerPacket(PacketDirection.SERVER, 8, CPacketBlockPlace::class)
+      registerPacket(PacketDirection.SERVER, 9, CPacketHeldItemChange::class)
+      registerPacket(PacketDirection.SERVER, 10, CPacketAnimation::class)
+      registerPacket(PacketDirection.SERVER, 11, CPacketEntityAction::class)
+      registerPacket(PacketDirection.SERVER, 12, CPacketInput::class)
+      registerPacket(PacketDirection.SERVER, 13, CPacketCloseWindow::class)
+      registerPacket(PacketDirection.SERVER, 14, CPacketClickWindow::class)
+      registerPacket(PacketDirection.SERVER, 15, CPacketConfirmTransaction::class)
+      registerPacket(PacketDirection.SERVER, 16, CPacketCreativeAction::class)
+      registerPacket(PacketDirection.SERVER, 17, CPacketEnchantItem::class)
+      registerPacket(PacketDirection.SERVER, 18, CPacketUpdateSign::class)
+      registerPacket(PacketDirection.SERVER, 19, CPacketAbilities::class)
+      registerPacket(PacketDirection.SERVER, 20, CPacketTabComplete::class)
+      registerPacket(PacketDirection.SERVER, 21, CPacketSettings::class)
+      registerPacket(PacketDirection.SERVER, 22, CPacketStatus::class)
+      registerPacket(PacketDirection.SERVER, 23, CPacketPayload::class)
+      registerPacket(PacketDirection.SERVER, 24, CPacketSpectate::class)
+      registerPacket(PacketDirection.SERVER, 25, CPacketResourcePack::class)
     }
   },
 
@@ -256,11 +161,10 @@ enum class ConnectionState(val id: Int) {
    */
   STATUS(1) {
     init {
-      // order is important
-      registerPacket(PacketDirection.SERVER, CPacketServerQuery::class)
-      registerPacket(PacketDirection.CLIENT, SPacketServerInfo::class)
-      registerPacket(PacketDirection.SERVER, CPacketPing::class)
-      registerPacket(PacketDirection.CLIENT, SPacketPong::class)
+      registerPacket(PacketDirection.CLIENT, 0, SPacketServerInfo::class)
+      registerPacket(PacketDirection.CLIENT, 1, SPacketPong::class)
+      registerPacket(PacketDirection.SERVER, 0, CPacketServerQuery::class)
+      registerPacket(PacketDirection.SERVER, 1, CPacketPing::class)
     }
   },
 
@@ -280,12 +184,12 @@ enum class ConnectionState(val id: Int) {
   LOGIN(2) {
     init {
       // order is important
-      registerPacket(PacketDirection.CLIENT, SPacketDisconnect::class)
-      registerPacket(PacketDirection.CLIENT, SPacketEncryptionRequest::class)
-      registerPacket(PacketDirection.CLIENT, SPacketLoginSuccess::class)
-      registerPacket(PacketDirection.CLIENT, SPacketEnableCompression::class)
-      registerPacket(PacketDirection.SERVER, CPacketLoginStart::class)
-      registerPacket(PacketDirection.SERVER, CPacketEncryptionResponse::class)
+      registerPacket(PacketDirection.CLIENT, 0, SPacketDisconnect::class)
+      registerPacket(PacketDirection.CLIENT, 1, SPacketEncryptionRequest::class)
+      registerPacket(PacketDirection.CLIENT, 2, SPacketLoginSuccess::class)
+      registerPacket(PacketDirection.CLIENT, 3, SPacketEnableCompression::class)
+      registerPacket(PacketDirection.SERVER, 0, CPacketLoginStart::class)
+      registerPacket(PacketDirection.SERVER, 1, CPacketEncryptionResponse::class)
     }
   };
 
@@ -309,10 +213,10 @@ enum class ConnectionState(val id: Int) {
   }
 
   /**
-   * Creates a new packet instance from the given [direction] and [id].
+   * Creates a new packet instance from the given [direction] and [packetId].
    */
-  fun createPacket(direction: PacketDirection, id: Int, buffer: PacketBuffer): HandledPacket {
-    val clazz = directions[direction]?.get(id) ?: error("Unable to create packet with id $id")
+  fun createPacket(direction: PacketDirection, packetId: Int, buffer: PacketBuffer): HandledPacket {
+    val clazz = directions[direction]?.get(packetId) ?: error("Unable to create packet with id $packetId")
     return clazz.objectInstance ?: clazz.newInstance(buffer)
   }
 
@@ -332,9 +236,9 @@ enum class ConnectionState(val id: Int) {
    *
    * Although it's more propend to have an error if not satisfy equals than client packets.
    */
-  fun registerPacket(direction: PacketDirection, packetClass: HandledPacketClass) {
+  fun registerPacket(direction: PacketDirection, packetId: Int, packetClass: HandledPacketClass) {
     val map = directions.getOrPut(direction) { HashBiMap.create() }
-    map[map.size] = packetClass
+    map[packetId] = packetClass
   }
 
   companion object {
@@ -350,10 +254,13 @@ enum class ConnectionState(val id: Int) {
       }
     }
 
+    const val MIN = -1
+    const val MAX = 2
+
     /**
      * Gets a connection state by id.
      */
-    fun byId(id: Int) = entries[id % 4]
+    fun byId(id: Int) = entries[id - MIN]
 
     /**
      * Gets a connection state by class.

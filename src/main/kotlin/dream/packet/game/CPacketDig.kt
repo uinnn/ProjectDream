@@ -1,14 +1,15 @@
 package dream.packet.game
 
-import dream.network.*
-import dream.pos.*
+import dream.network.PacketBuffer
+import dream.pos.Direction
+import dream.pos.Pos
 
 /**
  * Clientbound packet player dig.
  *
  * Called when a player is digging a block.
  */
-class CPacketDig(
+data class CPacketDig(
   var action: DigAction,
   var pos: Pos,
   var direction: Direction,

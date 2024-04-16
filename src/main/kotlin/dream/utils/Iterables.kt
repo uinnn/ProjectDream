@@ -94,7 +94,10 @@ fun <T, E> Iterable<T>.mapMutable(selector: (T) -> E): MutableList<E> = mapTo(Ar
  */
 inline fun <T> Iterable<T>.forEachSync(lock: Any = this, action: (T) -> Unit) {
   synchronized(lock) {
-    forEach(action)
+    val iterator = iterator()
+    while (iterator.hasNext()) {
+      action(iterator.next())
+    }
   }
 }
 

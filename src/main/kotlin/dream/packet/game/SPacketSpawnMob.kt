@@ -10,7 +10,7 @@ import dream.utils.and
  *
  * Used to spawn a mob to a player.
  */
-class SPacketSpawnMob(
+data class SPacketSpawnMob(
   var entityId: Int,
   var type: Int,
   var x: Int,

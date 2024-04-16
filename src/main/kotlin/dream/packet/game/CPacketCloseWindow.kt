@@ -1,12 +1,12 @@
 package dream.packet.game
 
-import dream.inventory.container.*
-import dream.network.*
+import dream.inventory.container.Container
+import dream.network.PacketBuffer
 
 /**
  * CLientbound close window.
  */
-class CPacketCloseWindow(var id: Int) : ClientGamePacket {
+data class CPacketCloseWindow(var id: Int) : ClientGamePacket {
 
   constructor(container: Container) : this(container.id)
 

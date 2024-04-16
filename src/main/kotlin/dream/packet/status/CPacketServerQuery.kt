@@ -8,6 +8,7 @@ import dream.network.PacketBuffer
  * Empty packet.
  */
 object CPacketServerQuery : ClientStatusPacket {
+
   override fun write(buf: PacketBuffer) {
   }
 

@@ -5,7 +5,7 @@ import dream.network.*
 /**
  * Serverbound Response for enabling compression packet.
  */
-class SPacketEnableCompression(var threshold: Int) : ServerLoginPacket {
+data class SPacketEnableCompression(var threshold: Int) : ServerLoginPacket {
 
   constructor(buf: PacketBuffer) : this(buf.readVarInt())
 

@@ -8,7 +8,7 @@ import javax.crypto.*
 /**
  * Clientbound Response for login encryption packet.
  */
-class CPacketEncryptionResponse(
+data class CPacketEncryptionResponse(
   var keyEncrypted: ByteArray,
   var verifyTokenEncrypted: ByteArray,
 ) : ClientLoginPacket {

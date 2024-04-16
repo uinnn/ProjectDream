@@ -2,7 +2,7 @@ package dream.packet.game
 
 import dream.network.*
 
-class SPacketChangeGameState(var state: Int, var value: Float) : ServerGamePacket {
+data class SPacketChangeGameState(var state: Int, var value: Float) : ServerGamePacket {
   
   constructor(state: GameStates, value: Float) : this(state.id, value)
   

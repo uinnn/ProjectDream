@@ -2,7 +2,7 @@ package dream.packet.game
 
 import dream.network.*
 
-class SPacketTabComplete(var matches: List<String>) : ServerGamePacket {
+data class SPacketTabComplete(var matches: List<String>) : ServerGamePacket {
   
   constructor(buf: PacketBuffer) : this(buf.readList(buf.readVarInt()) { it.readString() })
   

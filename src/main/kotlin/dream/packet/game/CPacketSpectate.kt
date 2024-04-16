@@ -8,7 +8,7 @@ import java.util.*
 /**
  * Clientbound packet spectate.
  */
-class CPacketSpectate(var id: UUID) : ClientGamePacket {
+data class CPacketSpectate(var id: UUID) : ClientGamePacket {
 
   constructor(entity: Entity) : this(entity.id)
 

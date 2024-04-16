@@ -1,14 +1,14 @@
 package dream.packet.game
 
-import dream.chat.Component
-import dream.network.PacketBuffer
+import dream.chat.*
+import dream.network.*
 
 /**
  * Serverbound packet title.
  */
-class SPacketTitle(
+data class SPacketTitle(
   var type: TitleType,
-  var text: Component = Component.EMPTY,
+  var text: ComponentText = Component.EMPTY,
   var fadeIn: Int = -1,
   var stay: Int = -1,
   var fadeOut: Int = -1

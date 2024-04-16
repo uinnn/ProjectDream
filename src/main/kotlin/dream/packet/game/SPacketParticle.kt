@@ -3,7 +3,7 @@ package dream.packet.game
 import dream.network.*
 import dream.particle.*
 
-class SPacketParticle(
+data class SPacketParticle(
   var particle: Particle,
   val longDistance: Boolean,
   var posX: Float,

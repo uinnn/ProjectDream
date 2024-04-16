@@ -1,11 +1,11 @@
 package dream.packet.game
 
-import dream.network.*
+import dream.network.PacketBuffer
 
 /**
  * Clientbound packet payload.
  */
-class CPacketPayload(var channel: String, var data: PacketBuffer) : ClientGamePacket {
+data class CPacketPayload(var channel: String, var data: PacketBuffer) : ClientGamePacket {
 
   constructor(buf: PacketBuffer) : this(
     buf.readString(),

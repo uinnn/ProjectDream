@@ -8,10 +8,14 @@ import dream.app.Console
 import dream.chat.*
 import dream.coroutines.*
 import dream.level.*
+import dream.level.provider.*
+import dream.level.storage.*
 import dream.misc.*
 import dream.network.*
-import dream.server.management.ProfileCache
+import dream.server.management.*
 import dream.utils.*
+import korlibs.io.async.launch
+import kotlinx.coroutines.delay
 import java.io.*
 import java.net.*
 import kotlin.coroutines.*
@@ -23,7 +27,7 @@ import kotlin.coroutines.*
  * own implementation of this class.
  */
 @Open
-class Server(val proxy: Proxy, val directory: File, profileDirectory: File = directory) : Scope {
+class Server(val proxy: Proxy, val directory: File, profileDirectory: File = directory) : Scope, Tickable {
   companion object {
     /**
      * The instance of server.
@@ -37,6 +41,8 @@ class Server(val proxy: Proxy, val directory: File, profileDirectory: File = dir
   }
 
   override var coroutineContext: CoroutineContext = MinecraftDispatcher
+
+  var tick = 0
 
   /**
    * The network system of this server.
@@ -102,11 +108,34 @@ class Server(val proxy: Proxy, val directory: File, profileDirectory: File = dir
    */
   fun createStatusResponse(): ServerStatusResponse {
     return ServerStatusResponse(
-      text("Project Dream developed by carrara."),
+      Description("§aPrototype I"),
       ProtocolVersion("Dream", 47),
-      PlayerCountData(1, 0),
+      PlayerCountData(-1, 0),
       ""
     )
+  }
+
+  init {
+    val level = DefaultLevel("World", LevelProvider(), SaveHandler(file("world")))
+    playerList.initPlayerStorage(level)
+    levels += level
+  }
+
+  init {
+    launch {
+      while (true) {
+        delay(50)
+        tick(tick)
+        tick++
+      }
+    }
+  }
+
+  override fun tick(partial: Int) {
+    networkSystem.tick(partial)
+    for (level in levels) {
+      level.tick(partial)
+    }
   }
 
 }

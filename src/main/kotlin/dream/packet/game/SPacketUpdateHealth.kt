@@ -2,7 +2,7 @@ package dream.packet.game
 
 import dream.network.*
 
-class SPacketUpdateHealth(
+data class SPacketUpdateHealth(
   var health: Float,
   var food: Int,
   var saturation: Float

@@ -1,8 +1,12 @@
 package dream.network
 
-import dream.misc.*
-import io.netty.buffer.*
-import io.netty.channel.*
+import dream.misc.Open
+import io.netty.buffer.ByteBuf
+import io.netty.buffer.Unpooled
+import io.netty.channel.ChannelFutureListener
+import io.netty.channel.ChannelHandlerContext
+import io.netty.channel.ChannelInboundHandlerAdapter
+import java.net.InetSocketAddress
 
 /**
  * Represents a handler for ping response.
@@ -11,51 +15,56 @@ import io.netty.channel.*
 class PingResponseHandler(val network: NetworkSystem) : ChannelInboundHandlerAdapter() {
 
   override fun channelRead(ctx: ChannelHandlerContext, msg: Any) {
+    println("channel: ${ctx.channel()}")
+
     val buffer = msg as ByteBuf
     buffer.markReaderIndex()
-    if (buffer.readUnsignedByte() != 254.toShort())
-      return
-
     var reset = true
 
     try {
-      val server = network.server
+      if (buffer.readUnsignedByte() == 254.toShort()) {
+        val address = ctx.channel().remoteAddress() as InetSocketAddress
+        //val server = network.server
 
-      /**
-       * TODO:
-       * Encodes MOTD, Version, Player count/max in buffer.
-       */
-      when (buffer.readableBytes()) {
-        // minecraft version 1.3 or below
-        0 -> writeAndFlush(ctx, getStringBuffer(""))
+        when (buffer.readableBytes()) {
+          // minecraft version 1.3 or below
+          0 -> {
+            println("Ping from 1.3 or below at ${address.address}")
+            val format = String.format("%s\u00a7%d\u00a7%d", "Hello World!", 0, 3)
+            writeAndFlush(ctx, getStringBuffer(format))
+          }
 
-        // minecraft version 1.4-1.5
-        1 -> {
-          if (buffer.readUnsignedByte() != 1.toShort())
-            return
+          // minecraft version 1.4-1.5
+          1 -> {
+            if (buffer.readUnsignedByte() != 1.toShort())
+              return
 
-          writeAndFlush(ctx, getStringBuffer(""))
-        }
+            println("Ping from 1.4-1.5 at ${address.address}")
+            writeAndFlush(ctx, getStringBuffer(""))
+          }
 
-        // minecraft version 1.6 or higher
-        else -> {
-          if (!buffer.result())
-            return
+          // minecraft version 1.6 or higher
+          else -> {
+            if (!buffer.result())
+              return
 
-          val stringBuffer = getStringBuffer("")
-          try {
-            writeAndFlush(ctx, stringBuffer)
-          } finally {
-            stringBuffer.release()
+            println("Ping from 1.6 or higher at ${address.address}")
+            val format =
+              String.format("\u00a71\u0000%d\u0000%s\u0000%s\u0000%d\u0000%d", 127, "1.8.9", "Hello World!", 0, 3)
+            val stringBuffer = getStringBuffer(format)
+            try {
+              writeAndFlush(ctx, stringBuffer)
+            } finally {
+              stringBuffer.release()
+            }
           }
         }
+
+        buffer.release()
+        reset = false
+        return
       }
-
-      buffer.release()
-      reset = false
-      return
-
-    } catch (ex: Exception) {
+    } catch (ex: RuntimeException) {
       return
     } finally {
       if (reset) {
@@ -88,7 +97,17 @@ class PingResponseHandler(val network: NetworkSystem) : ChannelInboundHandlerAda
    * Gets the result of encoded data for minecraft versions 1.6+
    */
   fun ByteBuf.result(): Boolean {
-    var base = readUnsignedByte() == 1.toShort()
+    var flag1 = readUnsignedByte().toInt() == 1
+    flag1 = flag1 and (readUnsignedByte().toInt() == 250)
+    flag1 = flag1 and ("MC|PingHost" == String(readBytes(readShort() * 2).array(), Charsets.UTF_16BE))
+    val j: Int = readUnsignedShort()
+    flag1 = flag1 and (readUnsignedByte() >= 73)
+    flag1 = flag1 and (3 + readBytes(readShort() * 2).array().size + 4 == j)
+    flag1 = flag1 and (readInt() <= 65535)
+    flag1 = flag1 and (readableBytes() == 0)
+    return flag1
+
+    /*var base = readUnsignedByte() == 1.toShort()
     base = base and (readUnsignedByte() == 250.toShort())
     base = base and (String(readBytes(readShort() * 2).array(), Charsets.UTF_16BE) == "MC|PingHost")
     val max = readUnsignedShort()
@@ -96,6 +115,6 @@ class PingResponseHandler(val network: NetworkSystem) : ChannelInboundHandlerAda
     base = base and (7 + readBytes(readShort() * 2).array().size == max)
     base = base and (readInt() <= 65535)
     base = base and (readableBytes() == 0)
-    return base
+    return base*/
   }
 }

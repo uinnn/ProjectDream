@@ -1,22 +1,24 @@
 package dream.utils
 
-import io.netty.bootstrap.*
-import io.netty.channel.*
+import io.netty.bootstrap.Bootstrap
+import io.netty.bootstrap.ServerBootstrap
+import io.netty.channel.ChannelInitializer
+import io.netty.channel.socket.SocketChannel
 
 /**
  * Shortcut for safely handling bootstrap.
  */
-inline fun Bootstrap.handler(crossinline callback: (Channel) -> Unit): Bootstrap {
-  return handler(object : ChannelInitializer<Channel>() {
-    override fun initChannel(ch: Channel) = callback(ch)
+inline fun Bootstrap.handler(crossinline callback: (SocketChannel) -> Unit): Bootstrap {
+  return handler(object : ChannelInitializer<SocketChannel>() {
+    override fun initChannel(ch: SocketChannel) = callback(ch)
   })
 }
 
 /**
  * Shortcut for safely child-handling bootstrap.
  */
-inline fun ServerBootstrap.childHandler(crossinline callback: (Channel) -> Unit): ServerBootstrap {
-  return childHandler(object : ChannelInitializer<Channel>() {
-    override fun initChannel(ch: Channel) = callback(ch)
+inline fun ServerBootstrap.childHandler(crossinline callback: (SocketChannel) -> Unit): ServerBootstrap {
+  return childHandler(object : ChannelInitializer<SocketChannel>() {
+    override fun initChannel(ch: SocketChannel) = callback(ch)
   })
 }

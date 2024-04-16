@@ -3,7 +3,7 @@ package dream.packet.game
 import dream.network.*
 import dream.pos.*
 
-class SPacketSpawnPos(var pos: Pos) : ServerGamePacket {
+data class SPacketSpawnPos(var pos: Pos) : ServerGamePacket {
   
   constructor(buf: PacketBuffer) : this(buf.readPos())
   

@@ -4,7 +4,7 @@ import dream.entity.item.*
 import dream.network.*
 import dream.pos.*
 
-class SPacketSpawnPainting(
+data class SPacketSpawnPainting(
   var entityId: Int,
   var pos: Pos,
   var facing: Direction,

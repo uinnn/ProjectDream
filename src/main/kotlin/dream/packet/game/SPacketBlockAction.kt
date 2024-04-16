@@ -1,13 +1,13 @@
 package dream.packet.game
 
-import dream.block.Block
-import dream.network.PacketBuffer
-import dream.pos.Pos
+import dream.block.*
+import dream.network.*
+import dream.pos.*
 
 /**
  * Serverbound block action packet.
  */
-class SPacketBlockAction(
+data class SPacketBlockAction(
   var pos: Pos,
   var instrument: Int,
   var pitch: Int,

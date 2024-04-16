@@ -3,7 +3,7 @@ package dream.packet.game
 import dream.entity.item.*
 import dream.network.*
 
-class SPacketSpawnExp(
+data class SPacketSpawnExp(
   var entityId: Int,
   var x: Int,
   var y: Int,

@@ -9,7 +9,7 @@ import dream.pos.*
  *
  * Used to update sign lines.
  */
-class CPacketUpdateSign(var pos: Pos, var lines: List<Component>) : ClientGamePacket {
+data class CPacketUpdateSign(var pos: Pos, var lines: List<ComponentText>) : ClientGamePacket {
 
   constructor(buf: PacketBuffer) : this(
     buf.readPos(),

@@ -1,13 +1,13 @@
 package dream.packet.game
 
-import dream.network.*
+import dream.network.PacketBuffer
 
 /**
  * Clientbound packet resource pack status.
  *
  * Called when a resource pack is sended to player.
  */
-class CPacketResourcePack(var hash: String, var status: ResourcePackStatus) : ClientGamePacket {
+data class CPacketResourcePack(var hash: String, var status: ResourcePackStatus) : ClientGamePacket {
 
   constructor(buf: PacketBuffer) : this(
     buf.readString(),

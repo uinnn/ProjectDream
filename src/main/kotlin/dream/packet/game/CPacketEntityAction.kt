@@ -1,14 +1,14 @@
 package dream.packet.game
 
-import dream.entity.base.*
-import dream.network.*
+import dream.entity.base.Entity
+import dream.network.PacketBuffer
 
 /**
  * Clientbound packet entity action.
  *
  * Called when an entity makes an action.
  */
-class CPacketEntityAction(
+data class CPacketEntityAction(
   var id: Int,
   var action: EntityAction,
   var data: Int = 0,

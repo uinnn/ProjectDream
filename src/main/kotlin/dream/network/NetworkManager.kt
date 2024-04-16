@@ -1,28 +1,32 @@
 package dream.network
 
-import com.google.common.collect.*
-import com.google.common.util.concurrent.*
-import dream.api.*
-import dream.chat.*
-import dream.entity.player.*
-import dream.misc.*
-import dream.packet.*
+import com.google.common.collect.Queues
+import dream.api.Tickable
+import dream.chat.Component
+import dream.chat.ComponentText
+import dream.chat.text
+import dream.entity.player.PlayerConnection
+import dream.misc.Open
+import dream.misc.createNetCipher
+import dream.packet.Packet
+import dream.packet.PacketHandler
 import dream.packet.login.SPacketDisconnect
-import dream.utils.*
-import io.netty.bootstrap.*
-import io.netty.channel.*
-import io.netty.channel.epoll.*
-import io.netty.channel.local.*
-import io.netty.channel.nio.*
-import io.netty.channel.socket.nio.*
-import io.netty.handler.timeout.*
-import io.netty.util.*
-import io.netty.util.concurrent.*
+import dream.packet.state
+import dream.utils.forEachPoll
+import dream.utils.handler
+import io.netty.channel.Channel
+import io.netty.channel.ChannelFutureListener
+import io.netty.channel.ChannelHandlerContext
+import io.netty.channel.SimpleChannelInboundHandler
+import io.netty.channel.local.LocalChannel
+import io.netty.channel.local.LocalServerChannel
+import io.netty.util.AttributeKey
 import io.netty.util.concurrent.Future
-import java.net.*
-import java.util.concurrent.*
-import java.util.concurrent.locks.*
-import javax.crypto.*
+import io.netty.util.concurrent.GenericFutureListener
+import java.net.SocketAddress
+import java.util.concurrent.ConcurrentLinkedQueue
+import java.util.concurrent.locks.ReentrantReadWriteLock
+import javax.crypto.SecretKey
 
 typealias HandledPacket = Packet<PacketHandler>
 typealias PacketChannelHandler = SimpleChannelInboundHandler<HandledPacket>
@@ -139,6 +143,7 @@ class NetworkManager(val direction: PacketDirection) : PacketChannelHandler() {
 
   @Deprecated("Deprecated in Java")
   override fun exceptionCaught(context: ChannelHandlerContext, cause: Throwable) {
+    cause.printStackTrace()
     closeChannel(
       text(
         """
@@ -266,8 +271,9 @@ class NetworkManager(val direction: PacketDirection) : PacketChannelHandler() {
   fun processPackets(partial: Int = -1) {
     flushOutboundQueue()
 
+    val handler = handler
     if (handler is Tickable) {
-      (handler as Tickable).tick(partial)
+      handler.tick(partial)
     }
 
     channel.flush()
@@ -286,7 +292,7 @@ class NetworkManager(val direction: PacketDirection) : PacketChannelHandler() {
   /**
    * Disconnects this network manager sending them a disconnect packet and closing the channel.
    */
-  fun disconnect(reason: Component) {
+  fun disconnect(reason: ComponentText) {
     sendPacket(SPacketDisconnect(reason))
     closeChannel(reason)
   }
@@ -350,11 +356,16 @@ class NetworkManager(val direction: PacketDirection) : PacketChannelHandler() {
     }
   }
 
+  override fun toString(): String {
+    return "NetworkManager"
+  }
+
   companion object {
 
     @JvmField
     val ATTRIBUTE_CONNECTION: AttributeKey<ConnectionState> = AttributeKey.valueOf("protocol")
 
+    /*
     val CLIENT_NIO_EVENTLOOP by lazy {
       NioEventLoopGroup(
         ThreadFactoryBuilder().setNameFormat("Netty Client IO #%d").setDaemon(true).build()
@@ -390,9 +401,9 @@ class NetworkManager(val direction: PacketDirection) : PacketChannelHandler() {
           it.config().setOption(ChannelOption.TCP_NODELAY, true)
           it.pipeline()
             .addLast("timeout", ReadTimeoutHandler(30))
-            .addLast("splitter", PacketSplitter)
+            .addLast("splitter", PacketSplitter())
             .addLast("decoder", PacketDecoder(PacketDirection.CLIENT))
-            .addLast("prepender", PacketPrepender)
+            .addLast("prepender", PacketPrepender())
             .addLast("encoder", PacketEncoder(PacketDirection.SERVER))
             .addLast("packet_handler", network)
         }
@@ -421,5 +432,7 @@ class NetworkManager(val direction: PacketDirection) : PacketChannelHandler() {
 
       return network
     }*/
+
+     */
   }
 }

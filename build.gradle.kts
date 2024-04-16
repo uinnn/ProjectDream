@@ -1,7 +1,7 @@
 plugins {
-  kotlin("jvm") version "2.0.0-Beta2"
-  kotlin("plugin.serialization") version "2.0.0-Beta2"
-  kotlin("plugin.allopen") version "2.0.0-Beta2"
+  kotlin("jvm") version "2.0.0-Beta5"
+  kotlin("plugin.serialization") version "2.0.0-Beta5"
+  kotlin("plugin.allopen") version "2.0.0-Beta5"
   id("java")
   id("com.github.johnrengelman.shadow") version "7.0.0"
   id("idea")
@@ -19,21 +19,19 @@ idea {
 
 
 val implLibs = listOf(
-  "org.jetbrains.kotlin:kotlin-stdlib:2.0.0-Beta2",
-  "org.jetbrains.kotlin:kotlin-stdlib-jdk7:2.0.0-Beta2",
-  "org.jetbrains.kotlin:kotlin-stdlib-jdk8:2.0.0-Beta2",
-  "org.jetbrains.kotlin:kotlin-reflect:2.0.0-Beta2"
+  "org.jetbrains.kotlin:kotlin-stdlib:2.0.0-Beta5",
+  "org.jetbrains.kotlin:kotlin-reflect:2.0.0-Beta5"
 )
 
 val downloadLibs = listOf(
   
   // kotlin
-  "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.8.0-RC2",
-  "org.jetbrains.kotlinx:kotlinx-serialization-core:1.6.2",
-  "org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.2",
-  "org.jetbrains.exposed:exposed-core:0.46.0",
-  "org.jetbrains.exposed:exposed-dao:0.46.0",
-  "org.jetbrains.exposed:exposed-jdbc:0.46.0",
+  "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.8.1-Beta",
+  "org.jetbrains.kotlinx:kotlinx-serialization-core:1.6.3",
+  "org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.3",
+  "org.jetbrains.exposed:exposed-core:0.49.0",
+  "org.jetbrains.exposed:exposed-dao:0.49.0",
+  "org.jetbrains.exposed:exposed-jdbc:0.49.0",
   
   // serialization
   //"com.charleskorn.kaml:kaml:0.48.0",
@@ -105,7 +103,7 @@ dependencies {
 
 tasks {
   compileKotlin {
-    kotlinOptions.freeCompilerArgs += "-Xopt-in=kotlin.time.ExperimentalTime,kotlin.ExperimentalStdlibApi,kotlinx.coroutines.DelicateCoroutinesApi,kotlinx.coroutines.ExperimentalCoroutinesApi,kotlinx.serialization.ExperimentalSerializationApi,kotlinx.serialization.InternalSerializationApi,com.google.devtools.ksp.KspExperimental,kotlin.contracts.ExperimentalContracts"
+    kotlinOptions.freeCompilerArgs += "-Xopt-in=kotlin.time.ExperimentalTime,kotlin.ExperimentalStdlibApi,kotlinx.coroutines.DelicateCoroutinesApi,kotlinx.coroutines.ExperimentalCoroutinesApi,kotlinx.serialization.ExperimentalSerializationApi,kotlinx.serialization.InternalSerializationApi,kotlin.contracts.ExperimentalContracts"
   }
 
   shadowJar {

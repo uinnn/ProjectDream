@@ -1,12 +1,12 @@
 package dream.packet.game
 
-import dream.entity.base.*
-import dream.network.*
+import dream.entity.base.Entity
+import dream.network.PacketBuffer
 
 /**
  * Clientbound Keep alive connection packet.
  */
-class CPacketKeepAlive(var id: Int) : ClientGamePacket {
+data class CPacketKeepAlive(var id: Int) : ClientGamePacket {
 
   constructor(entity: Entity) : this(entity.serialId)
 

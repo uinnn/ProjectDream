@@ -5,7 +5,7 @@ import dream.network.*
 /**
  * Clientbound packet status.
  */
-class CPacketStatus(var status: PlayerStatus) : ClientGamePacket {
+data class CPacketStatus(var status: PlayerStatus) : ClientGamePacket {
 
   constructor(buf: PacketBuffer) : this(buf.readEnum<PlayerStatus>())
 

@@ -1,9 +1,9 @@
 package dream.chat
 
-import dream.api.*
-import dream.item.*
-import dream.serializer.*
-import kotlinx.serialization.*
+import dream.api.Id
+import dream.item.ItemStack
+import dream.serializer.HoverEventSerializer
+import kotlinx.serialization.Serializable
 
 /**
  * Represents a chat hover event.
@@ -21,8 +21,7 @@ enum class HoverAction(override val id: String, val allowedInChat: Boolean = tru
   SHOW_ENTITY("show_entity");
 
   companion object {
-    val values = values()
-    val lookup = values.associateBy { it.id }
+    val lookup = entries.associateBy { it.id }
 
     /**
      * Gets a hover action by [id].

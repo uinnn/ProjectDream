@@ -6,7 +6,7 @@ import dream.utils.and
 /**
  * Serverbound packet for chunk bulk.
  */
-class SPacketChunkBulk(
+data class SPacketChunkBulk(
   var posX: IntArray,
   var posZ: IntArray,
   var chunks: Array<ExtractedChunk>,

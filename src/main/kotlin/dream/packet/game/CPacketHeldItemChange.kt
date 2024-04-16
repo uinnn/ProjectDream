@@ -1,14 +1,14 @@
 package dream.packet.game
 
-import dream.entity.player.*
-import dream.network.*
+import dream.entity.player.Player
+import dream.network.PacketBuffer
 
 /**
  * Clientbound packet held item change.
  *
  * Called when a player changes the held item slot.
  */
-class CPacketHeldItemChange(var slot: Int) : ClientGamePacket {
+data class CPacketHeldItemChange(var slot: Int) : ClientGamePacket {
 
   constructor(player: Player) : this(player.heldSlot)
 

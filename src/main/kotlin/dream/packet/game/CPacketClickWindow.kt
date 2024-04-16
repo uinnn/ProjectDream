@@ -1,15 +1,15 @@
 package dream.packet.game
 
-import dream.inventory.*
-import dream.item.*
-import dream.network.*
+import dream.inventory.ClickMode
+import dream.item.ItemStack
+import dream.network.PacketBuffer
 
 /**
  * Clientbound packet click window.
  *
  * Called when player clicks on an inventory.
  */
-class CPacketClickWindow(
+data class CPacketClickWindow(
   var id: Int,
   var slot: Int,
   var keyboard: Int,

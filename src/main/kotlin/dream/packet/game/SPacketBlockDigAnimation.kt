@@ -1,12 +1,12 @@
 package dream.packet.game
 
-import dream.network.PacketBuffer
-import dream.pos.Pos
+import dream.network.*
+import dream.pos.*
 
 /**
  * Serverbound packet for digging animation.
  */
-class SPacketBlockDigAnimation(
+data class SPacketBlockDigAnimation(
   var breakerId: Int,
   var pos: Pos,
   var progress: Int
