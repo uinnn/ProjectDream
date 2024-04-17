@@ -12,7 +12,7 @@ class RuntimeBlockData : BlockData {
   constructor(block: Block, properties: List<Prop>, states: List<IState>) : super(block, properties, states)
   constructor(block: Block, vararg props: Prop) : super(block) {
     properties = props.sortedBy { it.name }
-    states = properties.map { RuntimeState(block, HashMap()) }
+    validStates = properties.map { RuntimeState(block, HashMap()) }
   }
 
 }

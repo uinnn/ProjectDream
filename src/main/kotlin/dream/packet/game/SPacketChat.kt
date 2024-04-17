@@ -29,10 +29,6 @@ data class SPacketChat(var message: ComponentText, var type: ChatType = ChatType
     buf.writeByte(type.id.toInt())
   }
 
-  override fun process(handler: GamePacketHandler) {
-    TODO("Not yet implemented")
-  }
-
   override fun canSend(player: Player): Boolean {
     return when (player.chatVisibility) {
       ChatVisibility.HIDDEN -> false

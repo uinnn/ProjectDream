@@ -1,14 +1,14 @@
 package dream.packet.game
 
-import dream.entity.base.Entity
-import dream.network.PacketBuffer
+import dream.entity.base.*
+import dream.network.*
 
 /**
  * Clientbound packet player info.
  *
  * This is a base class for player move/look info.
  */
-data class CPacketPlayerInfo(
+class CPacketPlayerMovement(
   var x: Double = 0.0,
   var y: Double = 0.0,
   var z: Double = 0.0,
@@ -39,6 +39,10 @@ data class CPacketPlayerInfo(
   }
 
   override fun process(handler: GamePacketHandler) {
-    handler.handlePlayerInfo(this)
+    handler.handleMovement(this)
+  }
+
+  override fun toString(): String {
+    return "CPacketPlayerMovement(x=$x, y=$y, z=$z, yaw=$yaw, pitch=$pitch, onGround=$onGround, isMoving=$isMoving, isRotating=$isRotating)"
   }
 }

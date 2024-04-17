@@ -10,9 +10,4 @@ data class SPacketEntityStatus(var entityId: Int, var code: Byte) : ServerGamePa
     buf.writeVarInt(entityId)
     buf.writeByte(code)
   }
-  
-  override fun process(handler: GamePacketHandler) {
-    TODO("Not yet implemented")
-  }
-  
 }

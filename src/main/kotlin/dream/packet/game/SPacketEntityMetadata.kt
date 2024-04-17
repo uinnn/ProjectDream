@@ -21,9 +21,4 @@ data class SPacketEntityMetadata(
     buf.writeVarInt(entityId)
     buf.writeWatcher(values)
   }
-  
-  override fun process(handler: GamePacketHandler) {
-    TODO("Not yet implemented")
-  }
-  
 }

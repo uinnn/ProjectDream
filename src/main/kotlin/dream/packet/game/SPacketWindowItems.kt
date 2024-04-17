@@ -1,11 +1,23 @@
 package dream.packet.game
 
-import dream.network.PacketBuffer
+import dream.item.*
+import dream.network.*
 
-class SPacketWindowItems : ServerGamePacket {
+data class SPacketWindowItems(
+  var windowId: Int,
+  var items: List<ItemStack>
+) : ServerGamePacket {
+
+  constructor(buf: PacketBuffer) : this(
+    buf.readByte().toInt(),
+    buf.readList(ArrayList(), buf.readShort().toInt()) { it.readItem() }
+  )
+
   override fun write(buf: PacketBuffer) {
-  }
-
-  override fun process(handler: GamePacketHandler) {
+    buf.writeByte(windowId)
+    buf.writeShort(items.size)
+    for (item in items) {
+      buf.writeItem(item)
+    }
   }
 }

@@ -1,13 +1,13 @@
 package dream.packet.game
 
-import dream.network.PacketBuffer
+import dream.network.*
+import dream.pos.*
 
-class SPacketSignEditor : ServerGamePacket {
+data class SPacketSignEditor(var pos: Pos) : ServerGamePacket {
+
+  constructor(buf: PacketBuffer) : this(buf.readPos())
+
   override fun write(buf: PacketBuffer) {
-    TODO("Not yet implemented")
-  }
-
-  override fun process(handler: GamePacketHandler) {
-    TODO("Not yet implemented")
+    buf.writePos(pos)
   }
 }

@@ -27,10 +27,10 @@ import kotlin.collections.set
 @Open
 class PlayerList(val server: Server) : Tickable, PlayerStorage {
   companion object {
-    val BANNED_PLAYERS_FILE = file("banned-players.json")
-    val BANNED_IPS_FILE = file("banned-ips.json")
-    val OPS_FILE = file("ops.json")
-    val WHITELIST_FILE = file("whitelist.json")
+    val BANNED_PLAYERS_FILE = createFile("banned-players.json")
+    val BANNED_IPS_FILE = createFile("banned-ips.json")
+    val OPS_FILE = createFile("ops.json")
+    val WHITELIST_FILE = createFile("whitelist.json")
   }
 
   /**
@@ -116,7 +116,7 @@ class PlayerList(val server: Server) : Tickable, PlayerStorage {
    */
   override fun tick(partial: Int) {
     if (partial % pingDelay == 0) {
-      //sendPacketToAll(serverpacketp)
+      //sendPacketToAll()
     }
   }
 
@@ -167,16 +167,19 @@ class PlayerList(val server: Server) : Tickable, PlayerStorage {
    * Creates a [Player] instance for the specified [profile].
    */
   fun createPlayer(profile: Profile, network: NetworkManager): Player {
+    val level = server.mainLevel
     println("trying to create player...")
     val connection = PlayerConnection(server, network)
     println("created connection")
-    val interaction = PlayerInteraction(server.mainLevel)
+    val interaction = PlayerInteraction(level)
     println("created interaction")
     val player = Player(profile, server, connection, interaction)
     println("created player")
     connection.player = player
     network.handler = connection
     interaction.player = player
+    player.level = level
+    interaction.level = level
     println("setted everything")
     return player
   }
@@ -186,29 +189,31 @@ class PlayerList(val server: Server) : Tickable, PlayerStorage {
    */
   fun initConnection(network: NetworkManager, player: Player) {
     println("trying to init player connection...")
-    //server.profileCache.addEntry(player.profile)
-    //read(player)
+    server.profileCache.addEntry(player.profile, save = false)
+    read(player)
 
-    val world = server.mainLevel
+    //val world = server.mainLevel
 
     println("initializing ${player.name} to the server")
 
+    //player.level = world
     player.apply {
-      level = world
-      interaction.level = world
-
       sendPacket(SPacketJoin(player.serialId, false, Gamemode.CREATIVE, 0, Difficulty.EASY, 3, LevelType.DEFAULT, true))
       sendPacket(SPacketPayload("MC|Brand", packetBuffer { writeString("ProjectDream") }))
+      sendPacket(SPacketServerDifficulty(Difficulty.EASY, false))
       sendPacket(SPacketSpawnPos(Pos(0, 120, 0)))
       sendPacket(SPacketAbilities(false, false, true, false, 0.25f, 0.25f))
       sendPacket(SPacketHeldItemChange(heldSlot))
-
-      openContainer.addListener(this)
     }
+
+    sendChat(text("Player ${player.name} joined the game!"), false)
 
     println("joined ${player.name} to the server")
 
     onLogin(player)
+
+    player.openContainer.addListener(player)
+
   }
 
   /**

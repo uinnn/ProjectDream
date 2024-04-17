@@ -31,6 +31,5 @@ class SPacketEntityMoveLook(
     buf.writeByte(pitch)
     buf.writeBoolean(onGround)
   }
-  
 }
 

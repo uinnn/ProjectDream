@@ -69,8 +69,4 @@ data class SPacketSpawnPlayer(
     buf.writeShort(currentItem)
     watcher?.write(buf)
   }
-
-  override fun process(handler: GamePacketHandler) {
-  
-  }
 }

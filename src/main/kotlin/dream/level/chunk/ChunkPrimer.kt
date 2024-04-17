@@ -67,7 +67,7 @@ class ChunkPrimer {
    */
   fun setState(index: Int, state: IState) {
     if (index in data.indices) {
-      data[index] = Blocks.STATES[state].toShort()
+      data[index] = Blocks.STATES.getId(state).toShort()
     } else {
       throw IndexOutOfBoundsException("The coordinate is out of range")
     }

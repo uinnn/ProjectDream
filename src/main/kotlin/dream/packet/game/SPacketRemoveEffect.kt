@@ -10,9 +10,4 @@ data class SPacketRemoveEffect(var entityId: Int, var effectId: Int) : ServerGam
     buf.writeVarInt(entityId)
     buf.writeByte(effectId)
   }
-  
-  override fun process(handler: GamePacketHandler) {
-    TODO("Not yet implemented")
-  }
-  
 }

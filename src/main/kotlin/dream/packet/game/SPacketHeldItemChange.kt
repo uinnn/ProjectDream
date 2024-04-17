@@ -9,9 +9,4 @@ data class SPacketHeldItemChange(var slot: Int) : ServerGamePacket {
   override fun write(buf: PacketBuffer) {
     buf.writeByte(slot)
   }
-  
-  override fun process(handler: GamePacketHandler) {
-    TODO("Not yet implemented")
-  }
-  
 }

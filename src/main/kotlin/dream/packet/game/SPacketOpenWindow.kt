@@ -46,8 +46,4 @@ data class SPacketOpenWindow(
       buf.writeInt(entityId)
     }
   }
-  
-  override fun process(handler: GamePacketHandler) {
-    TODO("Not yet implemented")
-  }
 }

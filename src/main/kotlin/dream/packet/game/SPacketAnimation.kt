@@ -21,10 +21,6 @@ data class SPacketAnimation(var entityId: Int, var animation: EntityAnimation) :
     buf.writeVarInt(entityId)
     buf.writeByte(animation.id)
   }
-
-  override fun process(handler: GamePacketHandler) {
-    TODO("Not yet implemented")
-  }
 }
 
 /**

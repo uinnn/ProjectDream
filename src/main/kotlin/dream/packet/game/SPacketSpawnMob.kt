@@ -83,8 +83,4 @@ data class SPacketSpawnMob(
     buf.writeShort(speedZ.toInt())
     watcher?.write(buf)
   }
-
-  override fun process(handler: GamePacketHandler) {
-
-  }
 }

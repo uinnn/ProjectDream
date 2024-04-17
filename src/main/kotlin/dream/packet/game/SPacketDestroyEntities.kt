@@ -1,8 +1,8 @@
 package dream.packet.game
 
-import dream.entity.base.Entity
-import dream.network.PacketBuffer
-import korlibs.datastructure.mapInt
+import dream.entity.base.*
+import dream.network.*
+import korlibs.datastructure.*
 
 data class SPacketDestroyEntities(var entities: IntArray) : ServerGamePacket {
   
@@ -15,9 +15,14 @@ data class SPacketDestroyEntities(var entities: IntArray) : ServerGamePacket {
   override fun write(buf: PacketBuffer) {
     buf.writeIntArray(entities) { writeVarInt(it) }
   }
-  
-  override fun process(handler: GamePacketHandler) {
-    TODO("Not yet implemented")
+
+  override fun equals(other: Any?): Boolean {
+    if (this === other) return true
+    if (other !is SPacketDestroyEntities) return false
+    return entities.contentEquals(other.entities)
   }
-  
+
+  override fun hashCode(): Int {
+    return entities.contentHashCode()
+  }
 }

@@ -21,8 +21,4 @@ data class SPacketCollectItem(var itemId: Int, var collectorId: Int) : ServerGam
     buf.writeVarInt(itemId)
     buf.writeVarInt(collectorId)
   }
-
-  override fun process(handler: GamePacketHandler) {
-    TODO("Not yet implemented")
-  }
 }

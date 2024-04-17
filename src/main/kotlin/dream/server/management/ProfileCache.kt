@@ -1,17 +1,15 @@
 package dream.server.management
 
-import com.mojang.authlib.Agent
-import com.mojang.authlib.GameProfile
-import com.mojang.authlib.ProfileLookupCallback
-import dream.serializer.JsonLikeSerializer
-import dream.serializer.JsonStorable
-import dream.server.Server
+import com.mojang.authlib.*
+import dream.serializer.*
+import dream.server.*
 import dream.utils.*
-import korlibs.datastructure.iterators.fastForEachReverse
+import korlibs.datastructure.iterators.*
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.builtins.*
 import kotlinx.serialization.json.*
-import org.joda.time.DateTime
-import java.io.File
+import org.joda.time.*
+import java.io.*
 import java.util.*
 
 /**
@@ -45,9 +43,8 @@ class ProfileCache(val server: Server, val file: File) {
    * Saves the cache in [file].
    */
   fun save() {
-    file.outputStream().use {
-      Json.encodeToStream(limit(), it)
-    }
+    val json = Json.encodeToString(ListSerializer(ProfileEntry.serializer()), idLookup.values.toList())
+    file.writeText(json)
   }
   
   /**
@@ -57,7 +54,7 @@ class ProfileCache(val server: Server, val file: File) {
     file.inputStream().use { stream ->
       clearCache()
       Json.decodeFromStream<List<ProfileEntry>>(stream).fastForEachReverse {
-        addEntry(it.profile, it.expiration)
+        addEntry(it.profile, it.expiration, false)
       }
     }
   }
@@ -65,7 +62,7 @@ class ProfileCache(val server: Server, val file: File) {
   /**
    * Adds an new entry to this cache.
    */
-  fun addEntry(profile: GameProfile, expiration: DateTime = DateTime().plusMonths(1)) {
+  fun addEntry(profile: GameProfile, expiration: DateTime = DateTime().plusMonths(1), save: Boolean = true) {
     val entry = ProfileEntry(profile, expiration)
     val id = profile.id
     if (id in idLookup) {
@@ -77,7 +74,9 @@ class ProfileCache(val server: Server, val file: File) {
     nameLookup[profile.name.lowercase()] = entry
     idLookup[id] = entry
     profiles.addFirst(profile)
-    save()
+    if (save) {
+      save()
+    }
   }
   
   /**

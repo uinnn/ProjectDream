@@ -12,9 +12,4 @@ data class SPacketPayload(var channel: String, var data: PacketBuffer) : ServerG
     buf.writeString(channel)
     buf.writeBytes(data)
   }
-  
-  override fun process(handler: GamePacketHandler) {
-    TODO("Not yet implemented")
-  }
-  
 }

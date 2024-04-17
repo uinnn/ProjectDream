@@ -40,10 +40,6 @@ data class SPacketTitle(
       buf.writeInt(fadeOut)
     }
   }
-
-  override fun process(handler: GamePacketHandler) {
-    TODO("Not yet implemented")
-  }
 }
 
 /**

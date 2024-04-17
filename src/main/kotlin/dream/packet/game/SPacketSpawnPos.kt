@@ -10,9 +10,4 @@ data class SPacketSpawnPos(var pos: Pos) : ServerGamePacket {
   override fun write(buf: PacketBuffer) {
     buf.writePos(pos)
   }
-  
-  override fun process(handler: GamePacketHandler) {
-    TODO("Not yet implemented")
-  }
-  
 }

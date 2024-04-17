@@ -25,5 +25,4 @@ class SPacketEntityMovement(
     buf.writeByte(z)
     buf.writeBoolean(onGround)
   }
-  
 }

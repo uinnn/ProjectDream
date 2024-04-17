@@ -10,9 +10,4 @@ data class SPacketEntityHeadLook(var entityId: Int, var yaw: Byte) : ServerGameP
     buf.writeVarInt(entityId)
     buf.writeByte(yaw)
   }
-  
-  override fun process(handler: GamePacketHandler) {
-    TODO("Not yet implemented")
-  }
-  
 }

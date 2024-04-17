@@ -2,15 +2,15 @@ package dream.packet.game
 
 import dream.network.*
 
-// TODO: SCOREBOARD
-class SPacketDisplayScoreboard : ServerGamePacket {
+data class SPacketDisplayScoreboard(
+  var position: Int,
+  var name: String
+) : ServerGamePacket {
   
-  constructor(buf: PacketBuffer)
+  constructor(buf: PacketBuffer) : this(buf.readByte().toInt(), buf.readString(16))
   
   override fun write(buf: PacketBuffer) {
-  }
-  
-  override fun process(handler: GamePacketHandler) {
-    TODO("Not yet implemented")
+    buf.writeByte(position)
+    buf.writeString(name)
   }
 }

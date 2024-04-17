@@ -1,13 +1,20 @@
 package dream.packet.game
 
-import dream.network.PacketBuffer
+import dream.nbt.types.*
+import dream.network.*
+import dream.pos.*
 
-class SPacketUpdateTile : ServerGamePacket {
+data class SPacketUpdateTile(
+  var pos: Pos,
+  var metadata: Byte,
+  var tag: CompoundTag
+) : ServerGamePacket {
+
+  constructor(buf: PacketBuffer) : this(buf.readPos(), buf.readByte(), buf.readCompound())
+
   override fun write(buf: PacketBuffer) {
-    TODO("Not yet implemented")
-  }
-
-  override fun process(handler: GamePacketHandler) {
-    TODO("Not yet implemented")
+    buf.writePos(pos)
+    buf.writeByte(metadata)
+    buf.writeCompound(tag)
   }
 }

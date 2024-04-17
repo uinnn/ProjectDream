@@ -1,11 +1,10 @@
 package dream.packet.game
 
-import dream.block.Blocks
-import dream.block.state.IState
-import dream.level.chunk.Chunk
-import dream.level.chunk.ChunkCoordinate
-import dream.network.PacketBuffer
-import dream.pos.Pos
+import dream.block.*
+import dream.block.state.*
+import dream.level.chunk.*
+import dream.network.*
+import dream.pos.*
 
 /**
  * Serverbound packet used to change multiple blocks in a chunk at once.
@@ -47,11 +46,19 @@ data class SPacketMultiBlockChange(
     }
   }
 
-  override fun process(handler: GamePacketHandler) {
-    TODO("Not yet implemented")
+  fun getPos(crammedPos: Short): Pos = getPos(crammedPos.toInt(), coordinate)
+  override fun equals(other: Any?): Boolean {
+    if (this === other) return true
+    if (other !is SPacketMultiBlockChange) return false
+    if (coordinate != other.coordinate) return false
+    return changes.contentEquals(other.changes)
   }
 
-  fun getPos(crammedPos: Short): Pos = getPos(crammedPos.toInt(), coordinate)
+  override fun hashCode(): Int {
+    var result = coordinate.hashCode()
+    result = 31 * result + changes.contentHashCode()
+    return result
+  }
 }
 
 /**

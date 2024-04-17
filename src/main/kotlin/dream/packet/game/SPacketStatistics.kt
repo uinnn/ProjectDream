@@ -1,13 +1,22 @@
 package dream.packet.game
 
-import dream.network.PacketBuffer
+import dream.network.*
 
-class SPacketStatistics : ServerGamePacket {
-  override fun write(buf: PacketBuffer) {
-    TODO("Not yet implemented")
+data class SPacketStatistics(var stats: MutableMap<String, Int> = HashMap()) : ServerGamePacket {
+
+  constructor(buf: PacketBuffer, size: Int) : this(HashMap(size)) {
+    repeat(size) {
+      stats[buf.readString()] = buf.readVarInt()
+    }
   }
 
-  override fun process(handler: GamePacketHandler) {
-    TODO("Not yet implemented")
+  constructor(buf: PacketBuffer) : this(buf, buf.readVarInt())
+
+  override fun write(buf: PacketBuffer) {
+    buf.writeVarInt(stats.size)
+    for (stat in stats) {
+      buf.writeString(stat.key)
+      buf.writeVarInt(stat.value)
+    }
   }
 }

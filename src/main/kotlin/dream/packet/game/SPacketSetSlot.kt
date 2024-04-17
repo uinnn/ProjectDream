@@ -21,9 +21,4 @@ data class SPacketSetSlot(var windowId: Int, var slot: Int, var item: ItemStack)
     buf.writeShort(slot)
     buf.writeItem(item)
   }
-  
-  override fun process(handler: GamePacketHandler) {
-    TODO("Not yet implemented")
-  }
-  
 }

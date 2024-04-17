@@ -21,9 +21,4 @@ data class SPacketEntityEquipment(
     buf.writeShort(slot)
     buf.writeItem(item)
   }
-  
-  override fun process(handler: GamePacketHandler) {
-    TODO("Not yet implemented")
-  }
-  
 }

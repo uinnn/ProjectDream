@@ -1,13 +1,18 @@
 package dream.packet.game
 
-import dream.network.PacketBuffer
+import dream.network.*
 
-class SPacketConfirmTransaction : ServerGamePacket {
+data class SPacketConfirmTransaction(
+  var windowId: Int,
+  var actionId: Short,
+  var accepted: Boolean
+) : ServerGamePacket {
+
+  constructor(buf: PacketBuffer) : this(buf.readUnsignedByte().toInt(), buf.readShort(), buf.readBoolean())
+
   override fun write(buf: PacketBuffer) {
-    TODO("Not yet implemented")
-  }
-
-  override fun process(handler: GamePacketHandler) {
-    TODO("Not yet implemented")
+    buf.writeByte(windowId)
+    buf.writeShort(actionId)
+    buf.writeBoolean(accepted)
   }
 }

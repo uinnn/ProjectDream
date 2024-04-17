@@ -8,7 +8,7 @@ import kotlin.reflect.*
 /**
  * Represents a base block state.
  */
-class State(override val block: Block, override val values: PropertyMap) : IState {
+data class State(override val block: Block, override val values: PropertyMap) : IState {
 
   /**
    * The table of this state.

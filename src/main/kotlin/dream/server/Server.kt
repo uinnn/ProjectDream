@@ -27,7 +27,7 @@ import kotlin.coroutines.*
  * own implementation of this class.
  */
 @Open
-class Server(val proxy: Proxy, val directory: File, profileDirectory: File = directory) : Scope, Tickable {
+class Server(val proxy: Proxy, val directory: File, profileDirectory: File = createFile("profiles.json")) : Scope, Tickable {
   companion object {
     /**
      * The instance of server.
@@ -108,9 +108,9 @@ class Server(val proxy: Proxy, val directory: File, profileDirectory: File = dir
    */
   fun createStatusResponse(): ServerStatusResponse {
     return ServerStatusResponse(
-      Description("§aPrototype I"),
+      Description("§d§lPrototype I"),
       ProtocolVersion("Dream", 47),
-      PlayerCountData(-1, 0),
+      PlayerCountData(0, 0),
       ""
     )
   }
@@ -132,10 +132,11 @@ class Server(val proxy: Proxy, val directory: File, profileDirectory: File = dir
   }
 
   override fun tick(partial: Int) {
-    networkSystem.tick(partial)
     for (level in levels) {
       level.tick(partial)
     }
+    networkSystem.tick(partial)
+    playerList.tick(partial)
   }
 
 }

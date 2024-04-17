@@ -2,15 +2,30 @@ package dream.packet.game
 
 import dream.network.*
 
-// TODO: SCOREBOARD
-class SPacketUpdateScore : ServerGamePacket {
+class SPacketUpdateScore(
+  var name: String,
+  var action: UpdateScoreAction,
+  var objective: String,
+  var value: Int = 0,
+) : ServerGamePacket {
   
-  constructor(buf: PacketBuffer)
+  constructor(buf: PacketBuffer) : this(buf.readString(40), buf.readEnum(), buf.readString(16)) {
+    if (action == UpdateScoreAction.CHANGE) {
+      value = buf.readVarInt()
+    }
+  }
   
   override fun write(buf: PacketBuffer) {
+    buf.writeString(name)
+    buf.writeEnum(action)
+    buf.writeString(objective)
+    if (action == UpdateScoreAction.CHANGE) {
+      buf.writeVarInt(value)
+    }
   }
-  
-  override fun process(handler: GamePacketHandler) {
-    TODO("Not yet implemented")
-  }
+}
+
+enum class UpdateScoreAction {
+  CHANGE,
+  REMOVE
 }

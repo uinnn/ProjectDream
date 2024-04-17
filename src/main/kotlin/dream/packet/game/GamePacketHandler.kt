@@ -3,7 +3,6 @@ package dream.packet.game
 import dream.packet.*
 
 typealias GamePacket = Packet<GamePacketHandler>
-typealias ServerGamePacket = ServerPacket<GamePacketHandler>
 typealias ClientGamePacket = ClientPacket<GamePacketHandler>
 
 /**
@@ -26,7 +25,7 @@ interface GamePacketHandler : PacketHandler {
   fun handleInput(packet: CPacketInput)
   fun handleKeepAlive(packet: CPacketKeepAlive)
   fun handlePayload(packet: CPacketPayload)
-  fun handlePlayerInfo(packet: CPacketPlayerInfo)
+  fun handleMovement(packet: CPacketPlayerMovement)
   fun handleResourcePack(packet: CPacketResourcePack)
   fun handleSettings(packet: CPacketSettings)
   fun handleSpectate(packet: CPacketSpectate)
@@ -35,4 +34,13 @@ interface GamePacketHandler : PacketHandler {
   fun handleUpdateSign(packet: CPacketUpdateSign)
   fun handleUseEntity(packet: CPacketUseEntity)
 
+}
+
+/**
+ * A server packet for [GamePacketHandler].
+ */
+interface ServerGamePacket : ServerPacket<GamePacketHandler> {
+  override fun process(handler: GamePacketHandler) {
+    throw UnsupportedOperationException("Server Packets are processed only in client.")
+  }
 }

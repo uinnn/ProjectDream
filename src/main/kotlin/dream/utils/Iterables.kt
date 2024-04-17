@@ -1,6 +1,6 @@
 package dream.utils
 
-import korlibs.datastructure.random.FastRandom
+import korlibs.datastructure.random.*
 
 /**
  * Returns the size of this iterable.
@@ -14,13 +14,13 @@ fun <T> Iterable<T>.asSequence() = sequence<T> { iterator() }
 /**
  * Returns the cartesian product of this list.
  */
-fun <T> Iterable<Iterable<T>>.cartesian(): Set<List<T>> {
-  if (isEmpty()) return emptySet()
-  return drop(1).fold(
-    first()
-      .map(::listOf)
-  ) { acc, iterable -> acc.flatMap { list -> iterable.map(list::plus) } }
-    .toSet()
+fun <T> Iterable<Iterable<T>>.cartesian(): List<List<T>> {
+  if (isEmpty()) return emptyList()
+  return drop(1).fold(first().map(::listOf)) { acc, iterable ->
+    acc.flatMap { list ->
+      iterable.map(list::plus)
+    }
+  }
 }
 
 /**

@@ -24,8 +24,4 @@ data class SPacketBlockAction(
     buf.writeByte(pitch)
     buf.writeBlock(block)
   }
-
-  override fun process(handler: GamePacketHandler) {
-    TODO("Not yet implemented")
-  }
 }

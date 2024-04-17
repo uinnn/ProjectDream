@@ -9,8 +9,4 @@ class SPacketTeams : ServerGamePacket {
   
   override fun write(buf: PacketBuffer) {
   }
-  
-  override fun process(handler: GamePacketHandler) {
-    TODO("Not yet implemented")
-  }
 }

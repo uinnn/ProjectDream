@@ -1,16 +1,14 @@
 package dream.level
 
-import dream.api.Scope
-import dream.block.Blocks
-import dream.coroutines.LevelDispatcher
-import dream.level.chunk.Chunk
-import dream.level.chunk.storage.Pallete
-import dream.level.provider.ChunkProvider
-import dream.level.provider.LevelProvider
-import dream.level.storage.ISaveHandler
-import dream.misc.IProgressUpdate
-import dream.utils.getOrPut
-import kotlin.coroutines.CoroutineContext
+import dream.api.*
+import dream.block.*
+import dream.coroutines.*
+import dream.level.chunk.*
+import dream.level.chunk.storage.*
+import dream.level.provider.*
+import dream.level.storage.*
+import dream.misc.*
+import kotlin.coroutines.*
 
 /**
  * Represents a Level.
@@ -30,8 +28,9 @@ class DefaultLevel(
     return object : ChunkProvider {
       override fun provide(x: Int, z: Int): Chunk {
         val chunk = Chunk(this@DefaultLevel, x, z)
-        val pallete = chunk.palletes.getOrPut(0) { Pallete(0, true) }
+        val pallete = Pallete(0, true)
         pallete.fill(Blocks.STONE.state)
+        chunk.palletes += pallete
         return chunk
       }
 
@@ -55,7 +54,7 @@ class DefaultLevel(
       }
 
       override fun canSave(): Boolean {
-        return true
+        return false
       }
 
       override fun makeString(): String {
@@ -63,7 +62,7 @@ class DefaultLevel(
       }
 
       override fun getLoadedChunkCount(): Int {
-        return 0
+        return 1
       }
 
       override fun recreateStructures(chunk: Chunk, x: Int, z: Int) {

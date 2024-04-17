@@ -38,10 +38,6 @@ data class SPacketSpawnEntity(
     buf.writeInt(y)
     buf.writeInt(z)
   }
-
-  override fun process(handler: GamePacketHandler) {
-    TODO("Not yet implemented")
-  }
 }
 
 /**

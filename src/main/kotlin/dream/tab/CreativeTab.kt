@@ -1,7 +1,7 @@
 package dream.tab
 
-import dream.enchantment.EnchantmentTarget
-import dream.api.Locale
+import dream.api.*
+import dream.enchantment.*
 import dream.item.*
 
 /**
@@ -92,7 +92,8 @@ abstract class CreativeTab(val index: Int, override val unlocalName: String) : L
   }
 
   init {
-    TABS[index] = this
+    TABS.add(this)
+    //TABS[index] = this
   }
 
   companion object Registry {

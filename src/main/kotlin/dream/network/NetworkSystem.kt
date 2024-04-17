@@ -48,7 +48,7 @@ class NetworkSystem(val server: Server) : Tickable {
     val b = ServerBootstrap()
     b.group(EVENT_LOOPS)
       .channel(NioServerSocketChannel::class.java)
-      //.option(ChannelOption.SO_BACKLOG, 128)
+      .option(ChannelOption.SO_BACKLOG, 128)
       .childHandler {
         it.config().setOption(ChannelOption.TCP_NODELAY, true)
         it.pipeline()
@@ -176,6 +176,7 @@ class NetworkSystem(val server: Server) : Tickable {
               val text = text("Internal Server Error")
               network.sendPacket(SPacketDisconnect(text)) { network.closeChannel(text) }
               network.disableAutoRead()
+              e.printStackTrace()
             }
           }
         }

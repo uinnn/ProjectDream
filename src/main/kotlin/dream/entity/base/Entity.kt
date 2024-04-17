@@ -647,7 +647,9 @@ abstract class Entity : Identifiable, Localizable, CompoundStorable, Tickable, N
   val isOnLadder: Boolean
     get() {
       val state = stateInside
-      return state.its(Blocks.LADDER) || state.its(Blocks.VINES)
+      //return state.its(Blocks.LADDER) || state.its(Blocks.VINES)
+      return false
+
     }
   
   /**

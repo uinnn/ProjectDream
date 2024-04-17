@@ -34,9 +34,4 @@ data class SPacketSpawnExp(
     buf.writeInt(y)
     buf.writeShort(experience)
   }
-  
-  override fun process(handler: GamePacketHandler) {
-    TODO("Not yet implemented")
-  }
-  
 }

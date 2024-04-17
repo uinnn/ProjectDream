@@ -24,10 +24,4 @@ data class SPacketRespawn(
     buf.writeByte(gamemode.id)
     buf.writeString(levelType.name)
   }
-  
-  override fun process(handler: GamePacketHandler) {
-    TODO("Not yet implemented")
-  }
-  
-  
 }

@@ -25,7 +25,7 @@ object Items : NamespacedRegistry<Key, Item>() {
 
   val STONE = vanilla(1, "stone", Item())
 
-  val BOOK = vanilla(-1, "book", ItemBook())
+  val BOOK = vanilla(2, "book", ItemBook())
 
   /**
    * A registry to get [Item]'s from [Block]'s.

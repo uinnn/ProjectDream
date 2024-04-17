@@ -15,8 +15,4 @@ data class SPacketSetExperience(
     buf.writeVarInt(experience)
     buf.writeVarInt(level)
   }
-  
-  override fun process(handler: GamePacketHandler) {
-    TODO("Not yet implemented")
-  }
 }

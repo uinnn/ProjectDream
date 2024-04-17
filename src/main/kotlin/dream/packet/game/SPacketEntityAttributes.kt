@@ -1,10 +1,7 @@
 package dream.packet.game
 
-import dream.attribute.AttributeModifier
-import dream.attribute.IAttribute
-import dream.attribute.Operation
+import dream.attribute.*
 import dream.network.*
-import java.util.ArrayList
 
 data class SPacketEntityAttributes(
   var entityId: Int,
@@ -24,9 +21,9 @@ data class SPacketEntityAttributes(
       val modifiers = ArrayList<AttributeModifier>()
       repeat(buf.readVarInt()) {
         val id = buf.readUUID()
-        val value = buf.readDouble()
+        val amount = buf.readDouble()
         val operation = Operation.byId(buf.readByte().toInt())
-        modifiers += AttributeModifier("Unknown synced attribute modifier", value, operation, id)
+        modifiers += AttributeModifier("Unknown synced attribute modifier", amount, operation, id)
       }
       snapshots += AttributeSnapshot(name, value, modifiers)
     }
@@ -45,10 +42,6 @@ data class SPacketEntityAttributes(
         buf.writeByte(modifier.operation.id)
       }
     }
-  }
-
-  override fun process(handler: GamePacketHandler) {
-    TODO("Not yet implemented")
   }
 }
 

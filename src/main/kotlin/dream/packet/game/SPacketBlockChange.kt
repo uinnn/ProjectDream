@@ -17,9 +17,4 @@ data class SPacketBlockChange(var pos: Pos, var state: IState) : ServerGamePacke
     buf.writePos(pos)
     buf.writeState(state)
   }
-  
-  override fun process(handler: GamePacketHandler) {
-    TODO("Not yet implemented")
-  }
-  
 }

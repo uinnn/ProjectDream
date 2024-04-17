@@ -15,13 +15,8 @@ data class SPacketEntityTag(var entityId: Int, var tag: CompoundTag) : ServerGam
     buf.writeVarInt(entityId)
     buf.writeCompound(tag)
   }
-  
-  override fun process(handler: GamePacketHandler) {
-    TODO("Not yet implemented")
-  }
-  
+
   fun entity(level: Level): Entity? {
     return level.getEntity(entityId)
   }
-  
 }

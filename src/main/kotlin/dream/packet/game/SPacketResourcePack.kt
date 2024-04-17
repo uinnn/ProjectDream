@@ -1,14 +1,17 @@
 package dream.packet.game
 
-import dream.network.PacketBuffer
+import dream.network.*
 
-class SPacketResourcePack : ServerGamePacket {
+data class SPacketResourcePack(
+  var url: String,
+  var hash: String
+) : ServerGamePacket {
+
+  constructor(buf: PacketBuffer) : this(buf.readString(), buf.readString(40))
+
   override fun write(buf: PacketBuffer) {
-    TODO("Not yet implemented")
-  }
-
-  override fun process(handler: GamePacketHandler) {
-    TODO("Not yet implemented")
+    buf.writeString(url)
+    buf.writeString(hash)
   }
 }
 

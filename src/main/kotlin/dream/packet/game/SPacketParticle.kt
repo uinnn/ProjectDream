@@ -45,9 +45,36 @@ data class SPacketParticle(
     buf.writeInt(amount)
     buf.writeIntArray(arguments) { writeVarInt(it) }
   }
-  
-  override fun process(handler: GamePacketHandler) {
-    TODO("Not yet implemented")
+
+  override fun equals(other: Any?): Boolean {
+    if (this === other) return true
+    if (other !is SPacketParticle) return false
+    if (particle != other.particle) return false
+    if (longDistance != other.longDistance) return false
+    if (posX != other.posX) return false
+    if (posY != other.posY) return false
+    if (posZ != other.posZ) return false
+    if (offsetX != other.offsetX) return false
+    if (offsetY != other.offsetY) return false
+    if (offsetZ != other.offsetZ) return false
+    if (speed != other.speed) return false
+    if (amount != other.amount) return false
+    return arguments.contentEquals(other.arguments)
   }
-  
+
+  override fun hashCode(): Int {
+    var result = particle.hashCode()
+    result = 31 * result + longDistance.hashCode()
+    result = 31 * result + posX.hashCode()
+    result = 31 * result + posY.hashCode()
+    result = 31 * result + posZ.hashCode()
+    result = 31 * result + offsetX.hashCode()
+    result = 31 * result + offsetY.hashCode()
+    result = 31 * result + offsetZ.hashCode()
+    result = 31 * result + speed.hashCode()
+    result = 31 * result + amount
+    result = 31 * result + arguments.contentHashCode()
+    return result
+  }
+
 }

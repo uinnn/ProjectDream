@@ -1,16 +1,16 @@
 package dream.packet.game
 
-import dream.entity.base.Entity
-import dream.network.PacketBuffer
+import dream.entity.base.*
+import dream.network.*
 
 /**
  * Clientbound packet player look.
  */
-class CPacketPlayerLook(
-  yaw: Float,
-  pitch: Float,
-  ground: Boolean,
-) : CPacketPlayerInfo(yaw = yaw, pitch = pitch, onGround = ground, isRotating = true) {
+data class CPacketPlayerLook(
+  override var yaw: Float,
+  override var pitch: Float,
+  override var onGround: Boolean,
+) : CPacketPlayerMovement(yaw = yaw, pitch = pitch, onGround = onGround, isRotating = true) {
 
   constructor(entity: Entity) : this(entity.yaw, entity.pitch, entity.onGround)
 

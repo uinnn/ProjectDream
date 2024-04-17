@@ -207,7 +207,7 @@ abstract class Level(
    *
    * This handles chunk operations and caching.
    */
-  lateinit var chunkProvider: ChunkProvider
+  var chunkProvider: ChunkProvider = createChunkProvider()
   
   /**
    * Creates a chunk provider for this level.
@@ -444,9 +444,6 @@ abstract class Level(
   }
   
   override fun tick(partial: Int) {
-    for (player in players) {
-      player.tick(partial)
-    }
     for (entity in entities) {
       entity.tick(partial)
     }

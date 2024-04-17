@@ -1,13 +1,12 @@
 package dream.packet.game
 
-import dream.network.PacketBuffer
+import dream.network.*
 
-class SPacketCompressionLevel : ServerGamePacket {
+data class SPacketCompressionLevel(var threshold: Int) : ServerGamePacket {
+
+  constructor(buf: PacketBuffer) : this(buf.readVarInt())
+
   override fun write(buf: PacketBuffer) {
-    TODO("Not yet implemented")
-  }
-
-  override fun process(handler: GamePacketHandler) {
-    TODO("Not yet implemented")
+    buf.writeVarInt(threshold)
   }
 }

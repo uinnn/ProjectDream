@@ -1,13 +1,22 @@
 package dream.packet.game
 
-import dream.network.PacketBuffer
+import dream.network.*
 
-class SPacketWindowProperty : ServerGamePacket {
+data class SPacketWindowProperty(
+  var windowId: Int,
+  var propertyId: Int,
+  var value: Int
+) : ServerGamePacket {
+
+  constructor(buf: PacketBuffer) : this(
+    buf.readUnsignedByte().toInt(),
+    buf.readShort().toInt(),
+    buf.readShort().toInt()
+  )
+
   override fun write(buf: PacketBuffer) {
-    TODO("Not yet implemented")
-  }
-
-  override fun process(handler: GamePacketHandler) {
-    TODO("Not yet implemented")
+    buf.writeByte(windowId)
+    buf.writeShort(propertyId)
+    buf.writeShort(value)
   }
 }

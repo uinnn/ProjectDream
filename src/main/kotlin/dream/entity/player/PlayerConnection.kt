@@ -41,11 +41,17 @@ class PlayerConnection(
    */
   var ticks = 0
 
+  var lastSentPingPacket = 0
+  var lastPingTime = 0L
+  var lastPingId = 0
+
   override fun tick(partial: Int) {
-    if (ticks % 20 == 0) {
-      sendPacket(SPacketKeepAlive(player))
+    if (partial - lastSentPingPacket > 40) {
+      lastSentPingPacket = partial
+      lastPingTime = now
+      lastPingId = lastPingTime.toInt()
+      sendPacket(SPacketKeepAlive(lastPingId))
     }
-    ++ticks
   }
 
   /**
@@ -169,14 +175,19 @@ class PlayerConnection(
 
   override fun handleKeepAlive(packet: CPacketKeepAlive) {
     println("Received keep alive packet $packet")
+    if (packet.id == lastPingId) {
+      println("is last ping id")
+      val ping = (now - lastPingTime).toInt()
+      player.ping = (player.ping * 3 + ping) / 4
+    }
   }
 
   override fun handlePayload(packet: CPacketPayload) {
     println("Received payload packet $packet")
   }
 
-  override fun handlePlayerInfo(packet: CPacketPlayerInfo) {
-    println("Received player info packet $packet")
+  override fun handleMovement(packet: CPacketPlayerMovement) {
+    println("Received movement packet $packet")
   }
 
   override fun handleResourcePack(packet: CPacketResourcePack) {

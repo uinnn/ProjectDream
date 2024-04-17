@@ -15,9 +15,4 @@ data class SPacketUpdateHealth(
     buf.writeVarInt(food)
     buf.writeFloat(saturation)
   }
-  
-  override fun process(handler: GamePacketHandler) {
-    TODO("Not yet implemented")
-  }
-  
 }

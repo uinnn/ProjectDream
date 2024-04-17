@@ -9,8 +9,4 @@ data class SPacketCloseWindow(var windowId: Int) : ServerGamePacket {
   override fun write(buf: PacketBuffer) {
     buf.writeByte(windowId)
   }
-  
-  override fun process(handler: GamePacketHandler) {
-    TODO("Not yet implemented")
-  }
 }

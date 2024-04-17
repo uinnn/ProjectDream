@@ -25,20 +25,20 @@ class NamespacedRegistry<K, V> : Registry<K, V>() {
   /**
    * Gets a registry by [id].
    */
-  operator fun get(id: Int) = identifiers[id]
+  operator fun get(id: Int) = identifiers.getValue(id)
 
   /**
    * Register a new value in this registry.
    */
   fun register(id: Int, key: K, value: V) {
-    identifiers[value] = id
+    identifiers.put(value, id)
     set(key, value)
   }
 
   /**
    * Gets the id of [value].
    */
-  fun getId(value: V) = identifiers[value]
+  fun getId(value: V) = identifiers.getId(value)
 
   /**
    * Gets the key of [value].

@@ -48,7 +48,4 @@ data class SPacketAbilities(
     buf.writeFloat(flySpeed)
     buf.writeFloat(walkSpeed)
   }
-
-  override fun process(handler: GamePacketHandler) {
-  }
 }

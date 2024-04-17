@@ -6,14 +6,14 @@ import dream.network.*
 /**
  * Clientbound packet player movement look.
  */
-class CPacketPlayerMoveLook(
-  x: Double,
-  y: Double,
-  z: Double,
-  yaw: Float,
-  pitch: Float,
-  ground: Boolean,
-) : CPacketPlayerInfo(x, y, z, yaw, pitch, ground, true, true) {
+data class CPacketPlayerMoveLook(
+  override var x: Double,
+  override var y: Double,
+  override var z: Double,
+  override var yaw: Float,
+  override var pitch: Float,
+  override var onGround: Boolean,
+) : CPacketPlayerMovement(x, y, z, yaw, pitch, onGround, true, true) {
 
   constructor(entity: Entity) : this(
     entity.x,

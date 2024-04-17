@@ -12,9 +12,4 @@ data class SPacketCamera(var entityId: Int) : ServerGamePacket {
   override fun write(buf: PacketBuffer) {
     buf.writeVarInt(entityId)
   }
-  
-  override fun process(handler: GamePacketHandler) {
-    TODO("Not yet implemented")
-  }
-  
 }

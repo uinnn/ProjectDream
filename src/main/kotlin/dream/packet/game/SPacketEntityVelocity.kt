@@ -30,9 +30,4 @@ data class SPacketEntityVelocity(
     buf.writeShort(motionY)
     buf.writeShort(motionZ)
   }
-  
-  override fun process(handler: GamePacketHandler) {
-    TODO("Not yet implemented")
-  }
-  
 }

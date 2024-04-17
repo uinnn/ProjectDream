@@ -46,9 +46,4 @@ data class SPacketJoin(
     buf.writeString(levelType.name)
     buf.writeBoolean(reducedDebugInfo)
   }
-
-  override fun process(handler: GamePacketHandler) {
-    TODO("Not yet implemented")
-  }
-
 }

@@ -1,22 +1,20 @@
 package dream.block
 
-import dream.block.material.Materials
-import dream.block.property.PropertyInt
-import dream.block.state.IState
-import dream.entity.player.Player
-import dream.item.ItemStack
-import dream.item.Items
-import dream.item.misc.ItemBook
-import dream.level.Level
-import dream.level.chunk.Chunk
-import dream.misc.Click
-import dream.pos.Direction
-import dream.pos.Pos
-import dream.tab.CreativeTab
+import dream.block.material.*
+import dream.block.property.*
+import dream.block.state.*
+import dream.entity.player.*
+import dream.item.*
+import dream.item.misc.*
+import dream.level.*
+import dream.level.chunk.*
+import dream.misc.*
+import dream.pos.*
+import dream.tab.*
 
 class BlockBookshelf : Block(Materials.WOOD, CreativeTab.BLOCKS) {
   companion object {
-    val BOOKS = PropertyInt("books", 0..4)
+    val BOOKS = PropertyInt("books", 1..2)
   }
   
   override fun getDrop(level: Level, pos: Pos, state: IState, fortune: Int, chance: Float): ItemStack {
@@ -39,5 +37,9 @@ class BlockBookshelf : Block(Materials.WOOD, CreativeTab.BLOCKS) {
       }
     }
     return true
+  }
+
+  override fun createData(): BlockData {
+    return RuntimeBlockData(this, BOOKS)
   }
 }

@@ -29,7 +29,7 @@ interface IState {
    *
    * Is supposed that the state [block] is registered.
    */
-  val id: Int get() = Blocks.STATES[this]
+  val id: Int get() = Blocks.STATES.getId(this)
   
   /**
    * Gets all properties keys of this block state.

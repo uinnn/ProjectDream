@@ -30,9 +30,4 @@ data class SPacketPosLook(
     buf.writeFloat(pitch)
     buf.writeByte(flags.masked())
   }
-  
-  override fun process(handler: GamePacketHandler) {
-    TODO("Not yet implemented")
-  }
-  
 }

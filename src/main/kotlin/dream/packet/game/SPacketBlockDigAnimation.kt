@@ -19,9 +19,4 @@ data class SPacketBlockDigAnimation(
     buf.writePos(pos)
     buf.writeByte(progress)
   }
-
-  override fun process(handler: GamePacketHandler) {
-    TODO("Not yet implemented")
-  }
-
 }

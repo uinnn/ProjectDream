@@ -15,8 +15,4 @@ data class SPacketServerDifficulty(var difficulty: Difficulty, var isLocked: Boo
   override fun write(buf: PacketBuffer) {
     buf.writeByte(difficulty.id)
   }
-
-  override fun process(handler: GamePacketHandler) {
-    TODO("Not yet implemented")
-  }
 }

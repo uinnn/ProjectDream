@@ -1,7 +1,7 @@
 package dream.packet.game
 
-import dream.network.PacketBuffer
-import dream.pos.Pos
+import dream.network.*
+import dream.pos.*
 
 data class SPacketEffect(
   var type: Int,
@@ -17,8 +17,5 @@ data class SPacketEffect(
     buf.writePos(pos)
     buf.writeInt(data)
     buf.writeBoolean(relativeVolume)
-  }
-
-  override fun process(handler: GamePacketHandler) {
   }
 }

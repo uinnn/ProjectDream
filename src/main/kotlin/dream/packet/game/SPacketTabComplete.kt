@@ -10,9 +10,4 @@ data class SPacketTabComplete(var matches: List<String>) : ServerGamePacket {
     buf.writeVarInt(matches.size)
     buf.writeList(matches) { writeString(it) }
   }
-  
-  override fun process(handler: GamePacketHandler) {
-    TODO("Not yet implemented")
-  }
-  
 }

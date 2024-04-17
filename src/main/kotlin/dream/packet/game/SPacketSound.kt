@@ -41,9 +41,4 @@ data class SPacketSound(
     buf.writeFloat(volume)
     buf.writeByte(pitch.toInt())
   }
-
-  override fun process(handler: GamePacketHandler) {
-    TODO("Not yet implemented")
-  }
-
 }

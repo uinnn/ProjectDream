@@ -1,13 +1,17 @@
 package dream.packet.game
 
-import dream.network.PacketBuffer
+import dream.chat.*
+import dream.network.*
 
-class SPacketPlayerListInfo : ServerGamePacket {
+data class SPacketPlayerListInfo(
+  var header: ComponentText,
+  var footer: ComponentText
+) : ServerGamePacket {
+
+  constructor(buf: PacketBuffer) : this(buf.readComponent(), buf.readComponent())
+
   override fun write(buf: PacketBuffer) {
-    TODO("Not yet implemented")
-  }
-
-  override fun process(handler: GamePacketHandler) {
-    TODO("Not yet implemented")
+    buf.writeComponent(header)
+    buf.writeComponent(footer)
   }
 }

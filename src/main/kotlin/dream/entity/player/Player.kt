@@ -66,7 +66,12 @@ class Player(
       result = result.substring(0, result.indexOf(':'))
       return result
     }
-  
+
+  /**
+   * The current connection ping of this player in the server.
+   */
+  var ping = 0
+
   /**
    * Gets all outbound packets that is been sending to this player.
    */
@@ -451,7 +456,8 @@ class Player(
   }
   
   override fun update(container: Container, items: List<ItemStack>) {
-    sendPacket(SPacketWindowItems())
+    sendPacket(SPacketWindowItems(container.id, items))
+    sendPacket(SPacketSetSlot(-1, -1, cursor))
   }
   
   override fun sendContent(container: Container, slot: Int, item: ItemStack) {
@@ -459,11 +465,13 @@ class Player(
   }
   
   override fun sendData(container: Container, id: Int, value: Int) {
-    sendPacket(SPacketWindowProperty())
+    sendPacket(SPacketWindowProperty(container.id, id, value))
   }
   
   override fun sendProps(container: Container, inventory: IInventory) {
-
+    repeat(inventory.fieldCount) {
+      sendPacket(SPacketWindowProperty(container.id, it, inventory.getField(it)))
+    }
   }
   
   fun sendContainer(container: Container) {

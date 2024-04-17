@@ -6,12 +6,12 @@ import dream.network.*
 /**
  * Clientbound packet player movement.
  */
-class CPacketPlayerMove(
-  x: Double,
-  y: Double,
-  z: Double,
-  ground: Boolean,
-) : CPacketPlayerInfo(x, y, z, onGround = ground, isMoving = true) {
+data class CPacketPlayerMove(
+  override var x: Double,
+  override var y: Double,
+  override var z: Double,
+  override var onGround: Boolean,
+) : CPacketPlayerMovement(x, y, z, onGround = onGround, isMoving = true) {
 
   constructor(entity: Entity) : this(entity.x, entity.y, entity.z, entity.onGround)
 

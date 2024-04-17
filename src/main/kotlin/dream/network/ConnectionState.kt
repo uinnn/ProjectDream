@@ -122,7 +122,7 @@ enum class ConnectionState(val id: Int) {
       registerPacket(PacketDirection.SERVER, 0, CPacketKeepAlive::class)
       registerPacket(PacketDirection.SERVER, 1, CPacketChat::class)
       registerPacket(PacketDirection.SERVER, 2, CPacketUseEntity::class)
-      registerPacket(PacketDirection.SERVER, 3, CPacketPlayerInfo::class)
+      registerPacket(PacketDirection.SERVER, 3, CPacketPlayerMovement::class)
       registerPacket(PacketDirection.SERVER, 4, CPacketPlayerMove::class)
       registerPacket(PacketDirection.SERVER, 5, CPacketPlayerLook::class)
       registerPacket(PacketDirection.SERVER, 6, CPacketPlayerMoveLook::class)

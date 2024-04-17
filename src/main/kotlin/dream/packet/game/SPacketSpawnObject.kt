@@ -67,10 +67,6 @@ data class SPacketSpawnObject(
       buf.writeShort(speedZ)
     }
   }
-
-  override fun process(handler: GamePacketHandler) {
-
-  }
 }
 
 /**

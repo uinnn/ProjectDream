@@ -18,9 +18,4 @@ data class SPacketEntityMove(
   override fun write(buf: PacketBuffer) {
     buf.writeVarInt(entityId)
   }
-  
-  override fun process(handler: GamePacketHandler) {
-    TODO("Not yet implemented")
-  }
-  
 }

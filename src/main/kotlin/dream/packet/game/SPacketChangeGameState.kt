@@ -12,10 +12,6 @@ data class SPacketChangeGameState(var state: Int, var value: Float) : ServerGame
     buf.writeByte(state)
     buf.writeFloat(value)
   }
-  
-  override fun process(handler: GamePacketHandler) {
-    TODO("Not yet implemented")
-  }
 }
 
 /**

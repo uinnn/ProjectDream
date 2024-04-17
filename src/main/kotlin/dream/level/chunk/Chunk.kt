@@ -28,7 +28,7 @@ class Chunk(val level: Level, var x: Int, var z: Int) : CompoundStorable, Compar
    * Used to store block IDs, block MSBs, Sky-light maps, Block-light maps, and metadata.
    * Each entry corresponds to a logical segment of 16x16x16 blocks, stacked vertically.
    */
-  var palletes: MutableList<Pallete> = SizedList(16)
+  var palletes: MutableList<Pallete> = ArrayList(16)
   
   /**
    * Contains a 16x16 mapping on the X/Z plane of the biome ID to which each colum belongs.

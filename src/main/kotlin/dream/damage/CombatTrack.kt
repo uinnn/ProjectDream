@@ -1,6 +1,5 @@
 package dream.damage
 
-import dream.block.*
 import dream.chat.*
 import dream.entity.base.*
 import dream.entity.player.*
@@ -112,8 +111,8 @@ class CombatTrack(val entity: EntityLiving) : Iterable<CombatEntry> {
       else -> {
         val state = entity.stateInside
         when {
-          state.its(Blocks.LADDER) -> "ladder"
-          state.its(Blocks.VINES) -> "ladder"
+          //state.its(Blocks.LADDER) -> "ladder"
+          //state.its(Blocks.VINES) -> "ladder"
           else -> ""
         }
       }
@@ -178,7 +177,7 @@ class CombatTrack(val entity: EntityLiving) : Iterable<CombatEntry> {
    * @return The death message component.
    */
   fun getDeathMessage(): Component {
-    return text("TODO")
+    return text("Entity killeds another entity.")
   }
   
   override fun iterator(): Iterator<CombatEntry> {

@@ -2,39 +2,34 @@ package dream.registry
 
 import com.google.common.collect.*
 import dream.misc.*
+import java.util.*
+import kotlin.collections.set
 
 /**
  * Represents a registry based on id's
  */
 @Open
 class IdRegistry<T> : Iterable<T> {
+  val map: IdentityHashMap<T, Int> = IdentityHashMap(512)
+  val list: MutableList<T?> = Lists.newArrayList()
 
-  /**
-   * All registered data.
-   */
-  val data: BiMap<T, Int> = createUnderlyingMap()
+  fun put(key: T, value: Int) {
+    map[key] = value
+    while (list.size <= value) {
+      list.add(null)
+    }
+    list[value] = key
+  }
 
-  /**
-   * The inverse data of this registry.
-   */
-  val inverseData: BiMap<Int, T> = data.inverse()
+  fun getId(key: T): Int {
+    return map[key] ?: -1
+  }
 
-  /**
-   * Gets a registry id from the specified [key].
-   */
-  operator fun get(key: T) = data[key] ?: -1
+  fun getValue(index: Int): T? {
+    return list.getOrNull(index)
+  }
 
-  /**
-   * Gets a registry value from the specified [index].
-   */
-  operator fun get(index: Int) = inverseData[index]
-
-  /**
-   * Register a new id [value] with [key] in this registry.
-   */
-  operator fun set(key: T, value: Int) = data.put(key, value)
-
-  override fun iterator() = data.keys.iterator()
-
-  fun createUnderlyingMap(): BiMap<T, Int> = HashBiMap.create(512)
+  override fun iterator(): Iterator<T> {
+    return map.keys.iterator()
+  }
 }

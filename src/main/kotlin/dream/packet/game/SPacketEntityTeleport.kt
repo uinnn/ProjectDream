@@ -42,9 +42,4 @@ data class SPacketEntityTeleport(
     buf.writeByte(pitch)
     buf.writeBoolean(onGround)
   }
-  
-  override fun process(handler: GamePacketHandler) {
-    TODO("Not yet implemented")
-  }
-  
 }

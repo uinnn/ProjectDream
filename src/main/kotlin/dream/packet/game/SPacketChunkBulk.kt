@@ -38,10 +38,6 @@ data class SPacketChunkBulk(
       buf.writeByteArray(chunks[it].data)
     }
   }
-
-  override fun process(handler: GamePacketHandler) {
-    TODO("Not yet implemented")
-  }
 }
 
 internal fun readBulkChunks(

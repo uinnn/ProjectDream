@@ -29,9 +29,4 @@ data class SPacketEntityEffect(
     buf.writeVarInt(duration)
     buf.writeBoolean(hideParticles)
   }
-  
-  override fun process(handler: GamePacketHandler) {
-    TODO("Not yet implemented")
-  }
-  
 }

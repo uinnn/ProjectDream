@@ -27,10 +27,6 @@ data class SPacketChunkData(
     buf.writeShort(extracted.size and 65535)
     buf.writeByteArray(extracted.data)
   }
-
-  override fun process(handler: GamePacketHandler) {
-    TODO("Not yet implemented")
-  }
 }
 
 /**

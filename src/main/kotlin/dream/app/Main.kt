@@ -1,11 +1,12 @@
 package dream.app
 
-import dream.network.ConnectionState
-import dream.server.Server
-import dream.utils.file
-import kotlinx.coroutines.SupervisorJob
-import kotlinx.coroutines.runBlocking
-import java.net.Proxy
+import dream.block.*
+import dream.item.*
+import dream.network.*
+import dream.server.*
+import dream.utils.*
+import kotlinx.coroutines.*
+import java.net.*
 
 suspend fun main() {
 
@@ -17,6 +18,9 @@ suspend fun main() {
     ConnectionState.PLAY
     ConnectionState.LOGIN
     ConnectionState.STATUS
+
+    Items
+    Blocks
 
     val directory = file("C:\\Users\\Cliente\\Jetbrains\\Servidores\\Dream")
     val server = Server(Proxy.NO_PROXY, directory)

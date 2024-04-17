@@ -3,7 +3,7 @@ package dream.block
 import dream.*
 import dream.api.*
 import dream.block.material.*
-import dream.block.property.PropertyInt
+import dream.block.property.*
 import dream.block.state.*
 import dream.collision.*
 import dream.entity.base.*
@@ -104,7 +104,7 @@ class Block(var material: Material, var pallete: MapPallete) : Keyable, Locale {
    *
    * Random tick is associated by level gamerule "randomTickSpeed".
    *
-   * Ref-counted by [BlockStorage] in order to broadly cull a chunk from the random chunk
+   * Ref-counted by [Pallete] in order to broadly cull a chunk from the random chunk
    * update list for efficiency's sake.
    */
   var isTickable = false
@@ -170,7 +170,7 @@ class Block(var material: Material, var pallete: MapPallete) : Keyable, Locale {
   /**
    * The default state for this block.
    */
-  var state: IState = data.baseState
+  val state: IState get() = data.baseState
   
   /**
    * The render for this block.
@@ -405,7 +405,7 @@ class Block(var material: Material, var pallete: MapPallete) : Keyable, Locale {
    * Creates the block data for this block.
    */
   fun createData(): BlockData {
-    return BlockData(this, PropertyInt("meta", 1..2))
+    return RuntimeBlockData(this)
   }
   
   /**

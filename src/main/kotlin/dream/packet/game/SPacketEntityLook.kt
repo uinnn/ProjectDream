@@ -22,5 +22,4 @@ class SPacketEntityLook(
     buf.writeByte(pitch)
     buf.writeBoolean(onGround)
   }
-  
 }

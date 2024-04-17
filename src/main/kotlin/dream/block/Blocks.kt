@@ -14,20 +14,19 @@ object Blocks : NamespacedRegistry<Key, Block>() {
    */
   val STATES = IdRegistry<IState>()
 
-  @JvmField
   val AIR = register0(0, "air", BlockAir())
-  @JvmField
   val STONE = register0(1, "stone", BlockBookshelf())
-  @JvmField
-  val VINES = register0(2, "vines", BlockChest())
-  @JvmField
-  val LADDER = register0(3, "ladder", Block())
+  //val VINES = register0(2, "vines", BlockChest())
+  //val LADDER = register0(3, "ladder", Block())
 
   override fun register(id: Int, key: Key, value: Block) {
     super.register(id, key, value)
-    for (state in value.data.states) {
-      STATES[state] = id shl 4 or state.getMetadata()
-    }
+   /* val states = value.data.states
+    if (states.isNotEmpty()) {
+      for (state in states) {
+        STATES[state] = id shl 4 or state.getMetadata()
+      }
+    }*/
   }
 
   private fun <T : Block> register0(id: Int, key: String, value: T): T {
@@ -43,7 +42,7 @@ object Blocks : NamespacedRegistry<Key, Block>() {
   fun byName(name: String): Block? {
     return get(key(name)) ?: get(name.toIntOrNull() ?: return null)
   }
-  
+
   /**
    * Retrieves the block by its state ID or returns null if no block is found.
    *
@@ -51,7 +50,7 @@ object Blocks : NamespacedRegistry<Key, Block>() {
    * @return The block corresponding to the state ID, or null if no block is found.
    */
   fun byStateIdOrNull(id: Int): Block? = get(id and 4095)
-  
+
   /**
    * Retrieves the block by its state ID or returns the default block if no block is found.
    *
@@ -60,7 +59,7 @@ object Blocks : NamespacedRegistry<Key, Block>() {
    * @return The block corresponding to the state ID, or the default block if no block is found.
    */
   fun byStateId(id: Int, default: Block = AIR): Block = byStateIdOrNull(id) ?: default
-  
+
   /**
    * Retrieves the state by its ID or returns null if no state is found.
    *
@@ -68,7 +67,7 @@ object Blocks : NamespacedRegistry<Key, Block>() {
    * @return The state corresponding to the ID, or null if no state is found.
    */
   fun stateByIdOrNull(id: Int): IState? = byStateIdOrNull(id)?.getStateFromMeta(id shr 12 and 15)
-  
+
   /**
    * Retrieves the state by its ID or returns the default state if no state is found.
    *
@@ -77,6 +76,15 @@ object Blocks : NamespacedRegistry<Key, Block>() {
    * @return The state corresponding to the ID, or the default state if no state is found.
    */
   fun stateById(id: Int, default: IState = AIR.state): IState = stateByIdOrNull(id) ?: default
-  
+
+
+  init {
+    for (block in values) {
+      for (state in block.data.validStates) {
+        val id = getId(block) shr 4 or block.getMetaFromState(state)
+        STATES.put(state, id)
+      }
+    }
+  }
 
 }

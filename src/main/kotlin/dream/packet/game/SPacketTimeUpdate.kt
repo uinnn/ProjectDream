@@ -18,8 +18,4 @@ class SPacketTimeUpdate(var totalTime: Long, var time: Long, doDaylightCycle: Bo
     buf.writeLong(totalTime)
     buf.writeLong(time)
   }
-  
-  override fun process(handler: GamePacketHandler) {
-    TODO("Not yet implemented")
-  }
 }

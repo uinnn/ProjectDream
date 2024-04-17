@@ -26,9 +26,4 @@ data class SPacketSpawnPainting(
     buf.writePos(pos)
     buf.writeByte(facing.horizontalIndex)
   }
-  
-  override fun process(handler: GamePacketHandler) {
-    TODO("Not yet implemented")
-  }
-  
 }

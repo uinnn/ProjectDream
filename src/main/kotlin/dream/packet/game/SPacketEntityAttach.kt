@@ -21,9 +21,4 @@ data class SPacketEntityAttach(var entityId: Int, var vehicleId: Int, var leashI
     buf.writeInt(vehicleId)
     buf.writeByte(leashId)
   }
-
-  override fun process(handler: GamePacketHandler) {
-    TODO("Not yet implemented")
-  }
-
 }
